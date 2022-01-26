@@ -16,8 +16,8 @@ type R record {|
 |};
 
 public function main() {
-    R r = {x:3,y:2.5};
-    R1&R2 rr = r;
+    R r = {x: 3, y: 2.5};
+    R1 & R2 rr = r;
     r = rr;
     _ = r;
     int x = rr.x;

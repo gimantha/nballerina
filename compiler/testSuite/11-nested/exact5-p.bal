@@ -3,7 +3,7 @@ type C record {|
 |};
 
 public function main() {
-    C c = { i: 0 };
+    C c = {i: 0};
     string m = "j";
     c[m] = 8; // @panic bad mapping store
 }

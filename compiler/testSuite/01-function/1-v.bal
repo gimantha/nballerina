@@ -7,4 +7,5 @@ public function main() {
     io:println(1); // @output 1
 }
 
-function nothing() { }
+function nothing() {
+}

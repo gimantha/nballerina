@@ -66,7 +66,6 @@ public function main() {
     io:println(nInf % nInf); // @output NaN
     io:println(nInf % anotherNan); // @output NaN
 
-
     io:println(nan % 0.0); // @output NaN
     io:println(pInf % 0.0); // @output NaN
     io:println(7.0 % 0.0); // @output NaN
@@ -87,11 +86,11 @@ public function main() {
     io:println(0.7 % pInf); // @output  0.7
     io:println(0.5 % pInf); // @output  0.5
     io:println(0.0 % pInf); // @output  0.0
-    io:println(-7.0 % pInf ); // @output -7.0
-    io:println(-5.0 % pInf ); // @output -5.0
-    io:println(-0.7 % pInf ); // @output -0.7
-    io:println(-0.5 % pInf ); // @output -0.5
-    io:println(-0.0 % pInf ); // @output -0.0
+    io:println(-7.0 % pInf); // @output -7.0
+    io:println(-5.0 % pInf); // @output -5.0
+    io:println(-0.7 % pInf); // @output -0.7
+    io:println(-0.5 % pInf); // @output -0.5
+    io:println(-0.0 % pInf); // @output -0.0
 
     io:println(7.0 % nInf); // @output  7.0
     io:println(5.0 % nInf); // @output  5.0
@@ -116,7 +115,7 @@ public function main() {
     io:println(-0.0 % 7.0); // @output -0.0
 
     io:println(7.0 % 5.0); // @output  2.0
-    io:println(-7.0 % 5.0 ); // @output -2.0
+    io:println(-7.0 % 5.0); // @output -2.0
 
     io:println(7.0 % -7.0); // @output  0.0
     io:println(5.0 % -7.0); // @output  5.0
@@ -131,7 +130,7 @@ public function main() {
 
     io:println(7.0 % -5.0); // @output  2.0
     io:println(-7.0 % -5.0); // @output -2.0
-    
+
     io:println(floatRem(1.0, 0.1)); // @output 0.09999999999999995
     float f = 100f;
     io:println(f % 19.0); // @output 5.0

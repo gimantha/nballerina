@@ -6,6 +6,6 @@ type R record {|
 |};
 
 public function main() {
-    R r = { "x": "str" }; // @error
+    R r = {"x": "str"}; // @error
     io:println(r);
 }

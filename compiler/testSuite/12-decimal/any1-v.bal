@@ -25,7 +25,7 @@ public function main() {
     io:println(a2); // @output 1.000000000000000000000000000000000E+6144
     io:println(bar(1.2e3d)); // @output 1.2E+3
 
-    R r = { a: 2.345e32d };
+    R r = {a: 2.345e32d};
     io:println(r.a); // @output 2.345E+32
 
     any[] arr = [12d, 1.2e2d, 1.21e3d];
@@ -40,11 +40,11 @@ public function main() {
 
     io:println(arr1[1]); // @output [4.2E+3,3E+2]
 
-    map<any> m1 = { "x1": 1.2d, "x2": 1.2e2d };
+    map<any> m1 = {"x1": 1.2d, "x2": 1.2e2d};
     io:println(m1["x1"]); // @output 1.2
     io:println(m1["x2"]); // @output 1.2E+2
 
-    map<any[]> m2 = { "x1": [1d, 2d] };
+    map<any[]> m2 = {"x1": [1d, 2d]};
     any[] x = <any[]>m2["x1"];
     io:println(x[0]); // @output 1
 }

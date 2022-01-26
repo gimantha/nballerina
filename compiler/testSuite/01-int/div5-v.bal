@@ -13,5 +13,5 @@ public function main() {
 }
 
 function div(int i, int j) returns int {
-    return i/j;
+    return i / j;
 }

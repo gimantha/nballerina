@@ -14,7 +14,6 @@ public const int UT_READONLY = (1 << UT_COUNT_RO) - 1;
 
 const int UT_RW_MASK = UT_MASK & ~UT_READONLY;
 
-
 public type UniformTypeCode
     UT_NIL|UT_BOOLEAN|UT_INT|UT_FLOAT|UT_DECIMAL
     |UT_STRING|UT_ERROR|UT_FUNCTION|UT_TYPEDESC|UT_HANDLE
@@ -33,13 +32,12 @@ type TypeAtom readonly & record {|
 
 type AtomicType ListAtomicType|MappingAtomicType;
 
-
 // All the SemTypes used in any type operation (e.g. isSubtype) must have been created using the Env.
 public isolated class Env {
     private final table<TypeAtom> key(atomicType) atomTable = table [];
     // Set up index 0 for use by bddFixReadOnly
-    private final ListAtomicType?[] recListAtoms = [ LIST_SUBTYPE_RO ];
-    private final MappingAtomicType?[] recMappingAtoms = [ MAPPING_SUBTYPE_RO ];
+    private final ListAtomicType?[] recListAtoms = [LIST_SUBTYPE_RO];
+    private final MappingAtomicType?[] recMappingAtoms = [MAPPING_SUBTYPE_RO];
     private final FunctionAtomicType?[] recFunctionAtoms = [];
     // Count of the total number of non-nil members
     // of recListAtoms, recMappingAtoms and recFunctionAtoms
@@ -54,10 +52,10 @@ public isolated class Env {
     public isolated function isReady() returns boolean {
         lock {
             return self.recAtomCount
-                   == (self.recListAtoms.length()
-                       + self.recMappingAtoms.length()
-                       + self.recFunctionAtoms.length());
-        }  
+                    == (self.recListAtoms.length()
+                        + self.recMappingAtoms.length()
+                        + self.recFunctionAtoms.length());
+        }
     }
 
     isolated function listAtom(ListAtomicType atomicType) returns TypeAtom {
@@ -75,7 +73,7 @@ public isolated class Env {
                 return ta;
             }
             else {
-                TypeAtom result = { index: self.atomTable.length(), atomicType };
+                TypeAtom result = {index: self.atomTable.length(), atomicType};
                 self.atomTable.add(result);
                 return result;
             }
@@ -150,7 +148,7 @@ public isolated class Env {
             return <ListAtomicType>self.recListAtoms[ra];
         }
     }
-    
+
     isolated function getRecMappingAtomType(RecAtom ra) returns MappingAtomicType {
         lock {
             return <MappingAtomicType>self.recMappingAtoms[ra];
@@ -226,14 +224,17 @@ public class Context {
 }
 
 type ProperSubtypeData StringSubtype|DecimalSubtype|FloatSubtype|IntSubtype|BooleanSubtype|XmlSubtype|RwTableSubtype|BddNode;
+
 // true means everything and false means nothing (as with Bdd)
 type SubtypeData ProperSubtypeData|boolean;
 
 type UniformSubtype [UniformTypeCode, ProperSubtypeData];
 
-type BinOp function(SubtypeData t1, SubtypeData t2) returns SubtypeData;
-type UnaryOp function(SubtypeData t) returns SubtypeData;
-type UnaryTypeCheckOp function(Context cx, SubtypeData t) returns boolean;
+type BinOp function (SubtypeData t1, SubtypeData t2) returns SubtypeData;
+
+type UnaryOp function (SubtypeData t) returns SubtypeData;
+
+type UnaryTypeCheckOp function (Context cx, SubtypeData t) returns boolean;
 
 function binOpPanic(SubtypeData t1, SubtypeData t2) returns SubtypeData {
     panic error("binary operation should not be called");
@@ -374,9 +375,9 @@ public final UniformTypeBitSet TOP = uniformTypeUnion(UT_MASK);
 public final UniformTypeBitSet ANY = uniformTypeUnion(UT_MASK & ~(1 << UT_ERROR));
 public final UniformTypeBitSet READONLY = uniformTypeUnion(UT_READONLY);
 public final UniformTypeBitSet SIMPLE_OR_STRING = uniformTypeUnion((1 << UT_NIL) | (1 << UT_BOOLEAN) | (1 << UT_INT) | (1 << UT_FLOAT) | (1 << UT_DECIMAL) | (1 << UT_STRING));
-public final UniformTypeBitSet NON_BEHAVIOURAL = uniformTypeUnion((1 << UT_NIL) | (1 << UT_BOOLEAN) | (1 << UT_INT) | (1 << UT_FLOAT)| (1 << UT_DECIMAL) | (1 << UT_STRING)
-                                                                 | (1 << UT_XML_RO) | (1 << UT_LIST_RO) | (1 << UT_MAPPING_RO) | (1 << UT_TABLE_RO)
-                                                                 | (1 << UT_XML_RW) | (1 << UT_LIST_RW) | (1 << UT_MAPPING_RW) | (1 << UT_TABLE_RW));
+public final UniformTypeBitSet NON_BEHAVIOURAL = uniformTypeUnion((1 << UT_NIL) | (1 << UT_BOOLEAN) | (1 << UT_INT) | (1 << UT_FLOAT) | (1 << UT_DECIMAL) | (1 << UT_STRING)
+                                                                | (1 << UT_XML_RO) | (1 << UT_LIST_RO) | (1 << UT_MAPPING_RO) | (1 << UT_TABLE_RO)
+                                                                | (1 << UT_XML_RW) | (1 << UT_LIST_RW) | (1 << UT_MAPPING_RW) | (1 << UT_TABLE_RW));
 public final UniformTypeBitSet NUMBER = uniformTypeUnion((1 << UT_INT) | (1 << UT_FLOAT) | (1 << UT_DECIMAL));
 public final SemType BYTE = intWidthUnsigned(8);
 public final SemType STRING_CHAR = stringChar();
@@ -389,7 +390,7 @@ public final SemType XML_PI = xmlSingleton(XML_PRIMITIVE_PI_RO | XML_PRIMITIVE_P
 // It has to be public to workaround another bug.
 public type SubtypePairIterator object {
     // JBUG if `ProperSubtypeData` on the next line is changed to SubtypeData, jBallerina blows up
-    public function next() returns record {| [UniformTypeCode, ProperSubtypeData?, ProperSubtypeData?] value; |}?;
+    public function next() returns record {|[UniformTypeCode, ProperSubtypeData?, ProperSubtypeData?] value;|}?;
 };
 
 class SubtypePairIteratorImpl {
@@ -413,7 +414,7 @@ class SubtypePairIteratorImpl {
         return self;
     }
 
-    public function next() returns record {| [UniformTypeCode, ProperSubtypeData?, ProperSubtypeData?] value; |}? {
+    public function next() returns record {|[UniformTypeCode, ProperSubtypeData?, ProperSubtypeData?] value;|}? {
         while true {
             if self.i1 >= self.t1.length() {
                 if self.i2 >= self.t2.length() {
@@ -422,14 +423,14 @@ class SubtypePairIteratorImpl {
                 var [code, data2] = self.get2();
                 self.i2 += 1;
                 if self.include(code) {
-                    return { value: [code, (), data2] };
+                    return {value: [code, (), data2]};
                 }
             }
             else if self.i2 >= self.t2.length() {
                 var [code, data1] = self.get1();
                 self.i1 += 1;
                 if self.include(code) {
-                    return { value: [code, data1, ()] };
+                    return {value: [code, data1, ()]};
                 }
             }
             else {
@@ -438,27 +439,27 @@ class SubtypePairIteratorImpl {
                 if code1 == code2 {
                     self.i1 += 1;
                     self.i2 += 1;
-                    if self.include(code1) {    
-                        return { value: [code1, data1, data2] };
+                    if self.include(code1) {
+                        return {value: [code1, data1, data2]};
                     }
                 }
                 else if code1 < code2 {
                     self.i1 += 1;
                     if self.include(code1) {
-                        return { value: [code1, data1, ()] };
+                        return {value: [code1, data1, ()]};
                     }
                 }
                 else {
                     self.i2 += 1;
                     if self.include(code2) {
-                        return { value: [code2, (), data2] };
+                        return {value: [code2, (), data2]};
                     }
                 }
 
             }
         }
         return ();
-    } 
+    }
 
     private function include(UniformTypeCode code) returns boolean {
         int c = code;
@@ -474,7 +475,6 @@ class SubtypePairIteratorImpl {
     }
 }
 
-
 public function union(SemType t1, SemType t2) returns SemType {
     UniformTypeBitSet all1;
     UniformTypeBitSet all2;
@@ -483,7 +483,7 @@ public function union(SemType t1, SemType t2) returns SemType {
 
     if t1 is UniformTypeBitSet {
         if t2 is UniformTypeBitSet {
-            return t1|t2;
+            return t1 | t2;
         }
         else if t1 == 0 {
             return t2;
@@ -510,7 +510,7 @@ public function union(SemType t1, SemType t2) returns SemType {
             some2 = t2.some;
         }
     }
-    
+
     UniformTypeBitSet all = all1 | all2;
     UniformTypeBitSet some = (some1 | some2) & ~<int>all;
     if some == 0 {
@@ -552,7 +552,7 @@ public function intersect(SemType t1, SemType t2) returns SemType {
 
     if t1 is UniformTypeBitSet {
         if t2 is UniformTypeBitSet {
-            return t1&t2;
+            return t1 & t2;
         }
         else {
             if t1 == 0 {
@@ -585,7 +585,7 @@ public function intersect(SemType t1, SemType t2) returns SemType {
             some2 = t2.some;
         }
     }
-   
+
     UniformTypeBitSet all = all1 & all2;
 
     // some(t1 & t2) = some(t1) & some(t2)
@@ -616,7 +616,7 @@ public function intersect(SemType t1, SemType t2) returns SemType {
     if subtypes.length() == 0 {
         return all;
     }
-    return createComplexSemType(all, subtypes);    
+    return createComplexSemType(all, subtypes);
 }
 
 public function roDiff(Context cx, SemType t1, SemType t2) returns SemType {
@@ -722,7 +722,7 @@ function maybeRoDiff(SemType t1, SemType t2, Context? cx) returns SemType {
     if subtypes.length() == 0 {
         return all;
     }
-    return createComplexSemType(all, subtypes);        
+    return createComplexSemType(all, subtypes);
 }
 
 public function complement(SemType t) returns SemType {
@@ -752,8 +752,8 @@ public function isEmpty(Context cx, SemType t) returns boolean {
         return true;
     }
 }
-    
-public function isSubtype(Context cx, SemType t1, SemType t2) returns boolean { 
+
+public function isSubtype(Context cx, SemType t1, SemType t2) returns boolean {
     return isEmpty(cx, diff(t1, t2));
 }
 
@@ -810,7 +810,7 @@ function comparableNillableList(Context cx, SemType t1, SemType t2) returns bool
     if memoized != () {
         return memoized.comparable;
     }
-    ComparableMemo memo = { semType1: t1, semType2: t2 };
+    ComparableMemo memo = {semType1: t1, semType2: t2};
     cx.comparableMemo.add(memo);
     // SUBSET need to iterate members when tuples are supported
     // following relies on the fact `listMemberType(cx, NIL, ()) = NEVER`
@@ -883,10 +883,10 @@ public function listAtomicSimpleArrayMemberType(ListAtomicType? atomic) returns 
             return memberType;
         }
     }
-    return ();   
+    return ();
 }
 
-final ListAtomicType LIST_ATOMIC_TOP = { members: { initial: [], fixedLength: 0 }, rest: TOP };
+final ListAtomicType LIST_ATOMIC_TOP = {members: {initial: [], fixedLength: 0}, rest: TOP};
 
 public function listAtomicTypeRw(Context cx, SemType t) returns ListAtomicType? {
     if t is UniformTypeBitSet {
@@ -897,18 +897,18 @@ public function listAtomicTypeRw(Context cx, SemType t) returns ListAtomicType? 
         if !isSubtypeSimple(t, LIST) {
             return ();
         }
-        return bddListAtomicType(env, <Bdd>getComplexSubtypeData(t, UT_LIST_RW), LIST_ATOMIC_TOP);       
+        return bddListAtomicType(env, <Bdd>getComplexSubtypeData(t, UT_LIST_RW), LIST_ATOMIC_TOP);
     }
 }
 
 function bddListAtomicType(Env env, Bdd bdd, ListAtomicType top) returns ListAtomicType? {
-    if bdd is boolean { 
+    if bdd is boolean {
         if bdd {
             return top;
         }
     }
     else if bdd.left == true && bdd.middle == false && bdd.right == false {
-        return env.listAtomType(bdd.atom);    
+        return env.listAtomType(bdd.atom);
     }
     return ();
 }
@@ -924,12 +924,12 @@ public function listMemberType(Context cx, SemType t, int? key = ()) returns Sem
     }
     else {
         return union(bddListMemberType(cx, <Bdd>getComplexSubtypeData(t, UT_LIST_RO), key, TOP),
-                     bddListMemberType(cx, <Bdd>getComplexSubtypeData(t, UT_LIST_RW), key, TOP));
+                    bddListMemberType(cx, <Bdd>getComplexSubtypeData(t, UT_LIST_RW), key, TOP));
     }
 }
 
-final MappingAtomicType MAPPING_ATOMIC_TOP = { names: [], types: [], rest: TOP };
-final MappingAtomicType MAPPING_ATOMIC_READONLY = { names: [], types: [], rest: READONLY };
+final MappingAtomicType MAPPING_ATOMIC_TOP = {names: [], types: [], rest: TOP};
+final MappingAtomicType MAPPING_ATOMIC_READONLY = {names: [], types: [], rest: READONLY};
 
 public function mappingAtomicTypeRw(Context cx, SemType t) returns MappingAtomicType? {
     if t is UniformTypeBitSet {
@@ -945,13 +945,13 @@ public function mappingAtomicTypeRw(Context cx, SemType t) returns MappingAtomic
 }
 
 function bddMappingAtomicType(Env env, Bdd bdd, MappingAtomicType top) returns MappingAtomicType? {
-    if bdd is boolean { 
+    if bdd is boolean {
         if bdd {
             return top;
         }
     }
     else if bdd.left == true && bdd.middle == false && bdd.right == false {
-        return env.mappingAtomType(bdd.atom);    
+        return env.mappingAtomType(bdd.atom);
     }
     return ();
 }
@@ -966,7 +966,7 @@ public function mappingMemberType(Context cx, SemType t, string? k = ()) returns
     }
     else {
         return union(bddMappingMemberType(cx, <Bdd>getComplexSubtypeData(t, UT_MAPPING_RO), k, TOP),
-                     bddMappingMemberType(cx, <Bdd>getComplexSubtypeData(t, UT_MAPPING_RW), k, TOP));
+                    bddMappingMemberType(cx, <Bdd>getComplexSubtypeData(t, UT_MAPPING_RW), k, TOP));
     }
 }
 
@@ -976,7 +976,7 @@ public function mappingMemberRequired(Context cx, SemType t, string k) returns b
     }
     else {
         return bddMappingMemberRequired(cx, <Bdd>getComplexSubtypeData(t, UT_MAPPING_RW), k, false)
-               && bddMappingMemberRequired(cx, <Bdd>getComplexSubtypeData(t, UT_MAPPING_RO), k, false);
+                && bddMappingMemberRequired(cx, <Bdd>getComplexSubtypeData(t, UT_MAPPING_RO), k, false);
     }
 }
 
@@ -1006,16 +1006,18 @@ public function mappingAlternativesRw(Context cx, SemType t) returns MappingAlte
         bddPaths(<Bdd>getComplexSubtypeData(t, UT_MAPPING_RW), paths, {});
         /// JBUG (33709) runtime error on construct1-v.bal if done as from/select
         MappingAlternative[] alts = [];
-        foreach var { bdd, pos, neg } in paths {
+        foreach var {bdd, pos, neg} in paths {
             SemType semType = createUniformSemType(UT_MAPPING_RW, bdd);
             if semType != NEVER {
                 alts.push({
                     semType,
                     // JBUG parse error without parentheses (33707)
-                    pos: (from var atom in pos select cx.mappingAtomType(atom)),
-                    neg: (from var atom in neg select cx.mappingAtomType(atom))
+                    pos: (from var atom in pos
+                        select cx.mappingAtomType(atom)),
+                    neg: (from var atom in neg
+                        select cx.mappingAtomType(atom))
                 });
-            }          
+            }
         }
         return alts;
     }
@@ -1035,14 +1037,15 @@ public type SplitSemType record {|
     [UniformTypeCode, ComplexSemType][] some;
 |};
 
-public function split(SemType t) returns SplitSemType  {
+public function split(SemType t) returns SplitSemType {
     if t is UniformTypeBitSet {
-        return { all: t, some: [] };
+        return {all: t, some: []};
     }
     else {
         return {
             all: t.all,
-            some: from var [code, sd] in unpackComplexSemType(t) select [code, createComplexSemType(0, [[code, sd]])]
+            some: from var [code, sd] in unpackComplexSemType(t)
+                select [code, createComplexSemType(0, [[code, sd]])]
         };
     }
 }
@@ -1050,20 +1053,20 @@ public function split(SemType t) returns SplitSemType  {
 public type SingleValue ()|boolean|int|float|decimal|string;
 
 public type WrappedSingleValue readonly & record {|
-   SingleValue value;
+    SingleValue value;
 |};
 
 // If the type contains exactly one shape, return a record
 // containing a value with that shape. Otherwise, return ().
 public function singleShape(SemType t) returns WrappedSingleValue? {
     if t is UniformTypeBitSet {
-        return t === NIL ? { value: () } : ();
+        return t === NIL ? {value: ()} : ();
     }
     UniformSubtype? s = singleUniformSubtype(t);
     if s is () {
         return ();
     }
-    var [code, sd] = s;  
+    var [code, sd] = s;
     SingleValue value;
     if code == UT_INT {
         value = intSubtypeSingleValue(sd);
@@ -1086,7 +1089,7 @@ public function singleShape(SemType t) returns WrappedSingleValue? {
     if value == () {
         return ();
     }
-    return { value };
+    return {value};
 }
 
 public function singleDecimalShape(SemType t) returns decimal? {
@@ -1192,7 +1195,7 @@ public function constUniformTypeCode(SingleValue v) returns SingleValueUniformTy
 }
 
 public function constBasicType(SingleValue v) returns UniformTypeBitSet {
-    return  uniformType(constUniformTypeCode(v));
+    return uniformType(constUniformTypeCode(v));
 }
 
 public function containsConst(SemType t, SingleValue v) returns boolean {
@@ -1224,7 +1227,6 @@ public function containsNil(SemType t) returns boolean {
         return <boolean>getComplexSubtypeData(t, UT_NIL);
     }
 }
-
 
 public function containsConstString(SemType t, string s) returns boolean {
     if t is UniformTypeBitSet {
@@ -1289,7 +1291,7 @@ public function singleNumericType(SemType semType) returns UniformTypeBitSet? {
 }
 
 public function typeContext(Env env) returns Context {
-    return new(env);
+    return new (env);
 }
 
 public function createJson(Context context) returns SemType {
@@ -1341,7 +1343,7 @@ function init() {
         decimalOps, // decimal
         stringOps, // string
         errorOps, // error
-        functionOps,  // function
+        functionOps, // function
         {}, // typedesc
         {}, // handle
         {}, // unused
@@ -1352,5 +1354,5 @@ function init() {
         tableRwOps, // RW table
         xmlRwOps, // RW xml
         {} // RW object
-   ];
+    ];
 }

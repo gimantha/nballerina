@@ -3,12 +3,12 @@ import wso2/nballerina.comm.err;
 const PREPARSE_TYPE_DESC = true;
 const PREPARSE_EXPR = false;
 
-type CLOSE_BRACKET ")" | "]" | "}" | "|}";
+type CLOSE_BRACKET ")"|"]"|"}"|"|}";
 
 final readonly & map<CLOSE_BRACKET> closeBracketMap = {
     "(": ")",
     "[": "]",
-    "{" : "}",
+    "{": "}",
     "{|": "|}"
 };
 
@@ -42,7 +42,7 @@ function preparseBracketed(Tokenizer tok, CLOSE_BRACKET close) returns err:Synta
             () => {
                 return tok.err(`missing ${close}`);
             }
-            "." | "check" | "checkpanic" | "is" => {
+            "."|"check"|"checkpanic"|"is" => {
                 return PREPARSE_EXPR;
             }
             ";" => {
@@ -51,14 +51,14 @@ function preparseBracketed(Tokenizer tok, CLOSE_BRACKET close) returns err:Synta
                 }
                 check tok.advance();
             }
-            "(" | "[" | "{" | "{|" => {
+            "("|"["|"{"|"{|" => {
                 check tok.advance();
                 boolean? result = check preparseBracketed(tok, closeBracketMap.get(<string>t));
                 if result != () {
                     return result;
                 }
             }
-            ")" | "]" | "}" | "|}" => {
+            ")"|"]"|"}"|"|}" => {
                 if t == close {
                     check tok.advance();
                     break;
@@ -68,7 +68,7 @@ function preparseBracketed(Tokenizer tok, CLOSE_BRACKET close) returns err:Synta
             _ => {
                 check tok.advance();
             }
-        }  
+        }
     }
     return ();
 }

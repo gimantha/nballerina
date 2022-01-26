@@ -4,6 +4,6 @@ public function main() {
     if x == 1 {
     }
     // this should get an error because x should be narrowed to not include `1` so the operand types are disjoint
-    else if x == 1 {  // @error
+    else if x == 1 { // @error
     }
 }

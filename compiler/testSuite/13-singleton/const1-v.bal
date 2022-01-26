@@ -1,6 +1,7 @@
 import ballerina/io;
 
 type Color R|G|B;
+
 const R = "red";
 const G = "green";
 const B = "blue";

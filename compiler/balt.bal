@@ -6,7 +6,7 @@ import wso2/nballerina.nback;
 import ballerina/io;
 import ballerina/file;
 
-type TestKind "output" | "panic" | "error";
+type TestKind "output"|"panic"|"error";
 
 type BaltTestHeader record {|
     TestKind 'Test\-Case;
@@ -38,7 +38,7 @@ function compileBaltFile(string filename, string outDir, nback:Options nbackOpti
         string outBasename = chooseBaltCaseOutputFilename(t, i);
         string outFilename = check file:joinPath(outDir, outBasename) + OUTPUT_EXTENSION;
         string[] lines = t.content;
-        check compileAndOutputModule(DEFAULT_ROOT_MODULE_ID, [{ lines }], nbackOptions, options, outFilename);
+        check compileAndOutputModule(DEFAULT_ROOT_MODULE_ID, [{lines}], nbackOptions, options, outFilename);
         string? expectOutDir = options.expectOutDir;
         string expectFilename = check file:joinPath(expectOutDir ?: outDir, outBasename) + ".txt";
         check io:fileWriteLines(expectFilename, expect(t.content));
@@ -60,13 +60,13 @@ function compileModule(bir:ModuleId modId, front:SourcePart[] sources, nback:Opt
     return llMod;
 }
 
-function parseBalt(string path) returns  BaltTestCase[]|io:Error|file:Error|err:Diagnostic {
+function parseBalt(string path) returns BaltTestCase[]|io:Error|file:Error|err:Diagnostic {
     BaltTestCase[] tests = [];
     string[] lines = check io:fileReadLines(path);
 
     BaltTestHeader? maybeHeader = ();
-    string? prevFiledBody  = ();
-    string? prevFiledName  = ();
+    string? prevFiledBody = ();
+    string? prevFiledName = ();
     string[] content = [];
     int offset = 0;
 
@@ -75,7 +75,7 @@ function parseBalt(string path) returns  BaltTestCase[]|io:Error|file:Error|err:
         if l.startsWith("Test-Case:") {
             if s != BOF {
                 BaltTestHeader header = <BaltTestHeader>maybeHeader;
-                tests.push({ offset, header, content });
+                tests.push({offset, header, content});
             }
             s = HEADER;
 
@@ -94,7 +94,7 @@ function parseBalt(string path) returns  BaltTestCase[]|io:Error|file:Error|err:
                 BaltTestHeader header = <BaltTestHeader>maybeHeader;
                 // possible improvement: support other white spaces
                 if l.startsWith(" ") {
-                    if prevFiledName == () ||  prevFiledBody == () {
+                    if prevFiledName == () || prevFiledBody == () {
                         panic err:impossible("folded field body without field");
                     }
                     header[<string>prevFiledName] = <string>prevFiledBody + l;
@@ -151,7 +151,7 @@ function expect(string[] src) returns string[] {
             continue;
         }
 
-        int begin = <int> comment + 2;
+        int begin = <int>comment + 2;
         int? output = l.indexOf(OUTPUT_MARKER, begin);
         if output != () {
             expect.push(l.substring(output + OUTPUT_MARKER.length()).trim());
@@ -170,7 +170,7 @@ function expect(string[] src) returns string[] {
 }
 
 function chooseBaltCaseOutputFilename(BaltTestCase t, int i) returns string {
-   return pad4(i.toString()) + "L" + pad4(t.offset.toString()) + "-" + testKindToLetter(t.header.Test\-Case);
+    return pad4(i.toString()) + "L" + pad4(t.offset.toString()) + "-" + testKindToLetter(t.header.Test\-Case);
 }
 
 function testKindToLetter(TestKind k) returns string:Char {
@@ -191,7 +191,7 @@ function testKindToLetter(TestKind k) returns string:Char {
 }
 
 function pad4(string s) returns string {
-    int len = s.length() ;
+    int len = s.length();
     if len < 4 {
         return "0000".substring(len) + s;
     }

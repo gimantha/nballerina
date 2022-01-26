@@ -1,5 +1,6 @@
 // @productions list-type-descriptor list-constructor-expr local-var-decl-stmt int-literal
 import ballerina/io;
+
 public function main() {
     any[] v = [1, 2, 3, 4];
     v.push(5);

@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     boolean b1 = true;
     if b1 is any {

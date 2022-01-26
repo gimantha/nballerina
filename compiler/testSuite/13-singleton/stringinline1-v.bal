@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     "X"|"Y" xy = "X";
     io:println(xy); // @output X

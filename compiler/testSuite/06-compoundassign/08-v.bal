@@ -6,7 +6,7 @@ public function main() {
     s += " world";
     io:println(s); // @output hello world
     string n = " nballerina";
-    s +=n;
+    s += n;
     io:println(s); // @output hello world nballerina
     string x = "x";
     string y = "y";

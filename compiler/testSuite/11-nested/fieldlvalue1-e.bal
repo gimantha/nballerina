@@ -11,6 +11,6 @@ type C record {|
 |};
 
 public function main() {
-    A a = { b: { c: { i: 1 } } };
+    A a = {b: {c: {i: 1}}};
     a.b.c.i.x = 32; // @error
 }

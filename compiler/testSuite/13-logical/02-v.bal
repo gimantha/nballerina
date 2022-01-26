@@ -1,32 +1,33 @@
 import ballerina/io;
+
 public function main() {
     io:println(lhsTrue() && rhsTrue()); // @output lhsTrue
-                                        // @output rhsTrue
-                                        // @output true
+    // @output rhsTrue
+    // @output true
 
     io:println(lhsFalse() && rhsTrue()); // @output lhsFalse
-                                         // @output false
+    // @output false
 
     io:println(lhsTrue() && rhsFalse()); // @output lhsTrue
-                                         // @output rhsFalse
-                                         // @output false
+    // @output rhsFalse
+    // @output false
 
     io:println(lhsFalse() && rhsFalse()); // @output lhsFalse
-                                          // @output false
+    // @output false
 
-    io:println(lhsTrue() || rhsTrue());  // @output lhsTrue
-                                         // @output true
+    io:println(lhsTrue() || rhsTrue()); // @output lhsTrue
+    // @output true
 
     io:println(lhsFalse() || rhsTrue()); // @output lhsFalse
-                                         // @output rhsTrue
-                                         // @output true
+    // @output rhsTrue
+    // @output true
 
     io:println(lhsTrue() || rhsFalse()); // @output lhsTrue
-                                         // @output true
+    // @output true
 
     io:println(lhsFalse() || rhsFalse()); // @output lhsFalse
-                                          // @output rhsFalse
-                                          // @output false
+    // @output rhsFalse
+    // @output false
 }
 
 public function lhsTrue() returns boolean {

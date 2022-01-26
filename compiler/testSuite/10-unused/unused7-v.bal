@@ -3,7 +3,7 @@ function foo(int i, string s) {
 }
 
 function bar(int i) returns int {
-    return i*2;
+    return i * 2;
 }
 
 public function main() {

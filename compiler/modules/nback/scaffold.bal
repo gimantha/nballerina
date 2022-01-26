@@ -7,10 +7,15 @@ import wso2/nballerina.print.llvm;
 type BuildError err:Semantic|err:Unimplemented|err:Internal;
 
 type DIBuilder llvm:DIBuilder;
+
 type DISubprogram llvm:Metadata;
+
 type DILocation llvm:Metadata;
+
 type DIFile llvm:Metadata;
+
 type DICompileUnit llvm:Metadata;
+
 type DISubroutineType llvm:Metadata;
 
 const LLVM_INT = "i64";
@@ -34,7 +39,9 @@ enum UniformBaseRepr {
 
 const BASE_REPR_VOID = "BASE_REPR_VOID";
 const BASE_REPR_TAGGED = "BASE_REPR_TAGGED";
+
 type BaseRepr UniformBaseRepr|BASE_REPR_TAGGED;
+
 type RetBaseRepr BaseRepr|BASE_REPR_VOID;
 
 type UniformRepr readonly & record {|
@@ -66,7 +73,6 @@ type ImportedFunction record {|
 
 type ImportedFunctionTable table<ImportedFunction> key(symbol);
 
-
 //const STRING_VARIANT_SMALL = 0;
 const STRING_VARIANT_MEDIUM = 0;
 const STRING_VARIANT_LARGE = 1;
@@ -74,6 +80,7 @@ const STRING_VARIANT_LARGE = 1;
 type StringVariant STRING_VARIANT_MEDIUM|STRING_VARIANT_LARGE; // STRING_VARIANT_SMALL|;
 
 type StringDefn llvm:ConstPointerValue;
+
 type DecimalDefn llvm:ConstPointerValue;
 
 type Module record {|
@@ -81,7 +88,7 @@ type Module record {|
     llvm:Module llMod;
     // LLVM functions in the module indexed by (unmangled) identifier within the module
     map<llvm:FunctionDefn> functionDefns;
-     // List of all imported functions that have been added to the LLVM module
+    // List of all imported functions that have been added to the LLVM module
     ImportedFunctionTable importedFunctions = table [];
     llvm:PointerValue stackGuard;
     map<StringDefn> stringDefns = {};
@@ -145,14 +152,16 @@ class Scaffold {
         self.llFunc = llFunc;
         self.diFunc = diFunc;
         self.birBlocks = code.blocks;
-        final Repr[] reprs = from var reg in code.registers select semTypeRepr(reg.semType);
+        final Repr[] reprs = from var reg in code.registers
+            select semTypeRepr(reg.semType);
         self.reprs = reprs;
         self.returnType = defn.signature.returnType;
         self.retRepr = semTypeRetRepr(self.returnType);
         self.nParams = defn.signature.paramTypes.length();
         llvm:BasicBlock entry = llFunc.appendBasicBlock();
 
-        self.blocks = from var b in code.blocks select llFunc.appendBasicBlock(b.name);
+        self.blocks = from var b in code.blocks
+            select llFunc.appendBasicBlock(b.name);
 
         builder.positionAtEnd(entry);
         self.addresses = [];
@@ -163,14 +172,14 @@ class Scaffold {
     }
 
     function saveParams(llvm:Builder builder) {
-         foreach int i in 0 ..< self.nParams {
+        foreach int i in 0 ..< self.nParams {
             builder.store(self.llFunc.getParam(i), self.addresses[i]);
         }
     }
 
     function address(bir:Register r) returns llvm:PointerValue => self.addresses[r.number];
-       
-    function basicBlock(int label) returns llvm:BasicBlock  => self.blocks[label];
+
+    function basicBlock(int label) returns llvm:BasicBlock => self.blocks[label];
 
     function getRepr(bir:Register r) returns Repr => self.reprs[r.number];
 
@@ -186,7 +195,7 @@ class Scaffold {
         ImportedFunction? fn = self.mod.importedFunctions[symbol];
         return fn == () ? () : fn.decl;
     }
-    
+
     function addImportedFunction(bir:ExternalSymbol symbol, llvm:FunctionDecl decl) {
         self.mod.importedFunctions.add({symbol, decl});
     }
@@ -196,7 +205,7 @@ class Scaffold {
     }
 
     function getRuntimeFunctionDecl(RuntimeFunction rf) returns llvm:FunctionDecl {
-        bir:ExternalSymbol symbol =  { module: runtimeModule, identifier: rf.name };
+        bir:ExternalSymbol symbol = {module: runtimeModule, identifier: rf.name};
         llvm:FunctionDecl? decl = self.getImportedFunction(symbol);
         if decl != () {
             return decl;
@@ -247,7 +256,7 @@ class Scaffold {
     }
 
     function lineNumber(bir:Position pos) returns int {
-       return self.file.lineColumn(pos)[0];
+        return self.file.lineColumn(pos)[0];
     }
 
     function typeContext() returns t:Context => self.mod.typeContext;
@@ -271,7 +280,7 @@ class Scaffold {
         if origin == DEBUG_ORIGIN_ERROR_CONSTRUCT {
             DILocation? noLineLoc = self.noLineLocation;
             if noLineLoc == () {
-                loc =  di.builder.createDebugLocation(self.mod.llContext, 0, 0, self.diFunc);
+                loc = di.builder.createDebugLocation(self.mod.llContext, 0, 0, self.diFunc);
                 self.noLineLocation = loc;
             }
             else {
@@ -343,7 +352,7 @@ class Scaffold {
     }
 
     private function getUsedSemType(t:SemType ty) returns UsedSemType {
-        UsedSemType? used  = self.mod.usedSemTypes[ty];
+        UsedSemType? used = self.mod.usedSemTypes[ty];
         if used == () {
             UsedSemType t = {
                 index: self.mod.usedSemTypes.length(),
@@ -377,9 +386,9 @@ function addStringDefn(llvm:Context context, llvm:Module mod, int defnIndex, str
     if isSmallString(nCodePoints, bytes, nBytes) {
         int encoded = 0;
         foreach int i in 0 ..< 7 {
-            encoded |= (i < nBytes ? bytes[i] : 0xFF) << i*8;
+            encoded |= (i < nBytes ? bytes[i] : 0xFF) << i * 8;
         }
-        encoded |= FLAG_IMMEDIATE|TAG_STRING;
+        encoded |= FLAG_IMMEDIATE | TAG_STRING;
         return context.constGetElementPtr(llvm:constNull(LLVM_TAGGED_PTR), [llvm:constInt(LLVM_INT, encoded)]);
     }
     // if nBytes == nCodePoints && nBytes <= 0xFF {
@@ -402,14 +411,14 @@ function addStringDefn(llvm:Context context, llvm:Module mod, int defnIndex, str
         variant = STRING_VARIANT_LARGE;
     }
     llvm:ConstPointerValue ptr = mod.addGlobal(ty,
-                                               stringDefnSymbol(defnIndex),
-                                               initializer = val,
-                                               align = 8,
-                                               isConstant = true,
-                                               unnamedAddr = true,
-                                               linkage = "internal");
+                                                stringDefnSymbol(defnIndex),
+                                                initializer = val,
+                                                align = 8,
+                                                isConstant = true,
+                                                unnamedAddr = true,
+                                                linkage = "internal");
     return context.constGetElementPtr(context.constAddrSpaceCast(context.constBitCast(ptr, LLVM_TAGGED_PTR_WITHOUT_ADDR_SPACE), LLVM_TAGGED_PTR),
-                                      [llvm:constInt(LLVM_INT, TAG_STRING | <int>variant)]);
+                                    [llvm:constInt(LLVM_INT, TAG_STRING | <int>variant)]);
 }
 
 function addDecimalDefn(llvm:Context context, llvm:Module mod, int defnIndex, string str) returns llvm:ConstPointerValue {
@@ -418,12 +427,12 @@ function addDecimalDefn(llvm:Context context, llvm:Module mod, int defnIndex, st
     llvm:ConstValue val = context.constString(bytes);
     llvm:Type ty = llvm:arrayType("i8", bytes.length());
     llvm:ConstPointerValue ptr = mod.addGlobal(ty,
-                                               decimalDefnSymbol(defnIndex),
-                                               initializer = val,
-                                               align = 8,
-                                               isConstant = true,
-                                               unnamedAddr = true,
-                                               linkage = "internal");
+                                                decimalDefnSymbol(defnIndex),
+                                                initializer = val,
+                                                align = 8,
+                                                isConstant = true,
+                                                unnamedAddr = true,
+                                                linkage = "internal");
     return context.constBitCast(ptr, LLVM_DECIMAL_CONST);
 }
 
@@ -442,43 +451,46 @@ function padBytes(byte[] bytes, int headerSize) returns int {
 }
 
 // Maps int to i64
-final Repr REPR_INT = { base: BASE_REPR_INT, llvm: LLVM_INT };
+final Repr REPR_INT = {base: BASE_REPR_INT, llvm: LLVM_INT};
 // Maps float to llvm double
-final Repr REPR_FLOAT = { base: BASE_REPR_FLOAT, llvm: LLVM_DOUBLE };
+final Repr REPR_FLOAT = {base: BASE_REPR_FLOAT, llvm: LLVM_DOUBLE};
 // Maps int to i1
-final Repr REPR_BOOLEAN = { base: BASE_REPR_BOOLEAN, llvm: LLVM_BOOLEAN };
+final Repr REPR_BOOLEAN = {base: BASE_REPR_BOOLEAN, llvm: LLVM_BOOLEAN};
 
-final TaggedRepr REPR_NIL = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:NIL };
-final TaggedRepr REPR_STRING = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:STRING };
-final TaggedRepr REPR_LIST_RW = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:LIST_RW };
-final TaggedRepr REPR_LIST = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:LIST };
-final TaggedRepr REPR_MAPPING_RW = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:MAPPING_RW };
-final TaggedRepr REPR_MAPPING = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:MAPPING };
-final TaggedRepr REPR_ERROR = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:ERROR };
-final TaggedRepr REPR_DECIMAL = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:DECIMAL };
+final TaggedRepr REPR_NIL = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:NIL};
+final TaggedRepr REPR_STRING = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:STRING};
+final TaggedRepr REPR_LIST_RW = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:LIST_RW};
+final TaggedRepr REPR_LIST = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:LIST};
+final TaggedRepr REPR_MAPPING_RW = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:MAPPING_RW};
+final TaggedRepr REPR_MAPPING = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:MAPPING};
+final TaggedRepr REPR_ERROR = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:ERROR};
+final TaggedRepr REPR_DECIMAL = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:DECIMAL};
 
-final TaggedRepr REPR_TOP = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:TOP };
-final TaggedRepr REPR_ANY = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:ANY };
-final VoidRepr REPR_VOID = { base: BASE_REPR_VOID, llvm: LLVM_VOID };
+final TaggedRepr REPR_TOP = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:TOP};
+final TaggedRepr REPR_ANY = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: t:ANY};
+final VoidRepr REPR_VOID = {base: BASE_REPR_VOID, llvm: LLVM_VOID};
 
 final readonly & record {|
     t:UniformTypeBitSet domain;
     Repr repr;
 |}[] typeReprs = [
     // These are ordered from most to least specific
-    { domain: t:INT, repr: REPR_INT },
-    { domain: t:FLOAT, repr: REPR_FLOAT },
-    { domain: t:DECIMAL, repr: REPR_DECIMAL },
-    { domain: t:BOOLEAN, repr: REPR_BOOLEAN },
-    { domain: t:NIL, repr: REPR_NIL },
-    { domain: t:STRING, repr: REPR_STRING },
-    { domain: t:LIST_RW, repr: REPR_LIST_RW },
-    { domain: t:LIST, repr: REPR_LIST },
-    { domain: t:MAPPING_RW, repr: REPR_MAPPING_RW },
-    { domain: t:MAPPING, repr: REPR_MAPPING },
-    { domain: t:ERROR, repr: REPR_ERROR },
-    { domain: t:ANY, repr: REPR_ANY },
-    { domain: t:TOP, repr: REPR_TOP }
+    {
+        domain: t:INT,
+        repr: REPR_INT
+    },
+    {domain: t:FLOAT, repr: REPR_FLOAT},
+    {domain: t:DECIMAL, repr: REPR_DECIMAL},
+    {domain: t:BOOLEAN, repr: REPR_BOOLEAN},
+    {domain: t:NIL, repr: REPR_NIL},
+    {domain: t:STRING, repr: REPR_STRING},
+    {domain: t:LIST_RW, repr: REPR_LIST_RW},
+    {domain: t:LIST, repr: REPR_LIST},
+    {domain: t:MAPPING_RW, repr: REPR_MAPPING_RW},
+    {domain: t:MAPPING, repr: REPR_MAPPING},
+    {domain: t:ERROR, repr: REPR_ERROR},
+    {domain: t:ANY, repr: REPR_ANY},
+    {domain: t:TOP, repr: REPR_TOP}
 ];
 
 function semTypeRetRepr(t:SemType ty) returns RetRepr {
@@ -490,7 +502,7 @@ function semTypeRetRepr(t:SemType ty) returns RetRepr {
 
 // Return the representation for a SemType.
 function semTypeRepr(t:SemType ty) returns Repr {
-    t:UniformTypeBitSet w = t:widenToUniformTypes(ty);    
+    t:UniformTypeBitSet w = t:widenToUniformTypes(ty);
     foreach var tr in typeReprs {
         if w == tr.domain {
             return tr.repr;
@@ -499,10 +511,10 @@ function semTypeRepr(t:SemType ty) returns Repr {
     if w == t:NEVER {
         panic err:impossible("allocate register with never type");
     }
-    int supported = t:NIL|t:BOOLEAN|t:INT|t:FLOAT|t:DECIMAL|t:STRING|t:LIST|t:MAPPING|t:ERROR;
+    int supported = t:NIL | t:BOOLEAN | t:INT | t:FLOAT | t:DECIMAL | t:STRING | t:LIST | t:MAPPING | t:ERROR;
     int maximized = w | supported;
-    if maximized == t:TOP || maximized == (t:NON_BEHAVIOURAL|t:ERROR) || (w & supported) == w {
-        TaggedRepr repr = { base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: w };
+    if maximized == t:TOP || maximized == (t:NON_BEHAVIOURAL | t:ERROR) || (w & supported) == w {
+        TaggedRepr repr = {base: BASE_REPR_TAGGED, llvm: LLVM_TAGGED_PTR, subtype: w};
         return repr;
     }
     panic error("unimplemented type (" + w.toHexString() + ")");

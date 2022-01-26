@@ -10,13 +10,13 @@ public type XmlSubtype readonly & record {|
 // `primitives` fields are composed of allowed values from this singleton set.
 // Atom of the `Bdd` represented by `sequence` field is also composed of these to indicate 
 // non-empty sequence of allowed singletons.
-const int XML_PRIMITIVE_NEVER      = 1;
-const int XML_PRIMITIVE_TEXT       = 1 << 1;
+const int XML_PRIMITIVE_NEVER = 1;
+const int XML_PRIMITIVE_TEXT = 1 << 1;
 const int XML_PRIMITIVE_ELEMENT_RO = 1 << 2;
-const int XML_PRIMITIVE_PI_RO      = 1 << 3;
+const int XML_PRIMITIVE_PI_RO = 1 << 3;
 const int XML_PRIMITIVE_COMMENT_RO = 1 << 4;
 const int XML_PRIMITIVE_ELEMENT_RW = 1 << 5;
-const int XML_PRIMITIVE_PI_RW      = 1 << 6;
+const int XML_PRIMITIVE_PI_RW = 1 << 6;
 const int XML_PRIMITIVE_COMMENT_RW = 1 << 7;
 
 const int XML_PRIMITIVE_RO_SINGLETON = XML_PRIMITIVE_TEXT | XML_PRIMITIVE_ELEMENT_RO | XML_PRIMITIVE_PI_RO | XML_PRIMITIVE_COMMENT_RO;
@@ -24,12 +24,12 @@ const int XML_PRIMITIVE_RO_MASK = XML_PRIMITIVE_NEVER | XML_PRIMITIVE_RO_SINGLET
 const int XML_PRIMITIVE_RW_MASK = XML_PRIMITIVE_ELEMENT_RW | XML_PRIMITIVE_PI_RW | XML_PRIMITIVE_COMMENT_RW;
 const int XML_PRIMITIVE_SINGLETON = XML_PRIMITIVE_RO_SINGLETON | XML_PRIMITIVE_RW_MASK;
 
-final XmlSubtype xmlRoTop = { primitives: XML_PRIMITIVE_RO_MASK, sequence: bddAtom(XML_PRIMITIVE_RO_SINGLETON) };
-final XmlSubtype xmlRwTop = { primitives: XML_PRIMITIVE_RW_MASK, sequence: bddAtom(XML_PRIMITIVE_SINGLETON) };
+final XmlSubtype xmlRoTop = {primitives: XML_PRIMITIVE_RO_MASK, sequence: bddAtom(XML_PRIMITIVE_RO_SINGLETON)};
+final XmlSubtype xmlRwTop = {primitives: XML_PRIMITIVE_RW_MASK, sequence: bddAtom(XML_PRIMITIVE_SINGLETON)};
 
 function xmlSingleton(int primitives) returns SemType {
     return createXmlSemtype(
-        createXmlSubtype(true, primitives, false), 
+        createXmlSubtype(true, primitives, false),
         createXmlSubtype(false, primitives, false)
     );
 }
@@ -40,14 +40,14 @@ public function xmlSequence(SemType constituentType) returns SemType {
     }
     if constituentType is UniformTypeBitSet {
         return constituentType;
-    }   
+    }
     else {
         var ro = <XmlSubtype|boolean>getComplexSubtypeData(constituentType, UT_XML_RO);
         ro = ro is boolean ? ro : makeSequence(true, ro);
-        
+
         var rw = <XmlSubtype|boolean>getComplexSubtypeData(constituentType, UT_XML_RW);
         rw = rw is boolean ? rw : makeSequence(false, rw);
-        
+
         return createXmlSemtype(ro, rw);
     }
 }
@@ -72,7 +72,7 @@ function createXmlSubtypeOrEmpty(int primitives, Bdd sequence) returns XmlSubtyp
     if sequence == false && primitives == 0 {
         return false;
     }
-    return { primitives, sequence };
+    return {primitives, sequence};
 }
 
 function createXmlSemtype(XmlSubtype|boolean ro, XmlSubtype|boolean rw) returns ComplexSemType {
@@ -94,7 +94,7 @@ function createXmlSemtype(XmlSubtype|boolean ro, XmlSubtype|boolean rw) returns 
     else {
         subtypes.push([UT_XML_RW, rw]);
     }
-    return createComplexSemType(<UniformTypeBitSet>all, subtypes);  
+    return createComplexSemType(<UniformTypeBitSet>all, subtypes);
 }
 
 function xmlSubtypeUnion(boolean isRo, SubtypeData d1, SubtypeData d2) returns SubtypeData {

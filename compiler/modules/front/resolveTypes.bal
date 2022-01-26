@@ -48,7 +48,7 @@ function resolveFunctionSignature(ModuleSymbols mod, s:FunctionDefn defn) return
     }
     s:TypeDesc? retTy = defn.typeDesc.ret;
     t:SemType ret = retTy != () ? check resolveSubsetTypeDesc(mod, defn, retTy) : t:NIL;
-    return { paramTypes: paramTypes.cloneReadOnly(), returnType: ret };
+    return {paramTypes: paramTypes.cloneReadOnly(), returnType: ret};
 }
 
 function resolveSubsetTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn defn, s:TypeDesc td) returns t:SemType|ResolveTypeError {
@@ -62,7 +62,7 @@ function resolveSubsetTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn defn, s:Type
 
 function isSubsetUnionType(t:SemType ty) returns boolean {
     return (ty is t:UniformTypeBitSet
-            && ((t:isSubtypeSimple(ty, <t:UniformTypeBitSet>(t:ERROR|t:FLOAT|t:STRING|t:INT|t:BOOLEAN|t:NIL)) && ty != t:NEVER)
+            && ((t:isSubtypeSimple(ty, <t:UniformTypeBitSet>(t:ERROR | t:FLOAT | t:STRING | t:INT | t:BOOLEAN | t:NIL)) && ty != t:NEVER)
                 || (ty == t:ANY || ty == t:TOP)));
 }
 
@@ -99,27 +99,59 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
     else if td is s:BuiltinTypeDesc {
         match td.builtinTypeName {
             // These are easy
-            "any" => { return t:ANY; }
-            "anydata" => { return t:createAnydata(mod.tc); }
-            "boolean" => { return t:BOOLEAN; }
-            "byte" => { return t:BYTE; }
-            "error" => { return t:ERROR; }
-            "float" => { return t:FLOAT; }
-            "decimal" => { return t:DECIMAL; }
-            "int" => { return t:INT; }
-            "null" => { return t:NIL; }
-            "string" => { return t:STRING; }
+            "any" => {
+                return t:ANY;
+            }
+            "anydata" => {
+                return t:createAnydata(mod.tc);
+            }
+            "boolean" => {
+                return t:BOOLEAN;
+            }
+            "byte" => {
+                return t:BYTE;
+            }
+            "error" => {
+                return t:ERROR;
+            }
+            "float" => {
+                return t:FLOAT;
+            }
+            "decimal" => {
+                return t:DECIMAL;
+            }
+            "int" => {
+                return t:INT;
+            }
+            "null" => {
+                return t:NIL;
+            }
+            "string" => {
+                return t:STRING;
+            }
         }
         if !mod.allowAllTypes {
             return err:unimplemented(`type ${td.builtinTypeName} is not implemented`, s:locationInDefn(modDefn, td.startPos));
         }
         match td.builtinTypeName {
-            "handle" => { return t:HANDLE; }
-            "json" => { return t:createJson(mod.tc); }
-            "never" => { return t:NEVER; }
-            "readonly" => { return t:READONLY; }
-            "typedesc" => { return t:TYPEDESC; }
-            "xml" => { return t:XML; }
+            "handle" => {
+                return t:HANDLE;
+            }
+            "json" => {
+                return t:createJson(mod.tc);
+            }
+            "never" => {
+                return t:NEVER;
+            }
+            "readonly" => {
+                return t:READONLY;
+            }
+            "typedesc" => {
+                return t:TYPEDESC;
+            }
+            "xml" => {
+                return t:XML;
+            }
         }
     }
     final t:Env env = mod.tc.env;
@@ -137,8 +169,8 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
             // To solve this, we would need to build a list of intersections to be checked later.
             // But this is very unlikely to be a problem in practice.
             if t:isNever(result)
-               || (result !is t:UniformTypeBitSet && env.isReady() && t:isEmpty(mod.tc, result)) {
-                return err:semantic("intersection must not be empty", s:locationInDefn(modDefn, td.opPos)); 
+                || (result !is t:UniformTypeBitSet && env.isReady() && t:isEmpty(mod.tc, result)) {
+                return err:semantic("intersection must not be empty", s:locationInDefn(modDefn, td.opPos));
             }
             return result;
         }
@@ -152,7 +184,8 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
             }
             t:ListDefinition d = new;
             td.defn = d;
-            t:SemType[] members = from var x in td.members select check resolveTypeDesc(mod, modDefn, depth + 1, x);
+            t:SemType[] members = from var x in td.members
+                select check resolveTypeDesc(mod, modDefn, depth + 1, x);
             t:SemType rest = t:NEVER;
             s:TypeDesc? restTd = td.rest;
             if restTd != () {
@@ -162,8 +195,8 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
         }
         else {
             return defn.getSemType(env);
-        }   
-    }    
+        }
+    }
     if td is s:ArrayTypeDesc {
         t:ListDefinition? defn = td.defn;
         if defn == () {
@@ -186,7 +219,7 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
         }
         else {
             return defn.getSemType(env);
-        }   
+        }
     }
     if td is s:MappingTypeDesc {
         t:MappingDefinition? defn = td.defn;
@@ -195,7 +228,7 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
             td.defn = d;
             // JBUG this panics if done with `from` and there's an error is resolveTypeDesc
             t:Field[] fields = [];
-            foreach var { name, typeDesc } in td.fields {
+            foreach var {name, typeDesc} in td.fields {
                 fields.push([name, check resolveTypeDesc(mod, modDefn, depth + 1, typeDesc)]);
             }
             map<s:FieldDesc> fieldsByName = {};
@@ -252,10 +285,10 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
                 string qName = prefix + ":" + td.typeName;
                 d:Location loc = s:qNameLocationInDefn(modDefn, td.qNamePos);
                 if defn == () {
-                    return err:semantic(`no public definition of ${qName}`, loc=loc);
+                    return err:semantic(`no public definition of ${qName}`, loc = loc);
                 }
                 else {
-                    return err:semantic(`reference to a function ${qName} where a type is required`, loc=loc);
+                    return err:semantic(`reference to a function ${qName} where a type is required`, loc = loc);
                 }
             }
         }
@@ -284,13 +317,14 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
     if td is s:FunctionTypeDesc {
         t:FunctionDefinition? defn = td.defn;
         if defn == () {
-            t:FunctionDefinition d = new(env);
+            t:FunctionDefinition d = new (env);
             td.defn = d;
             s:TypeDesc[] a = [];
             foreach var arg in td.params {
                 a.push(arg.td);
             }
-            t:SemType[] args = from var x in a select check resolveTypeDesc(mod, modDefn, depth + 1, x);
+            t:SemType[] args = from var x in a
+                select check resolveTypeDesc(mod, modDefn, depth + 1, x);
             s:TypeDesc? retTy = td.ret;
             t:SemType ret = retTy != () ? check resolveTypeDesc(mod, modDefn, depth + 1, retTy) : t:NIL;
             return d.define(env, t:tuple(env, ...args), ret);
@@ -310,20 +344,20 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
     }
     if td is s:XmlSequenceTypeDesc {
         t:SemType t = check resolveTypeDesc(mod, modDefn, depth, td.constituent);
-        
+
         if !t:isSubtypeSimple(t, t:XML) {
-            d:Location loc =  d:location(modDefn.part.file, td.pos);
-            return err:semantic("type parameter for xml is not a subtype of xml", loc=loc);
+            d:Location loc = d:location(modDefn.part.file, td.pos);
+            return err:semantic("type parameter for xml is not a subtype of xml", loc = loc);
         }
         return t:xmlSequence(t);
     }
     if td is s:TableTypeDesc {
         t:SemType t = check resolveTypeDesc(mod, modDefn, depth, td.row);
-        
+
         // Ensure the parameter type of table is a subtype of MAPPING
         if !t:isSubtypeSimple(t, t:MAPPING) {
-            d:Location loc =  d:location(modDefn.part.file, { startPos: td.startPos, endPos: td.endPos });
-            return err:semantic("type parameter for table is not a record", loc=loc);
+            d:Location loc = d:location(modDefn.part.file, {startPos: td.startPos, endPos: td.endPos});
+            return err:semantic("type parameter for table is not a record", loc = loc);
         }
         return t:tableContaining(t);
     }
@@ -332,15 +366,33 @@ function resolveTypeDesc(ModuleSymbols mod, s:ModuleLevelDefn modDefn, int depth
 
 function resolveBuiltinTypeDesc(t:Context tc, s:SubsetBuiltinTypeDesc td) returns t:SemType {
     match td.builtinTypeName {
-        "any" => { return t:ANY; }
-        "anydata" => { return t:createAnydata(tc); }
-        "boolean" => { return t:BOOLEAN; }
-        "byte" => { return t:BYTE; }
-        "int" => { return t:INT; }
-        "float" => { return t:FLOAT; }
-        "decimal" => { return t:DECIMAL; }
-        "string" => { return t:STRING; }
-        "error" => { return t:ERROR; }
+        "any" => {
+            return t:ANY;
+        }
+        "anydata" => {
+            return t:createAnydata(tc);
+        }
+        "boolean" => {
+            return t:BOOLEAN;
+        }
+        "byte" => {
+            return t:BYTE;
+        }
+        "int" => {
+            return t:INT;
+        }
+        "float" => {
+            return t:FLOAT;
+        }
+        "decimal" => {
+            return t:DECIMAL;
+        }
+        "string" => {
+            return t:STRING;
+        }
+        "error" => {
+            return t:ERROR;
+        }
     }
     panic err:impossible("unreachable in resolveInlineBuiltinTypeDesc");
 }

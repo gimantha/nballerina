@@ -8,6 +8,7 @@ import ballerina/io;
 
 // the string is an error message that should be associated with the import declaration
 type ProcessedImport front:ModuleExports|string;
+
 type ResolvedImport ProcessedImport|();
 
 const JOB_IN_PROGRESS = true;
@@ -23,11 +24,10 @@ class CompileContext {
     private final string? outputBasename;
     private final nback:ProgramModule[] programModules = [];
 
-
     final t:Env env = new;
     final string basename;
     final OutputOptions outputOptions;
-    
+
     final table<Job> key(id) jobs = table [];
 
     function init(string basename, string? outputBasename, nback:Options nbackOptions, OutputOptions outOptions) {
@@ -39,7 +39,7 @@ class CompileContext {
 
     function buildModule(bir:ModuleId id, bir:Module birMod) returns LlvmModule|CompileError {
         var [llMod, typeUsage] = check nback:buildModule(birMod, self.nbackOptions);
-        self.programModules.push({ id, typeUsage });
+        self.programModules.push({id, typeUsage});
         return llMod;
     }
 
@@ -50,7 +50,7 @@ class CompileContext {
     function job(bir:ModuleId id) returns Job {
         Job? j = self.jobs[id];
         if j is () {
-            Job nj = { id, result: () };
+            Job nj = {id, result: ()};
             self.jobs.add(nj);
             return nj;
         }
@@ -72,8 +72,8 @@ class CompileContext {
 
 // basename is filename without extension
 function compileBalFile(string filename, string basename, string? outputBasename, nback:Options nbackOptions, OutputOptions outOptions) returns CompileError? {
-    CompileContext cx = new(basename, outputBasename, nbackOptions, outOptions);
-    front:ResolvedModule mod = check processModule(cx, DEFAULT_ROOT_MODULE_ID, [ {filename} ], cx.outputFilename());
+    CompileContext cx = new (basename, outputBasename, nbackOptions, outOptions);
+    front:ResolvedModule mod = check processModule(cx, DEFAULT_ROOT_MODULE_ID, [{filename}], cx.outputFilename());
     check mod.validMain();
     check generateInitModule(cx, mod);
 }
@@ -137,14 +137,14 @@ function subModuleSourceParts(string basename, bir:ModuleId id) returns front:So
     string directory = check file:joinPath(basename + ".modules", subModuleSuffix(id));
     return
         from var md in check file:readDir(directory)
-        where !md.dir
-        let var [_, ext] = basenameExtension(md.absPath)
-        where ext == SOURCE_EXTENSION
-        select {
-            lines: check io:fileReadLines(md.absPath),
-            filename: check file:normalizePath(check file:joinPath(directory, check file:basename(md.absPath)), file:CLEAN),
-            directory
-        };
+    where !md.dir
+    let var [_, ext] = basenameExtension(md.absPath)
+    where ext == SOURCE_EXTENSION
+    select {
+        lines: check io:fileReadLines(md.absPath),
+        filename: check file:normalizePath(check file:joinPath(directory, check file:basename(md.absPath)), file:CLEAN),
+        directory
+    };
 }
 
 function subModuleSuffix(bir:ModuleId id) returns string {

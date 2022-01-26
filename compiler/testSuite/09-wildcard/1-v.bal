@@ -2,8 +2,8 @@
 import ballerina/io;
 
 function foo(string str) returns string {
-    io:println(str);                        
-    return "test string2";                  
+    io:println(str);
+    return "test string2";
 }
 
 public function main() {

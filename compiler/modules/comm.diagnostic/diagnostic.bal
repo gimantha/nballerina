@@ -1,4 +1,5 @@
 import wso2/nballerina.comm.lib;
+
 public type Message string|Template;
 
 public type Template object {
@@ -80,7 +81,7 @@ public type InternalDiagnostic record {|
 |};
 
 public function location(File file, Position|Range range) returns Location {
-    return { file, range };
+    return {file, range};
 }
 
 public function messageToString(Message m) returns string {

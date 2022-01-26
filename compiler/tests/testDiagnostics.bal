@@ -2,17 +2,17 @@ import ballerina/test;
 import wso2/nballerina.comm.diagnostic as d;
 import wso2/nballerina.front.syntax as s;
 
-@test:Config{}
+@test:Config {}
 function testEmptyPositions() {
     string[] testFileContent = [
         "type RecordType record {",
         "    string test;",
         "};"
     ];
-    s:SourceFile file = s:createSourceFile(testFileContent, { filename: "testFile" });
+    s:SourceFile file = s:createSourceFile(testFileContent, {filename: "testFile"});
     d:Position[] positions = [
-        position(1,24),
-        position(3,2)
+        position(1, 24),
+        position(3, 2)
     ];
     string[] errMessage = [
         "error range [1,24] is empty in testFile",
@@ -21,8 +21,8 @@ function testEmptyPositions() {
     foreach int i in 0 ..< positions.length() {
         d:Position range = positions[i];
         string m = errMessage[i];
-        d:Location location = { file, range };
-        d:Diagnostic diagnostic = { category: d:SYNTAX, location, message: "test error" };
+        d:Location location = {file, range};
+        d:Diagnostic diagnostic = {category: d:SYNTAX, location, message: "test error"};
         string[]|error result = trap d:format(diagnostic);
         if result is error {
             test:assertEquals(result.message(), m);
@@ -34,10 +34,10 @@ function testEmptyPositions() {
     foreach int i in 0 ..< positions.length() {
         d:Position endPos = positions[i];
         d:Position startPos = endPos;
-        d:Range range = { startPos, endPos };
+        d:Range range = {startPos, endPos};
         string m = errMessage[i];
-        d:Location location = { file, range };
-        d:Diagnostic diagnostic = { category: d:SYNTAX, location, message: "test error" };
+        d:Location location = {file, range};
+        d:Diagnostic diagnostic = {category: d:SYNTAX, location, message: "test error"};
         string[]|error result = trap d:format(diagnostic);
         if result is error {
             test:assertEquals(result.message(), m);

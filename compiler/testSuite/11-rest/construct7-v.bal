@@ -13,6 +13,6 @@ type R2 record {|
 |};
 
 public function main() {
-    R1|R2 r = {"x": 1, "y": 2, "other": 17 };
+    R1|R2 r = {"x": 1, "y": 2, "other": 17};
     io:println(r["other"]); // @output 17.0
 }

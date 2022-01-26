@@ -26,7 +26,7 @@ public function buildModule(bir:Module birMod, *Options options) returns [llvm:M
             DISubprogram diFunc = createFunctionDI(di, partFiles, defn, llFunc, mangledName);
             diFuncs.push(diFunc);
             llFunc.setSubprogram(diFunc);
-        }   
+        }
         if !(options.gcName == ()) {
             llFunc.setGC(options.gcName);
         }
@@ -48,13 +48,13 @@ public function buildModule(bir:Module birMod, *Options options) returns [llvm:M
         functionDefns: llFuncMap,
         stackGuard: llMod.addGlobal(llvm:pointerType("i8"), mangleRuntimeSymbol("stack_guard")),
         llInitTypes: createInitTypes(llContext)
-    };  
+    };
     foreach int i in 0 ..< functionDefns.length() {
         bir:FunctionDefn defn = functionDefns[i];
         bir:FunctionCode code = check birMod.generateFunctionCode(i);
         check bir:verifyFunctionCode(birMod, defn, code);
         DISubprogram? diFunc = di == () ? () : diFuncs[i];
-        Scaffold scaffold = new(mod, llFuncs[i], diFunc, builder, defn, code);
+        Scaffold scaffold = new (mod, llFuncs[i], diFunc, builder, defn, code);
         buildPrologue(builder, scaffold, defn.position);
         check buildFunctionBody(builder, scaffold, code);
     }
@@ -79,21 +79,22 @@ function createTypeUsage(table<UsedSemType> usedSemTypes) returns TypeUsage {
         }
         uses.push(use);
     }
-    return { types: types.cloneReadOnly(), uses: uses.cloneReadOnly() };
+    return {types: types.cloneReadOnly(), uses: uses.cloneReadOnly()};
 }
 
 function createModuleDI(llvm:Module mod, bir:File[] partFiles, boolean debugFull) returns ModuleDI {
     DIBuilder builder = mod.createDIBuilder();
     mod.addModuleFlag("warning", ["Debug Info Version", 3]);
-    DIFile[] files = from var f in partFiles select builder.createFile(f.filename(), f.directory() ?: "");
-    DICompileUnit compileUnit = builder.createCompileUnit(file=files[0]);
+    DIFile[] files = from var f in partFiles
+        select builder.createFile(f.filename(), f.directory() ?: "");
+    DICompileUnit compileUnit = builder.createCompileUnit(file = files[0]);
     DISubroutineType funcType = builder.createSubroutineType(files[0]);
-    return { builder, files, compileUnit, funcType, debugFull };
+    return {builder, files, compileUnit, funcType, debugFull};
 }
 
 function createFunctionDI(ModuleDI mod, bir:File[] files, bir:FunctionDefn birFunc, llvm:FunctionDefn llFunc, string mangledName) returns DISubprogram {
     int partIndex = birFunc.partIndex;
-    var [lineNo, _] = files[partIndex].lineColumn(birFunc.position); 
+    var [lineNo, _] = files[partIndex].lineColumn(birFunc.position);
     DIFile file = mod.files[partIndex];
     return mod.builder.createFunction({
         file,

@@ -2,7 +2,7 @@ import ballerina/test;
 
 import wso2/nballerina.bir;
 
-@test:Config{}
+@test:Config {}
 function manglingTest() {
     testMangle("ballerina", ["io"], "println", "_Bb02ioprintln");
     testMangle("ballerinax", ["choreo"], "hello", "_Bb1x6choreohello");
@@ -12,6 +12,6 @@ function manglingTest() {
 }
 
 function testMangle(string org, readonly & [string, string...] names, string local, string expected) {
-    bir:ModuleId modId = { org, names };
+    bir:ModuleId modId = {org, names};
     test:assertEquals(manglePublicSymbol(modId, local), expected);
 }

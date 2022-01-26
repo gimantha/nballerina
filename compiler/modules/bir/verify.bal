@@ -13,7 +13,7 @@ class VerifyContext {
 
     function init(Module mod, FunctionDefn defn) {
         self.mod = mod;
-        t:Context tc  = mod.getTypeContext();
+        t:Context tc = mod.getTypeContext();
         self.tc = tc;
         self.defn = defn;
     }
@@ -47,11 +47,11 @@ class VerifyContext {
     }
 
     function semanticErr(d:Message msg, Position|Range pos) returns err:Semantic {
-        return err:semantic(msg, loc=self.location(pos), defnName=self.defn.symbol.identifier);
+        return err:semantic(msg, loc = self.location(pos), defnName = self.defn.symbol.identifier);
     }
 
     function invalidErr(d:Message m, Position|Range pos) returns err:Internal {
-        return err:internal("invalid BIR: " + d:messageToString(m), loc=self.location(pos), defnName=self.defn.symbol.identifier);
+        return err:internal("invalid BIR: " + d:messageToString(m), loc = self.location(pos), defnName = self.defn.symbol.identifier);
     }
 
     private function location(Position|Range pos) returns d:Location {
@@ -66,7 +66,7 @@ class VerifyContext {
 }
 
 public function verifyFunctionCode(Module mod, FunctionDefn defn, FunctionCode code) returns Error? {
-    VerifyContext cx = new(mod, defn);
+    VerifyContext cx = new (mod, defn);
     foreach BasicBlock b in code.blocks {
         check verifyBasicBlock(cx, b);
     }
@@ -142,7 +142,7 @@ function verifyInsn(VerifyContext vc, Insn insn) returns Error? {
     else if insn is ListSetInsn {
         check verifyListSet(vc, insn);
     }
-     else if insn is MappingGetInsn {
+    else if insn is MappingGetInsn {
         check verifyMappingGet(vc, insn);
     }
     else if insn is MappingSetInsn {
@@ -223,7 +223,7 @@ function verifyListGet(VerifyContext vc, ListGetInsn insn) returns Error? {
     }
     t:SemType memberType = t:listMemberType(vc.typeContext(), insn.operands[0].semType);
     if !vc.isSameType(memberType, insn.result.semType) {
-        return vc.invalidErr("ListGet result type is not same as member type", pos=insn.pos);
+        return vc.invalidErr("ListGet result type is not same as member type", pos = insn.pos);
     }
 }
 
@@ -348,7 +348,7 @@ function verifyOperandFloat(VerifyContext vc, string insnName, FloatOperand oper
 
 function verifyOperandBoolean(VerifyContext vc, string insnName, BooleanOperand operand, Position pos) returns err:Internal? {
     if operand is Register {
-        return verifyRegisterSemType(vc,insnName, operand, t:BOOLEAN, "boolean", pos);
+        return verifyRegisterSemType(vc, insnName, operand, t:BOOLEAN, "boolean", pos);
     }
 }
 

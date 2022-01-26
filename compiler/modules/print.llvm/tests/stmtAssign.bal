@@ -4,7 +4,7 @@ function stmtAssign() returns Module {
     Context context = new;
     Builder builder = context.createBuilder();
     Module m = context.createModule();
-    FunctionDefn foo = m.addFunctionDefn("main", {returnType: "i64",paramTypes:["i64"]});
+    FunctionDefn foo = m.addFunctionDefn("main", {returnType: "i64", paramTypes: ["i64"]});
     BasicBlock initBlock = foo.appendBasicBlock();
     builder.positionAtEnd(initBlock);
     Value R0 = foo.getParam(0);
@@ -16,7 +16,6 @@ function stmtAssign() returns Module {
     builder.ret();
     return m;
 }
-
 
 @test:Config {}
 function testStmtAssign() returns error? {

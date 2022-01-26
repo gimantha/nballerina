@@ -1,6 +1,7 @@
 import ballerina/io;
 
 type Nothing null;
+
 type Everything any|error;
 
 public function main() {

@@ -35,7 +35,7 @@ public function d(any n) {
     if n is int:Signed16 {
         s += "s16";
     }
-     if n is int:Signed32 {
+    if n is int:Signed32 {
         s += "s32";
     }
     if n is int:Unsigned8 {

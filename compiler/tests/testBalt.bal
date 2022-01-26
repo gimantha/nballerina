@@ -11,7 +11,7 @@ type TestCaseMap map<[string, int, BaltTestHeader, string[]]>;
 //     dataProvider: parseBalts
 // }
 function testBalt(string baltName, int offset, BaltTestHeader header, string[] lines) returns error? {
-    LlvmModule|CompileError compileResult = compileModule(DEFAULT_ROOT_MODULE_ID, [{ lines }], {});
+    LlvmModule|CompileError compileResult = compileModule(DEFAULT_ROOT_MODULE_ID, [{lines}], {});
     CompileError? err = compileResult is error ? compileResult : ();
 
     if header["Fail-Issue"] != () {
@@ -36,8 +36,8 @@ function testBalt(string baltName, int offset, BaltTestHeader header, string[] l
 
 function parseBalts() returns TestCaseMap|error {
     string[] files = from var entry in check file:readDir("testSuite")
-            where basenameExtension(check file:basename(entry.absPath))[1] == ".balt"
-            select entry.absPath;
+        where basenameExtension(check file:basename(entry.absPath))[1] == ".balt"
+        select entry.absPath;
 
     TestCaseMap testMap = {};
     foreach var file in files {

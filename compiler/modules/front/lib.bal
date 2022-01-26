@@ -2,6 +2,7 @@ import wso2/nballerina.bir;
 import wso2/nballerina.types as t;
 
 type LangLibFunction [LangLibModuleName, string, readonly & t:SemType[], t:SemType];
+
 type LangLibModuleName "boolean"|"int"|"float"|"decimal"|"string"|"error"|"array"|"map";
 
 final readonly & LangLibFunction[] langLibFunctions = [
@@ -16,14 +17,14 @@ final readonly & LangLibFunction[] langLibFunctions = [
 function getLangLibFunction(string mod, string func) returns bir:FunctionSignature? {
     foreach var [moduleName, functionName, paramTypes, returnType] in langLibFunctions {
         if moduleName == mod && functionName == func {
-            return { returnType, paramTypes };
-        }   
+            return {returnType, paramTypes};
+        }
     }
     return ();
 }
 
 final readonly & map<bir:FunctionSignature> ioLibFunctions = {
-    println: { paramTypes: [t:TOP], returnType: t:NIL }
+    println: {paramTypes: [t:TOP], returnType: t:NIL}
 };
 
 type ModuleExportSemtypes readonly & map<t:SemType>;

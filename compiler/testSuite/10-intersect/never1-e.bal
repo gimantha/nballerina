@@ -4,7 +4,7 @@ public function main() {
 }
 
 function foo()
-    returns int&string // @error
+    returns int & string  // @error
 {
     while true {
 

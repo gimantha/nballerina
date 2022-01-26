@@ -48,7 +48,7 @@ public function main() {
 
     d = 1e308d;
     io:println(<float>d); // @output 1e308
-    
+
     d = 1.79769313486231571e+308d;
     io:println(<float>d); // @output 1.7976931348623157e308
 
@@ -90,7 +90,7 @@ public function main() {
 
     d = -9.999999999999999999999999999999999E6144d;
     io:println(<float>d); // @output -Infinity
-    
+
     d = -1.7976931348623156e+309d;
     io:println(<float>d); // @output -Infinity
 }

@@ -22,6 +22,6 @@ function printIfTrue(boolean b) {
         io:println(1);
     }
     else {
-        
+
     }
 }

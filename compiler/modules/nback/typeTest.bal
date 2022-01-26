@@ -46,11 +46,11 @@ type TypeTestedValue record {|
 |};
 
 function buildTypeTest(llvm:Builder builder, Scaffold scaffold, bir:TypeTestInsn insn) returns BuildError? {
-    TypeTestedValue { hasType } = check buildTypeTestedValue(builder, scaffold, insn.operand, insn.pos, insn.semType);
+    TypeTestedValue {hasType} = check buildTypeTestedValue(builder, scaffold, insn.operand, insn.pos, insn.semType);
     if insn.negated {
-        buildStoreBoolean(builder, scaffold, 
-                          builder.iBitwise("xor", llvm:constInt(LLVM_BOOLEAN, 1), hasType), 
-                          insn.result);
+        buildStoreBoolean(builder, scaffold,
+                        builder.iBitwise("xor", llvm:constInt(LLVM_BOOLEAN, 1), hasType),
+                        insn.result);
     }
     else {
         buildStoreBoolean(builder, scaffold, hasType, insn.result);
@@ -58,7 +58,7 @@ function buildTypeTest(llvm:Builder builder, Scaffold scaffold, bir:TypeTestInsn
 }
 
 function buildTypeCast(llvm:Builder builder, Scaffold scaffold, bir:TypeCastInsn insn) returns BuildError? {
-    TypeTestedValue { hasType, value, repr, valueToExactify } = check buildTypeTestedValue(builder, scaffold, insn.operand, insn.pos, insn.semType);
+    TypeTestedValue {hasType, value, repr, valueToExactify} = check buildTypeTestedValue(builder, scaffold, insn.operand, insn.pos, insn.semType);
     llvm:BasicBlock continueBlock = scaffold.addBasicBlock();
     llvm:BasicBlock castFailBlock = scaffold.addBasicBlock();
     builder.condBr(hasType, continueBlock, castFailBlock);
@@ -82,7 +82,7 @@ function buildTypeTestedValue(llvm:Builder builder, Scaffold scaffold, bir:Regis
     llvm:PointerValue? valueToExactify = ();
     llvm:Value hasType;
     BaseRepr baseRepr = repr.base;
-    if baseRepr == BASE_REPR_TAGGED { 
+    if baseRepr == BASE_REPR_TAGGED {
         llvm:PointerValue tagged = <llvm:PointerValue>value;
         t:UniformTypeBitSet? bitSet = testTypeAsUniformBitSet(scaffold.typeContext(), operand.semType, semType);
         if bitSet != () {
@@ -104,7 +104,7 @@ function buildTypeTestedValue(llvm:Builder builder, Scaffold scaffold, bir:Regis
         t:BooleanSubtype sub = <t:BooleanSubtype>t:booleanSubtype(<t:ComplexSemType>semType);
         hasType = builder.iCmp("eq", value, llvm:constInt(LLVM_BOOLEAN, sub.value ? 1 : 0));
     }
-    return { hasType, valueToExactify, value, repr };
+    return {hasType, valueToExactify, value, repr};
 }
 
 function buildCondNarrow(llvm:Builder builder, Scaffold scaffold, bir:CondNarrowInsn insn) returns BuildError? {
@@ -135,7 +135,7 @@ function buildExactify(llvm:Builder builder, Scaffold scaffold, llvm:PointerValu
         return tagged;
     }
     return <llvm:PointerValue>builder.call(scaffold.getRuntimeFunctionDecl(structureExactifyFunction),
-                                           [tagged, scaffold.getExactify(t:diff(targetType, t:READONLY))]);
+                                            [tagged, scaffold.getExactify(t:diff(targetType, t:READONLY))]);
 }
 
 // If we can perform the type test by testing whether the value belongs to a UniformTypeBitSet, then return that bit set.
@@ -166,14 +166,14 @@ function buildHasTagInSet(llvm:Builder builder, llvm:PointerValue tagged, t:Unif
     }
     return builder.iCmp("ne",
                         builder.iBitwise("and",
-                                         builder.iBitwise("shl",
-                                                          llvm:constInt(LLVM_INT, 1),
-                                                          builder.iBitwise("lshr",
-                                                                           // need to mask out the 0x20 bit
-                                                                           builder.iBitwise("and",
+                                        builder.iBitwise("shl",
+                                                        llvm:constInt(LLVM_INT, 1),
+                                                        builder.iBitwise("lshr",
+                                                                            // need to mask out the 0x20 bit
+                                                                            builder.iBitwise("and",
                                                                                             buildTaggedPtrToInt(builder, tagged),
                                                                                             llvm:constInt(LLVM_INT, TAG_MASK)),
-                                                                           llvm:constInt(LLVM_INT, TAG_SHIFT))),
-                                         llvm:constInt(LLVM_INT, bitSet)),
+                                                                            llvm:constInt(LLVM_INT, TAG_SHIFT))),
+                                        llvm:constInt(LLVM_INT, bitSet)),
                         llvm:constInt(LLVM_INT, 0));
 }

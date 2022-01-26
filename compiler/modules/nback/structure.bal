@@ -170,14 +170,14 @@ function buildListConstruct(llvm:Builder builder, Scaffold scaffold, bir:ListCon
     t:SemType listType = insn.result.semType;
     llvm:ConstPointerValue inherentType = scaffold.getInherentType(listType);
     llvm:PointerValue struct = <llvm:PointerValue>builder.call(scaffold.getRuntimeFunctionDecl(listConstructFunction),
-                                                               [inherentType, llvm:constInt(LLVM_INT, length)]);
+                                                                [inherentType, llvm:constInt(LLVM_INT, length)]);
 
     if length > 0 {
         // de-refer the member array from the list struct
         llvm:PointerValue array = <llvm:PointerValue>builder.load(builder.getElementPtr(struct,
                                                                                         [llvm:constInt(LLVM_INT, 0), llvm:constInt(LLVM_INDEX, 3)],
                                                                                         "inbounds"),
-                                                                  ALIGN_HEAP);
+                                                                ALIGN_HEAP);
 
         // Cases that are not arrays should have been filtered out before
         t:SemType memberType = <t:SemType>t:arrayMemberType(scaffold.typeContext(), listType);
@@ -185,12 +185,12 @@ function buildListConstruct(llvm:Builder builder, Scaffold scaffold, bir:ListCon
         array = builder.bitCast(array, heapPointerType(llvm:arrayType(repr.memberType, 0)));
         foreach int i in 0 ..< length {
             builder.store(check repr.buildMember(builder, scaffold, insn.operands[i], memberType),
-                          builder.getElementPtr(array, [llvm:constInt(LLVM_INT, 0), llvm:constInt(LLVM_INT, i)], "inbounds"));
+                        builder.getElementPtr(array, [llvm:constInt(LLVM_INT, 0), llvm:constInt(LLVM_INT, i)], "inbounds"));
         }
         builder.store(llvm:constInt(LLVM_INT, length),
-                      builder.getElementPtr(struct, [llvm:constInt(LLVM_INT, 0), llvm:constInt(LLVM_INDEX, 1)], "inbounds"));
+                    builder.getElementPtr(struct, [llvm:constInt(LLVM_INT, 0), llvm:constInt(LLVM_INDEX, 1)], "inbounds"));
     }
-    builder.store(buildTaggedPtr(builder, builder.bitCast(struct, LLVM_TAGGED_PTR), TAG_LIST_RW|FLAG_EXACT), scaffold.address(insn.result));
+    builder.store(buildTaggedPtr(builder, builder.bitCast(struct, LLVM_TAGGED_PTR), TAG_LIST_RW | FLAG_EXACT), scaffold.address(insn.result));
 }
 
 function buildListGet(llvm:Builder builder, Scaffold scaffold, bir:ListGetInsn insn) returns BuildError? {
@@ -210,15 +210,15 @@ function buildListGet(llvm:Builder builder, Scaffold scaffold, bir:ListGetInsn i
     else {
         // struct is the untagged pointer to the struct
         llvm:PointerValue struct = builder.bitCast(<llvm:PointerValue>builder.call(scaffold.getIntrinsicFunction("ptrmask.p1i8.i64"),
-                                                                                   [taggedStruct, llvm:constInt(LLVM_INT, POINTER_MASK)]),
-                                                   heapPointerType(llListType));
+                                                                                    [taggedStruct, llvm:constInt(LLVM_INT, POINTER_MASK)]),
+                                                    heapPointerType(llListType));
         llvm:BasicBlock continueBlock = scaffold.addBasicBlock();
         llvm:BasicBlock outOfBoundsBlock = scaffold.addBasicBlock();
         builder.condBr(builder.iCmp("ult",
                                     index,
                                     builder.load(builder.getElementPtr(struct, [llvm:constInt(LLVM_INT, 0), llvm:constInt(LLVM_INDEX, 1)]), ALIGN_HEAP)),
-                       continueBlock,
-                       outOfBoundsBlock);
+                        continueBlock,
+                        outOfBoundsBlock);
         builder.positionAtEnd(outOfBoundsBlock);
         builder.store(buildErrorForConstPanic(builder, scaffold, PANIC_INDEX_OUT_OF_BOUNDS, insn.pos), scaffold.panicAddress());
         builder.br(scaffold.getOnPanic());
@@ -260,8 +260,8 @@ function buildSpecializedListGet(llvm:Builder builder, Scaffold scaffold, llvm:V
 function buildListSet(llvm:Builder builder, Scaffold scaffold, bir:ListSetInsn insn) returns BuildError? {
     llvm:Value taggedStruct = builder.load(scaffold.address(insn.operands[0]));
     llvm:PointerValue struct = builder.bitCast(<llvm:PointerValue>builder.call(scaffold.getIntrinsicFunction("ptrmask.p1i8.i64"),
-                                                                               [taggedStruct, llvm:constInt(LLVM_INT, POINTER_MASK)]),
-                                               heapPointerType(llListType));
+                                                                                [taggedStruct, llvm:constInt(LLVM_INT, POINTER_MASK)]),
+                                                heapPointerType(llListType));
     llvm:BasicBlock? bbJoin = ();
     t:SemType memberType = t:listMemberType(scaffold.typeContext(), insn.operands[0].semType);
     llvm:Value index = buildInt(builder, scaffold, insn.operands[1]);
@@ -295,8 +295,8 @@ function buildSpecializedListSet(llvm:Builder builder, Scaffold scaffold, llvm:V
     builder.condBr(builder.iCmp("ult",
                                 index,
                                 builder.load(builder.getElementPtr(struct, [llvm:constInt(LLVM_INT, 0), llvm:constInt(LLVM_INDEX, 1)]), ALIGN_HEAP)),
-                   bbSpecializedSet,
-                   bbTaggedSet);
+                    bbSpecializedSet,
+                    bbTaggedSet);
     builder.positionAtEnd(bbSpecializedSet);
     llvm:PointerValue array = <llvm:PointerValue>builder.load(builder.getElementPtr(struct, [llvm:constInt(LLVM_INT, 0), llvm:constInt(LLVM_INDEX, 3)]), ALIGN_HEAP);
     array = builder.bitCast(array, heapPointerType(llvm:arrayType(memberTy, 0)));
@@ -311,17 +311,17 @@ function buildMappingConstruct(llvm:Builder builder, Scaffold scaffold, bir:Mapp
     t:SemType mappingType = insn.result.semType;
     llvm:ConstPointerValue inherentType = scaffold.getInherentType(mappingType);
     llvm:PointerValue m = <llvm:PointerValue>builder.call(scaffold.getRuntimeFunctionDecl(mappingConstructFunction),
-                                                          [inherentType, llvm:constInt(LLVM_INT, insn.operands.length())]);
+                                                        [inherentType, llvm:constInt(LLVM_INT, insn.operands.length())]);
     t:Context tc = scaffold.typeContext();
-    t:MappingAtomicType mat = <t:MappingAtomicType>t:mappingAtomicTypeRw(tc, mappingType);  
+    t:MappingAtomicType mat = <t:MappingAtomicType>t:mappingAtomicTypeRw(tc, mappingType);
     foreach var [fieldName, operand] in mappingOrderFields(mat, insn.fieldNames, insn.operands) {
         _ = builder.call(scaffold.getRuntimeFunctionDecl(mappingInitMemberFunction),
-                         [
-                             m,
-                             check buildConstString(builder, scaffold, fieldName),
-                             check buildWideRepr(builder, scaffold, operand, REPR_ANY,
-                                                 t:mappingMemberType(tc, mappingType, fieldName))
-                         ]);
+                        [
+            m,
+            check buildConstString(builder, scaffold, fieldName),
+            check buildWideRepr(builder, scaffold, operand, REPR_ANY,
+                                                t:mappingMemberType(tc, mappingType, fieldName))
+        ]);
     }
     builder.store(m, scaffold.address(insn.result));
 }
@@ -339,14 +339,15 @@ function mappingOrderFields(t:MappingAtomicType mat, string[] fieldNames, bir:Op
         }
         return
             from int i in 0 ..< length
-            let string fieldName = fieldNames[i]
-            let int sortIndex = requiredFieldIndex[fieldName] ?: nRequiredFields + i
-            order by sortIndex
-            select [fieldName, operands[i]];
+        let string fieldName = fieldNames[i]
+        let int sortIndex = requiredFieldIndex[fieldName] ?: nRequiredFields + i
+        order by sortIndex
+        select [fieldName, operands[i]];
     }
     else {
-        return from int i in 0 ..< length select [fieldNames[i], operands[i]];
-    }    
+        return from int i in 0 ..< length
+            select [fieldNames[i], operands[i]];
+    }
 }
 
 function buildMappingGet(llvm:Builder builder, Scaffold scaffold, bir:MappingGetInsn insn) returns BuildError? {
@@ -434,11 +435,11 @@ function buildMappingSet(llvm:Builder builder, Scaffold scaffold, bir:MappingSet
     // to check the exactness of the member type: buildWideRepr does all that is necessary.
     // See exact.md for more details.
     llvm:Value? err = builder.call(scaffold.getRuntimeFunctionDecl(rf),
-                                   [
-                                       builder.load(scaffold.address(mappingReg)),
-                                       k,
-                                       check buildWideRepr(builder, scaffold, newMemberOperand, REPR_ANY, memberType)
-                                   ]);
+                                    [
+        builder.load(scaffold.address(mappingReg)),
+        k,
+        check buildWideRepr(builder, scaffold, newMemberOperand, REPR_ANY, memberType)
+    ]);
     buildCheckError(builder, scaffold, <llvm:Value>err, insn.pos);
 }
 
@@ -484,8 +485,8 @@ function buildCheckError(llvm:Builder builder, Scaffold scaffold, llvm:Value err
     llvm:BasicBlock continueBlock = scaffold.addBasicBlock();
     llvm:BasicBlock errorBlock = scaffold.addBasicBlock();
     builder.condBr(builder.iCmp("eq", err, llvm:constInt("i64", 0)),
-                   continueBlock,
-                   errorBlock);
+                    continueBlock,
+                    errorBlock);
     builder.positionAtEnd(errorBlock);
     builder.store(buildErrorForPanic(builder, scaffold, err, pos), scaffold.panicAddress());
     builder.br(scaffold.getOnPanic());

@@ -1,5 +1,6 @@
 import ballerina/test;
-@test:Config{}
+
+@test:Config {}
 function testBitTwiddling() {
     test:assertEquals(numberOfTrailingZeros(0x10), 4);
     test:assertEquals(numberOfTrailingZeros(0x100), 8);

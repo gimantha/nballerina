@@ -8,17 +8,17 @@ function nameAlloca() returns Module {
     Builder builder = context.createBuilder();
     builder.positionAtEnd(initBlock);
     _ = builder.alloca("i64");
-    _ = builder.alloca("i64", (),"V");
-    _ = builder.alloca("i64", (),"V.1");
-    _ = builder.alloca("i64", (),"V");
+    _ = builder.alloca("i64", (), "V");
+    _ = builder.alloca("i64", (), "V.1");
+    _ = builder.alloca("i64", (), "V");
     _ = builder.alloca("i64", (), "var");
-    _ = builder.alloca("i64", (),"V.1");
-    _ = builder.alloca("i64", (),"V.1");
+    _ = builder.alloca("i64", (), "V.1");
+    _ = builder.alloca("i64", (), "V.1");
     _ = builder.alloca("i64");
-    _ = builder.alloca("i64", (),"1");
-    _ = builder.alloca("i64", (),"?");
-    _ = builder.alloca("i64", (),"#");
-    _ = builder.alloca("i64", (),"\"test\"");
+    _ = builder.alloca("i64", (), "1");
+    _ = builder.alloca("i64", (), "?");
+    _ = builder.alloca("i64", (), "#");
+    _ = builder.alloca("i64", (), "\"test\"");
     builder.ret();
     return m;
 }

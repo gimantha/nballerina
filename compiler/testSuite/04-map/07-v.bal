@@ -7,5 +7,5 @@ public function main() {
 }
 
 function wrap(any x) returns map<any> {
-    return { value: x };
+    return {value: x};
 }

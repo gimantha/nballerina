@@ -18,7 +18,7 @@ public function testJsonTypes(string filename) returns error? {
     TestCase[] tests = check j.fromJsonWithType();
     int testNum = 0;
     int testsPassed = 0;
-    foreach var [rel, j1, j2]  in tests {
+    foreach var [rel, j1, j2] in tests {
         testNum += 1;
         if runTest(rel, j1, j2, testNum) {
             testsPassed += 1;
@@ -29,9 +29,9 @@ public function testJsonTypes(string filename) returns error? {
 }
 
 final var relationExpect = {
-   proper_subtype: [true, false],
-   equivalent: [true, true],
-   incomparable: [false, false]
+    proper_subtype: [true, false],
+    equivalent: [true, true],
+    incomparable: [false, false]
 };
 
 function runTest(Relation rel, json j1, json j2, int testNum) returns boolean {
@@ -42,7 +42,7 @@ function runTest(Relation rel, json j1, json j2, int testNum) returns boolean {
         t:SemType t1 = check j:parse(tc, j1);
         firstOk = true;
         t:SemType t2 = check j:parse(tc, j2);
-        var expect = <[boolean,boolean]>relationExpect[rel];
+        var expect = <[boolean, boolean]>relationExpect[rel];
         return expectSubtype(testNum, j1, j2, tc, t1, t2, expect, 0)
                 && expectSubtype(testNum, j2, j1, tc, t2, t1, expect, 1);
     }

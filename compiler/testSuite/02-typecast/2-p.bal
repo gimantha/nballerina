@@ -11,6 +11,6 @@ function ifElse(boolean t, boolean b, int n) returns any {
         return b;
     }
     else {
-        return  n;
+        return n;
     }
 }

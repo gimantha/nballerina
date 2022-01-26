@@ -9,6 +9,6 @@ public function main() {
     R r = {
         x: 1,
         y: 2 // @error
-    }; 
+    };
     io:println(r);
 }

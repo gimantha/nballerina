@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     boolean b = false;
     int|boolean|float x = 8.4;

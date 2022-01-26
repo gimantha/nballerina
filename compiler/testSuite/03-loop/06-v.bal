@@ -16,8 +16,8 @@ function upper() returns int {
 public function main() {
     foreach int i in lower() ..< upper() {
         io:println(i); // @output 2
-                       // @output 3
-                       // @output 4
+        // @output 3
+        // @output 4
     }
 }
 

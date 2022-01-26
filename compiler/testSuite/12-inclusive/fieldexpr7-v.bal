@@ -10,6 +10,6 @@ public function main() {
 }
 
 function origin() returns Point {
-    Point p = { x: 0, y: 0, "z": 10 };
+    Point p = {x: 0, y: 0, "z": 10};
     return p;
 }

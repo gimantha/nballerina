@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     checkpanic newError();
     io:println("may not reach");

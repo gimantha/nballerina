@@ -52,6 +52,7 @@ type ArrayFiveOfIntFive int[FIVE][FIVE];
 type ROArrayFiveOfIntFive ArrayFiveOfIntFive & readonly;
 
 type N never;
+
 // @type ArrayOfInt5 = TwoArraysOfInt5[0]
 // @type ArrayOfInt5 = TwoArraysOfInt5[1]
 // @type N = TwoArraysOfInt5[2]

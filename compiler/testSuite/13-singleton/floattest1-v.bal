@@ -1,8 +1,9 @@
 import ballerina/io;
 
-const Inf = 1.0/0.0;
-const NaN = 0.0/0.0;
-const NegInf = -1.0/0.0;
+const Inf = 1.0 / 0.0;
+const NaN = 0.0 / 0.0;
+const NegInf = -1.0 / 0.0;
+
 type Special 0f|NaN|Inf|NegInf;
 
 public function main() {

@@ -44,10 +44,12 @@ final readonly & string[] listDescFuncSuffixes = [
 final readonly & string[] listDescNullFuncNames = ["float_array_get_int", "int_array_get_float"];
 
 final llvm:StructType llListDescType = createLlListDescType();
-final llvm:Type llListType = llvm:structType([llvm:pointerType(llListDescType),          // ListDesc *desc
-                                              LLVM_INT,                                  // int64_t length
-                                              LLVM_INT,                                  // int64_t capacity
-                                              heapPointerType(llvm:pointerType("i8"))]); // union {TaggedPtr, int64_t, float} *members
+final llvm:Type llListType = llvm:structType([
+    llvm:pointerType(llListDescType), // ListDesc *desc
+    LLVM_INT, // int64_t length
+    LLVM_INT, // int64_t capacity
+    heapPointerType(llvm:pointerType("i8"))
+]); // union {TaggedPtr, int64_t, float} *members
 
 type TypeHowUsed USED_INHERENT_TYPE|USED_EXACTIFY|USED_TYPE_TEST;
 
@@ -77,7 +79,7 @@ function createInitTypes(llvm:Context cx) returns InitTypes {
     llvm:FunctionType subtypeContainsFunction = llvm:functionType(LLVM_BOOLEAN, [uniformSubtypePtr, LLVM_TAGGED_PTR]);
     llvm:PointerType subtypeContainsFunctionPtr = llvm:pointerType(subtypeContainsFunction);
     cx.structSetBody(uniformSubtype, [subtypeContainsFunctionPtr]);
-    return { uniformSubtype, uniformSubtypePtr, subtypeContainsFunction, subtypeContainsFunctionPtr };
+    return {uniformSubtype, uniformSubtypePtr, subtypeContainsFunction, subtypeContainsFunctionPtr};
 }
 
 // When Ballerina gets the spread operator in list constructors,
@@ -113,9 +115,9 @@ function mangleTypeSymbol(bir:ModuleId modId, TypeHowUsed howUsed, int index) re
     }
     else {
         result += "t";
-    }    
+    }
     result += mangleOrg(modId.org);
     result += mangleModuleNames(modId.names);
     result += index.toString();
-    return result;    
+    return result;
 }

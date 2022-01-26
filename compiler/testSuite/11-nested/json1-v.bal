@@ -4,7 +4,7 @@ type J ()|boolean|int|float|string|J[]|map<J>;
 
 public function main() {
     J j = [
-        { name: "James", age: 100, children: ["Jack", "Jane"], married: true }
+        {name: "James", age: 100, children: ["Jack", "Jane"], married: true}
     ];
     io:println(j); // @output [{"name":"James","age":100,"children":["Jack","Jane"],"married":true}]
     if j is J[] {
@@ -14,5 +14,5 @@ public function main() {
             io:println("map"); // @output map
             io:println(j0["age"]); // @output 100
         }
-    } 
+    }
 }

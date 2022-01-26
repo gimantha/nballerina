@@ -3,8 +3,8 @@ import ballerina/io;
 type Int int;
 
 function foo(Int x) returns Int {
-   Int _ = x;
-   return x;
+    Int _ = x;
+    return x;
 }
 
 public function main() {

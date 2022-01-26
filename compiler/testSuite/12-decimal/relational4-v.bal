@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     decimal[] x = [1.5d];
     decimal[] y = [3d];

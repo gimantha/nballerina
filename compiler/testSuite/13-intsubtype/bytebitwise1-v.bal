@@ -15,6 +15,6 @@ function and() {
 function or() {
     byte x = 0xF0;
     byte y = 0x0F;
-    byte b = x|y;
-    io:println(b);  // @output 255
+    byte b = x | y;
+    io:println(b); // @output 255
 }

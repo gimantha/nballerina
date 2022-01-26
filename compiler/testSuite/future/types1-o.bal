@@ -6,5 +6,5 @@ public function main() {
 }
 
 function foo(int|int n) returns () {
-    io:println(n); 
+    io:println(n);
 }

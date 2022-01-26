@@ -8,7 +8,10 @@
 // ER<:E
 // ER<:EM
 type E error;
+
 type ER error<map<readonly>>;
+
 type Cloneable readonly|xml|Cloneable[]|map<Cloneable>;
+
 type EM error<map<Cloneable>>;
 

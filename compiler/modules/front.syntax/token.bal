@@ -4,6 +4,7 @@ import wso2/nballerina.comm.diagnostic as d;
 type Range d:Range;
 
 type Token FixedToken|VariableLengthToken;
+
 type FixedToken SingleCharDelim|MultiCharDelim|Keyword;
 
 const IDENTIFIER = 0;
@@ -18,60 +19,63 @@ type VariableTokenCode IDENTIFIER|DECIMAL_NUMBER|STRING_LITERAL|HEX_INT_LITERAL|
 
 // Use string for DECIMAL_NUMBER so we don't get overflow on -int:MAX_VALUE
 // JBUG #33694 can't factor `readonly` out
-type VariableLengthToken readonly & [IDENTIFIER, string] |
-                         readonly & [DECIMAL_NUMBER, string] |
-                         readonly & [STRING_LITERAL, string] |
-                         readonly & [HEX_INT_LITERAL, string] |
-                         readonly & [DECIMAL_FP_NUMBER, string, FpTypeSuffix?];
+type VariableLengthToken readonly & [IDENTIFIER, string]|
+                        readonly & [DECIMAL_NUMBER, string]|
+                        readonly & [STRING_LITERAL, string]|
+                        readonly & [HEX_INT_LITERAL, string]|
+                        readonly & [DECIMAL_FP_NUMBER, string, FpTypeSuffix?];
 
 // Some of these are not yet used by the grammar
-type SingleCharDelim ";" | "+" | "-" | "*" |"(" | ")" | "[" | "]" | "{" | "}" | "<" | ">" | "?" | "&" | "^" | "|" | "!" | ":" | "," | "/" | "%" | "=" | "." | "~";
-type MultiCharDelim "{|" | "|}" | "..." | "..<" | "==" | "!=" | ">=" | "<=" | "===" | "!==" | "<<" | ">>" | ">>>" | "=>" | "&&" | "||" | CompoundAssignDelim;
-type CompoundAssignDelim "+=" | "-=" | "/=" | "*=" | "&=" | "|=" | "^=" | "<<=" | ">>=" | ">>>=";
+type SingleCharDelim ";"|"+"|"-"|"*"|"("|")"|"["|"]"|"{"|"}"|"<"|">"|"?"|"&"|"^"|"|"|"!"|":"|","|"/"|"%"|"="|"."|"~";
+
+type MultiCharDelim "{|"|"|}"|"..."|"..<"|"=="|"!="|">="|"<="|"==="|"!=="|"<<"|">>"|">>>"|"=>"|"&&"|"||"|CompoundAssignDelim;
+
+type CompoundAssignDelim "+="|"-="|"/="|"*="|"&="|"|="|"^="|"<<="|">>="|">>>=";
+
 type Keyword
     "_"
-    | "any"
-    | "anydata"
-    | "as"
-    | "boolean"
-    | "byte"
-    | "check"
-    | "checkpanic"
-    | "const"
-    | "decimal"
-    | "error"
-    | "false"
-    | "final"
-    | "float"
-    | "foreach"
-    | "function"
-    | "handle"
-    | "in"
-    | "is"
-    | "int"
-    | "json"
-    | "map"
-    | "match"
-    | "never"
-    | "null"
-    | "panic"
-    | "readonly"
-    | "record"
-    | "return"
-    | "returns"
-    | "string"
-    | "true"
-    | "type"
-    | "typedesc"
-    | "xml"
-    | "if"
-    | "else"
-    | "while"
-    | "continue"
-    | "break"
-    | "public"
-    | "import"
-    | "table"
+    |"any"
+    |"anydata"
+    |"as"
+    |"boolean"
+    |"byte"
+    |"check"
+    |"checkpanic"
+    |"const"
+    |"decimal"
+    |"error"
+    |"false"
+    |"final"
+    |"float"
+    |"foreach"
+    |"function"
+    |"handle"
+    |"in"
+    |"is"
+    |"int"
+    |"json"
+    |"map"
+    |"match"
+    |"never"
+    |"null"
+    |"panic"
+    |"readonly"
+    |"record"
+    |"return"
+    |"returns"
+    |"string"
+    |"true"
+    |"type"
+    |"typedesc"
+    |"xml"
+    |"if"
+    |"else"
+    |"while"
+    |"continue"
+    |"break"
+    |"public"
+    |"import"
+    |"table"
     ;
 
 type StringIterator object {
@@ -88,9 +92,9 @@ final readonly & map<string:Char> ESCAPES = {
     "t": "\t"
 };
 
-
 const MODE_NORMAL = 0;
 const MODE_TYPE_DESC = 1;
+
 type Mode MODE_NORMAL|MODE_TYPE_DESC;
 
 type TokenizerState readonly & record {
@@ -248,7 +252,7 @@ class Tokenizer {
 
     // Peeks the next token. When skipQualIdent is passed, considers qualified identifier as a single token,
     // ie if current token is the first identifier of a qualified identifier, returns the token after the second identifier.
-    function peek(boolean skipQualIdent=false) returns VariableTokenCode|FixedToken? {
+    function peek(boolean skipQualIdent = false) returns VariableTokenCode|FixedToken? {
         readonly & FragCode[] fragCodes = self.fragCodes;
         int fragCodeIndex = self.fragCodeIndex;
         int lineIndex = self.lineIndex;
@@ -318,9 +322,9 @@ class Tokenizer {
                         return <FixedToken>fragTokens[<int>fragCode];
                     }
                 }
-            }   
+            }
         }
-        return ();   
+        return ();
     }
 
     function currentIsNoSpaceColon() returns boolean {
@@ -344,7 +348,7 @@ class Tokenizer {
         }
         return fragCodes[i - 2] != FRAG_WHITESPACE;
     }
-    
+
     function current() returns Token? {
         return self.curTok;
     }
@@ -376,7 +380,7 @@ class Tokenizer {
     }
 
     function currentRange() returns Range {
-        return { startPos: self.currentStartPos(), endPos: self.currentEndPos() };
+        return {startPos: self.currentStartPos(), endPos: self.currentEndPos()};
     }
 
     function previousEndPos() returns Position {
@@ -452,7 +456,7 @@ class Tokenizer {
 
     function err(d:Message msg) returns err:Syntax {
         // XXX pass in endPos if we need to in order to be able to recreate the right endPos
-        return err:syntax(msg, loc=d:location(self.file, self.currentRange()));
+        return err:syntax(msg, loc = d:location(self.file, self.currentRange()));
     }
 
     function save() returns TokenizerState {
@@ -529,7 +533,7 @@ public readonly class SourceFile {
         Position startPos;
         Position? endPos;
         if range is d:Range {
-            { startPos, endPos } = range;
+            {startPos, endPos} = range;
         }
         else {
             startPos = range;
@@ -561,7 +565,7 @@ public readonly class SourceFile {
         var [lineNum, startColumnNum] = self.lineColumn(startPos);
         ScannedLine line = self.scannedLine(lineNum);
         int endColumnNum = qualifiedIdentifierEndCodePointIndex(line, startColumnNum);
-        return { startPos, endPos: createPosition(lineNum, endColumnNum) };
+        return {startPos, endPos: createPosition(lineNum, endColumnNum)};
     }
 
     function scannedLines() returns readonly & ScannedLine[] => self.lines;
@@ -601,13 +605,13 @@ function tokenEndCodePointIndex(string[] fragments, FragCode[] fragCodes, int st
         return startCodePointIndex;
     }
     match fragCodes[fragmentIndex] {
-        FRAG_STRING_OPEN  => {
+        FRAG_STRING_OPEN => {
             return stringTokenEndCodePointIndex(fragments, fragCodes, startCodePointIndex, fragmentIndex);
         }
         FRAG_GREATER_THAN => {
             // Assume not in type-desc mode
-            if fragmentIndex + 1 < fragCodes.length() && fragCodes[fragmentIndex+1] == FRAG_GREATER_THAN {
-                if fragmentIndex + 2 < fragCodes.length() && fragCodes[fragmentIndex+2] == FRAG_GREATER_THAN {
+            if fragmentIndex + 1 < fragCodes.length() && fragCodes[fragmentIndex + 1] == FRAG_GREATER_THAN {
+                if fragmentIndex + 2 < fragCodes.length() && fragCodes[fragmentIndex + 2] == FRAG_GREATER_THAN {
                     return startCodePointIndex + 3; // >>>
                 }
                 return startCodePointIndex + 2; // >>
@@ -645,5 +649,5 @@ function stringTokenEndCodePointIndex(string[] fragments, FragCode[] fragCodes, 
 }
 
 public function createSourceFile(string[] lines, FilePath path) returns SourceFile {
-    return new(scanLines(lines), path);
+    return new (scanLines(lines), path);
 }

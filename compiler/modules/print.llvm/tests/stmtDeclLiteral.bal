@@ -4,7 +4,7 @@ function stmtDeclLiteral() returns Module {
     Context context = new;
     Builder builder = context.createBuilder();
     Module m = context.createModule();
-    FunctionDefn test = m.addFunctionDefn("test", {returnType: "i64", paramTypes:[]});
+    FunctionDefn test = m.addFunctionDefn("test", {returnType: "i64", paramTypes: []});
     BasicBlock initBlock = test.appendBasicBlock();
     builder.positionAtEnd(initBlock);
     PointerValue R1 = builder.alloca("i64");
@@ -20,7 +20,6 @@ function stmtDeclLiteral() returns Module {
     builder.ret();
     return m;
 }
-
 
 @test:Config {}
 function testStmtDeclLiteral() returns error? {

@@ -8,6 +8,7 @@ import mod;
 import mod2 as m;
 import mod3.submod2;
 import mod3.submod as ms;
+
 // @end
 
 function ignore() returns error? {

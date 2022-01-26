@@ -4,7 +4,7 @@ public type R2 record {|
 |};
 
 public function create(int i, float f) returns R2 {
-    return { intField: i, floatField: f };
+    return {intField: i, floatField: f};
 }
 
 public function test(any v) returns boolean {

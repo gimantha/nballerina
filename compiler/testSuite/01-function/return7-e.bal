@@ -9,7 +9,7 @@ function ignore(int x) {
 }
 
 function foo() returns int {
-    return bar();  // @error
+    return bar(); // @error
 }
 
 function bar() {

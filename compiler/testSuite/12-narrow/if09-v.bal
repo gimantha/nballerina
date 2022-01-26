@@ -5,7 +5,7 @@ type R record {|
 |};
 
 public function main() {
-    R r = { b: true };
+    R r = {b: true};
     func(r);
 }
 

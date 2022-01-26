@@ -29,7 +29,7 @@ class Module {
             if defn is s:FunctionDefn {
                 self.functionDefnSource.push(defn);
                 functionDefns.push({
-                    symbol: <bir:InternalSymbol>{ identifier: defn.name, isPublic: defn.vis == "public" },
+                    symbol: <bir:InternalSymbol>{identifier: defn.name, isPublic: defn.vis == "public"},
                     // casting away nil here, because it was filled in by `resolveTypes`
                     signature: <bir:FunctionSignature>defn.signature,
                     position: defn.namePos,
@@ -47,13 +47,13 @@ class Module {
     public function generateFunctionCode(int i) returns bir:FunctionCode|err:Semantic|err:Unimplemented {
         return codeGenFunction(self.syms, self.functionDefnSource[i], self.functionDefns[i].signature);
     }
-   
+
     public function finish() returns err:Semantic? {
         map<Import>[] partPrefixes = self.syms.partPrefixes;
         foreach int i in 0 ..< partPrefixes.length() {
-            foreach var [prefix, { decl, used }] in partPrefixes[i].entries() {
+            foreach var [prefix, {decl, used}] in partPrefixes[i].entries() {
                 if !used && decl != () {
-                    return err:semantic(`import ${prefix} unused`, loc=d:location(self.files[i], decl.namePos));
+                    return err:semantic(`import ${prefix} unused`, loc = d:location(self.files[i], decl.namePos));
                 }
             }
         }
@@ -68,7 +68,8 @@ class Module {
     }
 
     public function getPartFiles() returns bir:File[] {
-        return from var f in self.files select f;
+        return from var f in self.files
+            select f;
     }
 
     public function symbolToString(int partIndex, bir:Symbol sym) returns string {
@@ -109,7 +110,8 @@ public readonly class ScannedModule {
     }
 
     public function getImports() returns bir:ModuleId[] {
-        return from var mi in self.importsById select mi.id;
+        return from var mi in self.importsById
+            select mi.id;
     }
 }
 
@@ -117,23 +119,25 @@ function groupImports(s:ScannedModulePart[] parts, bir:ModuleId modId) returns M
     table<ModuleIdImports> key(id) miTable = table [];
     foreach var part in parts {
         foreach var decl in part.importDecls {
-            bir:ModuleId id = { org: decl.org ?: modId.org, names: decl.names };
+            bir:ModuleId id = {org: decl.org ?: modId.org, names: decl.names};
             if !miTable.hasKey(id) {
-                miTable.add({ id, imports: [decl] });
+                miTable.add({id, imports: [decl]});
             }
             else {
                 miTable.get(id).imports.push(decl);
             }
         }
     }
-    return from var mi in miTable select mi;
+    return from var mi in miTable
+        select mi;
 }
 
 public function resolveModule(ScannedModule scanned, t:Env env, (ModuleExports|string?)[] resolvedImports) returns ResolvedModule|err:Diagnostic|io:Error {
-    ModuleSymbols syms = { tc: t:typeContext(env) };
-    s:SourceFile[] files = from var p in scanned.parts select p.sourceFile();
+    ModuleSymbols syms = {tc: t:typeContext(env)};
+    s:SourceFile[] files = from var p in scanned.parts
+        select p.sourceFile();
     syms.partPrefixes.setLength(scanned.parts.length());
-    check importPartPrefixes(scanned, resolvedImports, files, syms.partPrefixes);    
+    check importPartPrefixes(scanned, resolvedImports, files, syms.partPrefixes);
     foreach var scannedPart in scanned.parts {
         s:ModulePart part = check s:parseModulePart(scannedPart);
         check addModulePart(syms.defns, part);
@@ -149,7 +153,7 @@ public function scanModule(SourcePart[] sourceParts, bir:ModuleId id) returns Sc
         s:SourceFile file = check loadSourcePart(sourceParts[i], i);
         parts.push(check s:scanModulePart(file, i));
     }
-    return new(parts, id);
+    return new (parts, id);
 }
 
 function loadSourcePart(SourcePart part, int i) returns s:SourceFile|io:Error {
@@ -157,15 +161,15 @@ function loadSourcePart(SourcePart part, int i) returns s:SourceFile|io:Error {
     string? filename = part?.filename;
     string[]? lines = part?.lines;
     if lines != () {
-        return s:createSourceFile(lines, { filename: filename ?: "<part" + (i + 1).toString() + ">", directory });
+        return s:createSourceFile(lines, {filename: filename ?: "<part" + (i + 1).toString() + ">", directory});
     }
     else if filename != () {
-        return s:createSourceFile(check io:fileReadLines(filename), { filename, directory });
+        return s:createSourceFile(check io:fileReadLines(filename), {filename, directory});
     }
     panic err:illegalArgument("neither filename nor lines were specified");
 }
 
-final bir:ModuleId BALLERINA_IO = { org: "ballerina", names: ["io"] };
+final bir:ModuleId BALLERINA_IO = {org: "ballerina", names: ["io"]};
 
 function importPartPrefixes(ScannedModule scanned, (ModuleExports|string?)[] resolvedImports, s:SourceFile[] files, map<Import>[] partPrefixes) returns err:Diagnostic? {
     ModuleIdImports[] importsById = scanned.importsById;
@@ -184,15 +188,15 @@ function importPartPrefixes(ScannedModule scanned, (ModuleExports|string?)[] res
         foreach var decl in importsById[i].imports {
             if resolved == () {
                 d:Message msg = `unsupported module ${moduleIdToString(moduleId)}`;
-                return err:unimplemented(msg, loc=d:location(files[decl.partIndex], decl.namePos));
+                return err:unimplemented(msg, loc = d:location(files[decl.partIndex], decl.namePos));
             }
             else if resolved is string {
-                return err:semantic(resolved, loc=d:location(files[decl.partIndex], decl.namePos));
+                return err:semantic(resolved, loc = d:location(files[decl.partIndex], decl.namePos));
             }
             else {
                 string? declPrefix = decl.prefix;
                 string prefix = declPrefix == () ? moduleIdDefaultPrefix(moduleId) : declPrefix;
-                partPrefixes[decl.partIndex][prefix] = { decl, moduleId, defns: resolved, partial };
+                partPrefixes[decl.partIndex][prefix] = {decl, moduleId, defns: resolved, partial};
             }
         }
     }
@@ -250,7 +254,7 @@ function addModulePart(ModuleDefns mod, s:ModulePart part) returns err:Semantic?
 // This is old interface for showTypes
 public function typesFromString(SourcePart[] sourceParts) returns [t:Env, map<t:SemType>]|err:Diagnostic|io:Error {
     t:Env env = new;
-    ModuleSymbols syms = { tc: t:typeContext(env), allowAllTypes: true };
+    ModuleSymbols syms = {tc: t:typeContext(env), allowAllTypes: true};
     foreach int i in 0 ..< sourceParts.length() {
         var loaded = check loadSourcePart(sourceParts[i], 0);
         s:ScannedModulePart part = check s:scanModulePart(loaded, i);

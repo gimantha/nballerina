@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     int? a = 4;
     int? b = 2;

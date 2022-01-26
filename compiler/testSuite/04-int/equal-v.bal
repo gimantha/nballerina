@@ -12,7 +12,7 @@ public function main() {
 
     b = intNotEq(21, 21);
     if b {
-        io:println(0); 
+        io:println(0);
     }
     else {
         io:println(21); // @output 21
@@ -32,7 +32,7 @@ public function main() {
     }
     else {
         io:println(0);
-    }    
+    }
 }
 
 function intEq(int i, int j) returns boolean {

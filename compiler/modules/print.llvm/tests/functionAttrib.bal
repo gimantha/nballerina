@@ -13,11 +13,11 @@ function functionAttrib() returns Module {
     Value p2 = test.getParam(2);
     BasicBlock initBlock = test.appendBasicBlock();
     builder.positionAtEnd(initBlock);
-    Value temp1 = builder.iArithmeticWrap("add",p0, p1);
-    Value temp2 = builder.iArithmeticWrap("add",temp1, p2);
+    Value temp1 = builder.iArithmeticWrap("add", p0, p1);
+    Value temp2 = builder.iArithmeticWrap("add", temp1, p2);
     builder.ret(temp2);
 
-    FunctionDecl test2 = m.addFunctionDecl("test2", {returnType:"i64", paramTypes:["i64", "i64", "i64"]});
+    FunctionDecl test2 = m.addFunctionDecl("test2", {returnType: "i64", paramTypes: ["i64", "i64", "i64"]});
     test2.addEnumAttribute("nounwind");
     test2.addEnumAttribute(["return", "noalias"]);
     test2.addEnumAttribute([0, "zeroext"]);

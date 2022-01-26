@@ -2,7 +2,6 @@
 // Format is defined in schema.bal
 import wso2/nballerina.types as t;
 
-
 public type Path int[];
 
 public type ParseDetail record {
@@ -21,40 +20,86 @@ type NameBinding record {|
 |};
 
 type DefBinding record {|
-   json desc;
-   t:Definition def;
-   Binding? next;
+    json desc;
+    t:Definition def;
+    Binding? next;
 |};
 
 public function parse(t:Context tc, json j) returns t:SemType|ParseError {
     return parseType(tc, (), j, []);
-} 
+}
 
 function parseType(t:Context tc, Binding? b, json j, Path path) returns t:SemType|ParseError {
     match j {
-        Nil => { return t:NIL; }
-        Boolean => { return t:BOOLEAN; }
-        Int => { return t:INT; }
-        Byte => { return t:BYTE; }
-        "int8" => { return t:intWidthSigned(8); }
-        "int16" => { return t:intWidthSigned(16); }
-        "int32" => { return t:intWidthSigned(32); }
-        "uint8" => { return t:intWidthUnsigned(8); }
-        "uint16" => { return t:intWidthUnsigned(16); }
-        "uint32" => { return t:intWidthUnsigned(32); }
-        Float => { return t:FLOAT; }
-        Decimal => { return t:DECIMAL; }
-        String => { return t:STRING; }
-        "error" => { return t:ERROR; }
-        Typedesc => { return t:TYPEDESC; }
-        Handle => { return t:HANDLE; }
-        Xml => { return t:XML; } 
-        Json => { return t:createJson(tc); }
-        Any => { return t:ANY; }
-        Never => { return t:NEVER; }
-        ReadOnly => { return t:READONLY; }
-        true => { return t:booleanConst(true); }
-        false => { return t:booleanConst(false); }
+        Nil => {
+            return t:NIL;
+        }
+        Boolean => {
+            return t:BOOLEAN;
+        }
+        Int => {
+            return t:INT;
+        }
+        Byte => {
+            return t:BYTE;
+        }
+        "int8" => {
+            return t:intWidthSigned(8);
+        }
+        "int16" => {
+            return t:intWidthSigned(16);
+        }
+        "int32" => {
+            return t:intWidthSigned(32);
+        }
+        "uint8" => {
+            return t:intWidthUnsigned(8);
+        }
+        "uint16" => {
+            return t:intWidthUnsigned(16);
+        }
+        "uint32" => {
+            return t:intWidthUnsigned(32);
+        }
+        Float => {
+            return t:FLOAT;
+        }
+        Decimal => {
+            return t:DECIMAL;
+        }
+        String => {
+            return t:STRING;
+        }
+        "error" => {
+            return t:ERROR;
+        }
+        Typedesc => {
+            return t:TYPEDESC;
+        }
+        Handle => {
+            return t:HANDLE;
+        }
+        Xml => {
+            return t:XML;
+        }
+        Json => {
+            return t:createJson(tc);
+        }
+        Any => {
+            return t:ANY;
+        }
+        Never => {
+            return t:NEVER;
+        }
+        ReadOnly => {
+            return t:READONLY;
+        }
+        true => {
+            return t:booleanConst(true);
+        }
+        false => {
+            return t:booleanConst(false);
+        }
         // Should be able to use match patterns here
         // but there's a compiler bug #29041
         var js if js is json[] => {
@@ -71,13 +116,13 @@ function parseType(t:Context tc, Binding? b, json j, Path path) returns t:SemTyp
                     return parseCompoundType(tc, b, k, js, path);
                 }
             }
-           
+
         }
         var s if s is string => {
             return parseError("unrecognized keyword '" + s + "'", path);
         }
     }
-    return parseError("unrecognized type syntax", path);  
+    return parseError("unrecognized type syntax", path);
 }
 
 // jlist is a list starting with k
@@ -145,7 +190,7 @@ function parseCompoundType(t:Context tc, Binding? b, string k, json[] jlist, Pat
             if s != () {
                 return s;
             }
-            t:FunctionDefinition def = new(env);
+            t:FunctionDefinition def = new (env);
             t:SemType[] v = check parseTypes(tc, consDefBinding(jlist, def, b), jlist, parent, 1);
             if v.length() == 0 {
                 return t:FUNCTION;
@@ -229,7 +274,7 @@ function parseCompoundType(t:Context tc, Binding? b, string k, json[] jlist, Pat
                 }
                 else {
                     return parseError("'rec' must be followed by two operands",
-                                      parent, jlist.length() > 3 ? 3 : 1);
+                                    parent, jlist.length() > 3 ? 3 : 1);
                 }
             }
         }
@@ -263,7 +308,7 @@ function consDefBinding(json desc, t:Definition def, Binding? next) returns Bind
     if next == () {
         return next;
     }
-    DefBinding db = { desc, def, next };
+    DefBinding db = {desc, def, next};
     return db;
 }
 
@@ -275,7 +320,6 @@ function parseFields(t:Context tc, Binding? b, json[] jlist, Path parent, int st
     }
     return fields;
 }
-
 
 function parseField(t:Context tc, Binding? b, json j, Path path) returns t:Field|ParseError {
     if j !is json[] || j.length() != 2 {
@@ -298,7 +342,7 @@ function lookupBinding(Binding? b, string name) returns [json, Path]|"loop"? {
     boolean loop = true;
     while true {
         if tem == () {
-           break;
+            break;
         }
         else if tem is NameBinding {
             if tem.name == name {
@@ -337,7 +381,7 @@ function lookupDef(t:Env env, Binding? b, json desc) returns t:SemType? {
 }
 
 function parseRec(t:Context tc, Binding? b, string name, json t, Path path) returns t:SemType|ParseError {
-    NameBinding nb = { name, next: b, desc: t, path };
+    NameBinding nb = {name, next: b, desc: t, path};
     return parseType(tc, nb, t, path);
 }
 
@@ -354,13 +398,17 @@ function parseError(string message, Path path, int? step = ()) returns ParseErro
     if step != () {
         path.push(step);
     }
-    return error ParseError(message, path=path);
+    return error ParseError(message, path = path);
 }
 
 function reduce(t:SemType[] v, function (t:SemType, t:SemType) returns t:SemType binary, t:SemType initial) returns t:SemType {
     match v.length() {
-        0 => { return initial; }
-        1 => { return v[0]; }
+        0 => {
+            return initial;
+        }
+        1 => {
+            return v[0];
+        }
     }
     t:SemType result = binary(v[0], v[1]);
     foreach int i in 2 ..< v.length() {

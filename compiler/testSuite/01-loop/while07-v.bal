@@ -22,9 +22,9 @@ function printClosestSquareNum(int x) {
 function isSquareNumber(int x) returns boolean {
     int i = 0;
     while i <= x {
-        if (i*i == x) {
+        if (i * i == x) {
             return true;
-        } else if (i*i > x) {
+        } else if (i * i > x) {
             return false;
         }
         i = i + 1;

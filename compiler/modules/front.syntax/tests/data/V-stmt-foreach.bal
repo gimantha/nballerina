@@ -6,6 +6,5 @@ function wrapper(int a, int b) {
     // @end
 }
 
-
 function foo(int a) {
 }

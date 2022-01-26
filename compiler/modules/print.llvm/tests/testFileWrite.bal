@@ -2,7 +2,7 @@ import ballerina/test;
 import ballerina/file;
 
 @test:Config {}
-function testFileWriting()returns error? {
+function testFileWriting() returns error? {
     Module m = basicMain();
     Output output = new ();
     m.output(output);

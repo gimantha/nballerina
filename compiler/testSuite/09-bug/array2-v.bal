@@ -1,6 +1,7 @@
 import ballerina/io;
 
 type ISA (int|string)[];
+
 type IBA (int|boolean)[];
 
 public function main() {

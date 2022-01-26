@@ -4,6 +4,6 @@ type Point record {
 };
 
 public function main() {
-    Point p = { x: 44, y: 88 };
+    Point p = {x: 44, y: 88};
     p.z = 22; // @error
 }

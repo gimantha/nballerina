@@ -16,11 +16,11 @@ public type Options record {|
 public function validGcName(string? gcName) returns string?|error {
     if gcName == () {
         return ();
-    } 
+    }
     else {
         foreach var c in gcName {
-            if !VALID_GC_NAME_CHARS.includes(c) { 
-                return error("invalid gc name " + gcName); 
+            if !VALID_GC_NAME_CHARS.includes(c) {
+                return error("invalid gc name " + gcName);
             }
         }
         return gcName;
@@ -33,7 +33,7 @@ public function validDebugLevel(int? debugLevel) returns DebugLevel|error {
     }
     else if (debugLevel < DEBUG_NONE || debugLevel > DEBUG_FULL) {
         return error("invalid debug level " + debugLevel.toString());
-    } 
+    }
     else {
         return <DebugLevel>debugLevel;
     }

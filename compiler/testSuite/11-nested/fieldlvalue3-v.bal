@@ -13,7 +13,7 @@ type C record {|
 |};
 
 public function main() {
-    A a = { b: { c: { i: 0 } } };
+    A a = {b: {c: {i: 0}}};
     string m = "i";
     a.b.c[m] = 8;
     io:println(a.b.c.i); // @output 8

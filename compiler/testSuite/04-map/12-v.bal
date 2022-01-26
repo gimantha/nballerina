@@ -11,7 +11,6 @@ function put(map<any> m, string k, int v) {
     m[k] = v;
 }
 
-
-function get(map<any> m, string k) returns int{
-    return <int> m[k];
+function get(map<any> m, string k) returns int {
+    return <int>m[k];
 }

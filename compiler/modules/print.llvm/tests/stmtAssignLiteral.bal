@@ -17,7 +17,6 @@ function stmtAssignLiteral() returns Module {
     return m;
 }
 
-
 @test:Config {}
 function testStmtAssignLiteral() returns error? {
     return runTest(stmtAssignLiteral, "stmt_assign_literal.ll");

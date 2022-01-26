@@ -1,5 +1,6 @@
 // @productions boolean-literal unary-expr additive-expr any function-call-expr int-literal
 import ballerina/io;
+
 public function main() {
     foo(57); // @output 57
     foo(true); // @output true

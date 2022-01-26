@@ -41,7 +41,7 @@ public function main() {
 function printBoolean(boolean b) {
     if b {
         io:println(1);
-    } 
+    }
     else {
         io:println(0);
     }

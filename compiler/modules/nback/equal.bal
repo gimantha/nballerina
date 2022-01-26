@@ -6,7 +6,7 @@ final RuntimeFunction floatEqFunction = {
     name: "float_eq",
     ty: {
         returnType: "i1",
-        paramTypes:  ["double", "double"]
+        paramTypes: ["double", "double"]
     },
     attrs: [["return", "zeroext"], "readonly"]
 };
@@ -15,7 +15,7 @@ final RuntimeFunction floatExactEqFunction = {
     name: "float_exact_eq",
     ty: {
         returnType: "i1",
-        paramTypes:  ["double", "double"]
+        paramTypes: ["double", "double"]
     },
     attrs: [["return", "zeroext"], "readonly"]
 };
@@ -61,7 +61,7 @@ type CmpEqOp "ne"|"eq";
 function buildEquality(llvm:Builder builder, Scaffold scaffold, bir:EqualityInsn insn) returns BuildError? {
     var [lhsRepr, lhsValue] = check buildReprValue(builder, scaffold, insn.operands[0]);
     var [rhsRepr, rhsValue] = check buildReprValue(builder, scaffold, insn.operands[1]);
-    CmpEqOp op = insn.op[0] == "!" ?  "ne" : "eq"; 
+    CmpEqOp op = insn.op[0] == "!" ? "ne" : "eq";
     boolean exact = insn.op.length() == 3; // either "===" or "!=="
     bir:Register result = insn.result;
     match [lhsRepr.base, rhsRepr.base] {
@@ -95,8 +95,8 @@ function buildEquality(llvm:Builder builder, Scaffold scaffold, bir:EqualityInsn
             return buildEqualTaggedInt(builder, scaffold, op, <llvm:PointerValue>rhsValue, lhsValue, result);
         }
         [BASE_REPR_BOOLEAN, BASE_REPR_BOOLEAN]
-        | [BASE_REPR_INT, BASE_REPR_INT] => {
-             // no tags involved, same representation, boolean/int
+        |[BASE_REPR_INT, BASE_REPR_INT] => {
+            // no tags involved, same representation, boolean/int
             return buildStoreBoolean(builder, scaffold, builder.iCmp(op, lhsValue, rhsValue), result);
         }
         [BASE_REPR_TAGGED, BASE_REPR_FLOAT] => {
@@ -119,9 +119,9 @@ function buildEqualTaggedFloat(llvm:Builder builder, Scaffold scaffold, boolean 
     builder.condBr(buildHasTag(builder, tagged, TAG_FLOAT), floatTagBlock, otherTagBlock);
     builder.positionAtEnd(otherTagBlock);
     buildStoreBoolean(builder, scaffold,
-                      // result is false if op is "eq", true if op is "ne"
-                      buildConstBoolean(op == "ne"),
-                      result);
+                    // result is false if op is "eq", true if op is "ne"
+                    buildConstBoolean(op == "ne"),
+                    result);
     builder.br(joinBlock);
     builder.positionAtEnd(floatTagBlock);
     buildEqualFloat(builder, scaffold, exact, op, buildUntagFloat(builder, scaffold, tagged), untagged, result);
@@ -165,13 +165,13 @@ function reprIsDecimal(Repr repr) returns boolean {
 }
 
 function reprIsImmediate(Repr repr) returns boolean {
-    return repr !is TaggedRepr || (repr.subtype & ~(t:NIL|t:BOOLEAN)) == 0;
+    return repr !is TaggedRepr || (repr.subtype & ~(t:NIL | t:BOOLEAN)) == 0;
 }
 
-function buildEqualTaggedBoolean(llvm:Builder builder, Scaffold scaffold, CmpEqOp op, llvm:PointerValue tagged, llvm:Value untagged, bir:Register result)  {
+function buildEqualTaggedBoolean(llvm:Builder builder, Scaffold scaffold, CmpEqOp op, llvm:PointerValue tagged, llvm:Value untagged, bir:Register result) {
     buildStoreBoolean(builder, scaffold,
-                      builder.iCmp(op, tagged, buildTaggedBoolean(builder, untagged)),
-                      result);
+                    builder.iCmp(op, tagged, buildTaggedBoolean(builder, untagged)),
+                    result);
 }
 
 function buildEqualTaggedInt(llvm:Builder builder, Scaffold scaffold, CmpEqOp op, llvm:PointerValue tagged, llvm:Value untagged, bir:Register result) {
@@ -181,9 +181,9 @@ function buildEqualTaggedInt(llvm:Builder builder, Scaffold scaffold, CmpEqOp op
     builder.condBr(buildHasTag(builder, tagged, TAG_INT), intTagBlock, otherTagBlock);
     builder.positionAtEnd(otherTagBlock);
     buildStoreBoolean(builder, scaffold,
-                      // result is false if op is "eq", true if op is "ne"
-                      buildConstBoolean(op == "ne"),
-                      result);
+                    // result is false if op is "eq", true if op is "ne"
+                    buildConstBoolean(op == "ne"),
+                    result);
     builder.br(joinBlock);
     builder.positionAtEnd(intTagBlock);
     buildStoreBoolean(builder, scaffold, builder.iCmp(op, buildUntagInt(builder, scaffold, tagged), untagged), result);

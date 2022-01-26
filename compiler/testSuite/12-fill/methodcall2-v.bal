@@ -13,9 +13,8 @@ type R3 record {|
 |};
 
 public function main() {
-    R3 r = {x: { x: { x: [] }}};
+    R3 r = {x: {x: {x: []}}};
     r.x.x.x.push(11);
     io:println(r.x.x.x[0]); // @output 11
 }
-
 

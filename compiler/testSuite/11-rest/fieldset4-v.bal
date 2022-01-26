@@ -1,6 +1,5 @@
 import ballerina/io;
 
-
 type R1 record {|
     int x;
     string...;

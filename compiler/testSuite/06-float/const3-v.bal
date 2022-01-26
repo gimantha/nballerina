@@ -22,7 +22,7 @@ public function main() {
     io:println(H); // @output true
     io:println(I); // @output false
     io:println(J); // @output 0.0
- }
+}
 
 function eq(float f1, float f2) returns any {
     boolean eq = f1 == f2;

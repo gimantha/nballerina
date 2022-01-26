@@ -5,4 +5,5 @@ public function main() {
     }
 }
 
-function foo() { }
+function foo() {
+}

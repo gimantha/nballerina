@@ -12,6 +12,6 @@ public function main() {
 }
 
 function origin() returns Point {
-    Point p = { x: 0, y: 0 };
+    Point p = {x: 0, y: 0};
     return p;
 }

@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     io:println(<decimal>1); // @output 1
     io:println(<decimal>0); // @output 0

@@ -1,8 +1,8 @@
 import ballerina/io;
 
 type J ()|boolean|int|float|string|J[]|map<J>;
-type IntJ ()|boolean|int|string|IntJ[]|map<IntJ>;
 
+type IntJ ()|boolean|int|string|IntJ[]|map<IntJ>;
 
 public function main() {
     int[] iv = [17];

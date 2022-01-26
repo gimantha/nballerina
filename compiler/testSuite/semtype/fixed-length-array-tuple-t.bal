@@ -1,4 +1,5 @@
 type Int1 int[1];
+
 type Int2 int[2];
 
 // @type IntT = Int1

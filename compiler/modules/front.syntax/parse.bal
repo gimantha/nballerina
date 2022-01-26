@@ -10,7 +10,7 @@ public type FilePath record {|
 public readonly class ScannedModulePart {
     private TokenizerState tokState;
     public ImportDecl[] importDecls;
-    int partIndex; 
+    int partIndex;
 
     function init(ImportDecl[] decls, Tokenizer tok, int partIndex) {
         self.importDecls = decls.cloneReadOnly();
@@ -19,7 +19,7 @@ public readonly class ScannedModulePart {
     }
 
     function tokenizer() returns Tokenizer {
-        Tokenizer tok = new(self.tokState.file);
+        Tokenizer tok = new (self.tokState.file);
         tok.restore(self.tokState);
         return tok;
     }
@@ -32,7 +32,7 @@ public readonly class ScannedModulePart {
 public function scanModulePart(SourceFile file, int partIndex) returns ScannedModulePart|err:Syntax {
     Tokenizer tok = new (file);
     check tok.advance();
-    return new(check parseImportDecls(tok, partIndex), tok, partIndex);
+    return new (check parseImportDecls(tok, partIndex), tok, partIndex);
 }
 
 public function parseModulePart(ScannedModulePart scanned) returns ModulePart|err:Syntax {
@@ -88,7 +88,7 @@ function parseImportDecl(Tokenizer tok, int partIndex) returns ImportDecl|err:Sy
     names.push(...check parseImportNamesRest(tok));
     string? prefix = check parseImportPrefix(tok);
     Position endPos = check tok.expectEnd(";");
-    return { startPos, endPos, org, names, prefix, namePos, partIndex };
+    return {startPos, endPos, org, names, prefix, namePos, partIndex};
 }
 
 function parseImportNamesRest(Tokenizer tok) returns string[]|err:Syntax {
@@ -160,7 +160,7 @@ function parseTypeDefinition(Tokenizer tok, ModulePart part, Visibility vis, Pos
     string name = check tok.expectIdentifier();
     TypeDesc td = check parseTypeDesc(tok);
     Position endPos = check tok.expectEnd(";");
-    return { startPos, endPos, name, td, namePos, vis, part };
+    return {startPos, endPos, name, td, namePos, vis, part};
 }
 
 function parseConstDefinition(Tokenizer tok, ModulePart part, Visibility vis, Position startPos) returns ConstDefn|err:Syntax {
@@ -171,25 +171,25 @@ function parseConstDefinition(Tokenizer tok, ModulePart part, Visibility vis, Po
         Position tdStartPos = tok.currentStartPos();
         Position tdEndPos = tok.currentEndPos();
         check tok.advance();
-        td = { startPos: tdStartPos, endPos: tdEndPos, builtinTypeName: t };
+        td = {startPos: tdStartPos, endPos: tdEndPos, builtinTypeName: t};
     }
     Position namePos = tok.currentStartPos();
     string name = check tok.expectIdentifier();
     check tok.expect("=");
     Expr expr = check parseInnerExpr(tok);
     Position endPos = check tok.expectEnd(";");
-    return { startPos, endPos, td, name, expr, namePos, vis, part };
+    return {startPos, endPos, td, name, expr, namePos, vis, part};
 }
 
 function parseFunctionDefinition(Tokenizer tok, ModulePart part, Visibility vis, Position startPos) returns FunctionDefn|err:Syntax {
     check tok.advance();
     Position namePos = tok.currentStartPos();
     string name = check tok.expectIdentifier();
-    FunctionParam [] params = [];
+    FunctionParam[] params = [];
     FunctionTypeDesc typeDesc = check parseFunctionTypeDesc(tok, params);
     StmtBlock body = check parseStmtBlock(tok);
     Position endPos = tok.previousEndPos();
-    FunctionDefn defn = { startPos, endPos, params, typeDesc, name, vis, namePos, body, part };
+    FunctionDefn defn = {startPos, endPos, params, typeDesc, name, vis, namePos, body, part};
     return defn;
 }
 
@@ -218,6 +218,6 @@ public function locationInDefn(ModuleLevelDefn defn, Position|Range pos) returns
     return d:location(defn.part.file, pos);
 }
 
-public function range(record {| *PositionFields; any|error...; |} node) returns Range {
-    return { startPos: node.startPos, endPos: node.endPos };
+public function range(record {|*PositionFields;any|error...; |} node) returns Range {
+    return {startPos: node.startPos, endPos: node.endPos};
 }

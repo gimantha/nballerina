@@ -18,10 +18,14 @@ type READ readonly;
 // @type Y1 <> T
 // @type Z < Y1
 // @type Z <> T
-type T table<R> & readonly | table<R1> & readonly;
+type T table<R> & readonly|table<R1> & readonly;
+
 type W table<R1> & readonly;
+
 type Y1 table<R1>;
+
 type Y table<R>;
+
 type Z table<R1> & !readonly;
 
 type X1 record {|
@@ -36,4 +40,5 @@ type X2 record {|
 
 // @type T2 < T1;
 type T1 table<X1>;
+
 type T2 table<X2>;

@@ -4,6 +4,6 @@ type R record {
 };
 
 public function main() {
-    R r = { x: 1, y: 2, w: 3 }; // @error
+    R r = {x: 1, y: 2, w: 3}; // @error
     _ = r;
 }

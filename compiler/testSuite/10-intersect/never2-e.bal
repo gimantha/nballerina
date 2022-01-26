@@ -2,6 +2,6 @@
 public function main() {
 }
 
-function foo(int&string arg) // @error
+function foo(int & string arg)  // @error
 {
 }

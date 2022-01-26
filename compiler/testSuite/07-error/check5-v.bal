@@ -1,7 +1,7 @@
 import ballerina/io;
 
 public function main() {
-    map<int> m = { x: 3 };
+    map<int> m = {x: 3};
     io:println(-checkpanic nonNil(m["x"])); // @output -3
 }
 

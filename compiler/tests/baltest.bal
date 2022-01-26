@@ -3,11 +3,12 @@ import ballerina/io;
 import ballerina/file;
 
 type SubtypeTestCase [string, string[], string[]];
+
 @test:Config {
     dataProvider: subtypeCaseProvider
 }
 function testSubtype(string filename, string[] lines, string[] expected) returns error? {
-    string[] result = check subtypeRels([{ lines, filename }]);
+    string[] result = check subtypeRels([{lines, filename}]);
     test:assertEquals(result, expected);
 }
 
@@ -32,10 +33,10 @@ function readTestCase(string filename) returns SubtypeTestCase|error {
     string[] lines = check io:fileReadLines(filename);
     string[] expected =
         from var line in lines
-        where line.startsWith("// ") && line.includes("<:")
-        let string result = line.substring(3).trim()
-        order by result
-        select result;
+    where line.startsWith("// ") && line.includes("<:")
+    let string result = line.substring(3).trim()
+    order by result
+    select result;
     return [filename, lines, expected];
 }
 
@@ -43,10 +44,10 @@ function readSubtypeTests(string filename) returns SubtypeTestCase|io:Error {
     string[] lines = check io:fileReadLines(filename);
     string[] expected =
         from var line in lines
-        where line.startsWith("// @type")
-        let string result = line.substring(9)
-        order by result
-        select result;
+    where line.startsWith("// @type")
+    let string result = line.substring(9)
+    order by result
+    select result;
     return [filename, lines, expected];
 }
 

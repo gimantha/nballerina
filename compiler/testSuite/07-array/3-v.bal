@@ -10,4 +10,3 @@ public function main() {
 function foo() returns any[] {
     return [];
 }
- 

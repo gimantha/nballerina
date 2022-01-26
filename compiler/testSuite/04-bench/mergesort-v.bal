@@ -12,7 +12,7 @@ public function main() {
     io:println(len); // @output 1000000
     foreach int i in 0 ..< len {
         v.push(x);
-        x = x*a % m;
+        x = x * a % m;
     }
     any[] s = sort(v);
     io:println(s.length() == len); // @output true

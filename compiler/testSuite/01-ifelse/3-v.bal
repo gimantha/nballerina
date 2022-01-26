@@ -8,7 +8,7 @@ public function main() {
 }
 
 function printBranch(int x) {
-    if (x<10) {
+    if (x < 10) {
         io:println(1);
     }
     else {

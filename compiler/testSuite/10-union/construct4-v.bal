@@ -12,7 +12,7 @@ type ZY record {|
 |};
 
 public function main() {
-    ZY|XYZ xyz= { x: 1, z: 3, y: 2 };
+    ZY|XYZ xyz = {x: 1, z: 3, y: 2};
     if xyz is XYZ {
         io:println(xyz.z); // @output 3
     }

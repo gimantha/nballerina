@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     int i = 8;
     if i is int {

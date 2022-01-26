@@ -20,22 +20,22 @@ public type NonCharStringSubtype readonly & record {|
 public function stringConst(string value) returns ComplexSemType {
     CharStringSubtype char;
     NonCharStringSubtype nonChar;
-    
+
     if value.length() == 1 {
-        char = { allowed: true, values: [<string:Char>value] };
-        nonChar = { allowed: true, values: [] };
+        char = {allowed: true, values: [<string:Char>value]};
+        nonChar = {allowed: true, values: []};
     }
     else {
-        char = { allowed: true, values: [] };
-        nonChar = { allowed: true, values: [value] };
+        char = {allowed: true, values: []};
+        nonChar = {allowed: true, values: [value]};
     }
-    return uniformSubtype(UT_STRING, { char, nonChar });
+    return uniformSubtype(UT_STRING, {char, nonChar});
 }
 
 function stringChar() returns SemType {
     StringSubtype st = {
-        char: { allowed: false, values: [] }, 
-        nonChar: { allowed: true, values: [] }
+        char: {allowed: false, values: []},
+        nonChar: {allowed: true, values: []}
     };
     return uniformSubtype(UT_STRING, st);
 }
@@ -44,7 +44,7 @@ function stringSubtypeSingleValue(SubtypeData d) returns string? {
     if d is boolean {
         return ();
     }
-    var { char, nonChar } = <StringSubtype>d;
+    var {char, nonChar} = <StringSubtype>d;
     int charCount = char.allowed ? char.values.length() : 2;
     int nonCharCount = nonChar.allowed ? nonChar.values.length() : 2;
     if charCount + nonCharCount == 1 {
@@ -58,7 +58,7 @@ function stringSubtypeContains(SubtypeData d, string s) returns boolean {
         return d;
     }
     StringSubtype st = <StringSubtype>d;
-    var { char, nonChar } = st;
+    var {char, nonChar} = st;
     if s.length() == 1 {
         return char.values.indexOf(<string:Char>s) != () ? char.allowed : !char.allowed;
     }
@@ -74,10 +74,10 @@ function stringSubtypeUnion(SubtypeData d1, SubtypeData d2) returns SubtypeData 
     boolean nonCharsAllowed = enumerableSubtypeUnion(sd1.nonChar, sd2.nonChar, nonChars);
 
     return createStringSubtype(
-        { allowed: charsAllowed, values: chars.cloneReadOnly() },
-        { allowed: nonCharsAllowed, values: nonChars.cloneReadOnly() }
+        {allowed: charsAllowed, values: chars.cloneReadOnly()},
+        {allowed: nonCharsAllowed, values: nonChars.cloneReadOnly()}
     );
-} 
+}
 
 function stringSubtypeIntersect(SubtypeData d1, SubtypeData d2) returns SubtypeData {
     if d1 is boolean {
@@ -93,10 +93,10 @@ function stringSubtypeIntersect(SubtypeData d1, SubtypeData d2) returns SubtypeD
     string[] nonChars = [];
     boolean charsAllowed = enumerableSubtypeIntersect(sd1.char, sd2.char, chars);
     boolean nonCharsAllowed = enumerableSubtypeIntersect(sd1.nonChar, sd2.nonChar, nonChars);
-    
+
     return createStringSubtype(
-        { allowed: charsAllowed, values: chars.cloneReadOnly() },
-        { allowed: nonCharsAllowed, values: nonChars.cloneReadOnly() }
+        {allowed: charsAllowed, values: chars.cloneReadOnly()},
+        {allowed: nonCharsAllowed, values: nonChars.cloneReadOnly()}
     );
 }
 
@@ -115,8 +115,8 @@ function stringSubtypeComplement(SubtypeData d) returns SubtypeData {
         }
     }
     return createStringSubtype(
-        { allowed: !char.allowed, values: char.values },
-        { allowed: !nonChar.allowed, values: nonChar.values }
+        {allowed: !char.allowed, values: char.values},
+        {allowed: !nonChar.allowed, values: nonChar.values}
     );
 }
 
@@ -129,7 +129,7 @@ function createStringSubtype(CharStringSubtype char, NonCharStringSubtype nonCha
             return false;
         }
     }
-    return { char, nonChar };
+    return {char, nonChar};
 }
 
 final UniformTypeOps stringOps = {

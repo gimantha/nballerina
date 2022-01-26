@@ -65,15 +65,16 @@ function constValueWithBody(PointerType ty, string[] body) returns ConstPointerV
     string operand = concat(...words);
     return new (ty, operand);
 }
+
 // Corresponds to LLVMConstInt
 // XXX Need to think about SignExtend argument
 public function constInt(IntType ty, int val) returns ConstValue {
     return new ConstValue(ty, val.toString());
 }
 
-final string posInf = floatBitsToHexString(1.0/0.0);
-final string negInf = floatBitsToHexString(-1.0/0.0);
-final string NAN = floatBitsToHexString(0.0/0.0);
+final string posInf = floatBitsToHexString(1.0 / 0.0);
+final string negInf = floatBitsToHexString(-1.0 / 0.0);
+final string NAN = floatBitsToHexString(0.0 / 0.0);
 
 // Corresponds to LLVMConstReal
 public function constFloat(FloatType ty, float val) returns ConstValue {
@@ -112,18 +113,18 @@ public function constNull(PointerType ty) returns ConstPointerValue {
 
 // Corresponds to LLVMContextRef
 public class Context {
-    private final map<[StructType,boolean]> namedStructTypes = {};
+    private final map<[StructType, boolean]> namedStructTypes = {};
     private final map<Type[]> namedStructTypeBody = {};
     // Corresponds to LLVMContextCreate
     public function init() {
     }
 
     public function createModule() returns Module {
-        return new(self);
+        return new (self);
     }
 
     public function createBuilder() returns Builder {
-        return new(self);
+        return new (self);
     }
 
     public function constStruct(Value[] elements) returns ConstValue {
@@ -145,7 +146,7 @@ public class Context {
         }
         structBody.push("}");
         Type structTy = structType(elemTypes);
-        return new(structTy, concat(...structBody));
+        return new (structTy, concat(...structBody));
     }
 
     // Corresponds to LLVMConstArray
@@ -160,18 +161,18 @@ public class Context {
             body.push(typeToString(element.ty, self), element.operand);
         }
         body.push("]");
-        return new(ty, concat(...body));
+        return new (ty, concat(...body));
     }
 
     // Corresponds to LLVMConstStringInContext
     public function constString(byte[] bytes) returns ConstValue {
         ArrayType ty = arrayType("i8", bytes.length());
-        ConstValue val = new(ty, charArray(bytes));
+        ConstValue val = new (ty, charArray(bytes));
         return val;
     }
 
     // Corresponds to LLVMConstGEP
-    public function constGetElementPtr(ConstPointerValue ptr, ConstValue[] indices, "inbounds"? inbounds=()) returns ConstPointerValue {
+    public function constGetElementPtr(ConstPointerValue ptr, ConstValue[] indices, "inbounds"? inbounds = ()) returns ConstPointerValue {
         string[] words = [];
         words.push("getelementptr");
         if inbounds != () {
@@ -207,7 +208,7 @@ public class Context {
         if self.namedStructTypes.hasKey(structName) {
             panic err:illegalArgument("this context already has a struct type by that name");
         }
-        StructType ty = { elementTypes: [], name: structName };
+        StructType ty = {elementTypes: [], name: structName};
         self.namedStructTypes[structName] = [ty, false];
         self.namedStructTypeBody[structName] = [];
         return ty;
@@ -229,7 +230,7 @@ public class Context {
         return new ConstValue(toType, concat("ptrtoint", "(", typeToString(constantValue.ty, self), constantValue.operand, "to", typeToString(toType, self), ")"));
     }
 
-    function output(Output out){
+    function output(Output out) {
         foreach var entry in self.namedStructTypes.entries() {
             var data = entry[1];
             if data[1] {
@@ -275,16 +276,16 @@ public class Module {
 
     // Corresponds to LLVMCreateDIBuilder
     public function createDIBuilder() returns DIBuilder {
-        DIBuilder dIBuilder = new(self);
+        DIBuilder dIBuilder = new (self);
         return dIBuilder;
     }
 
     // Corresponds to LLVMAddModuleFlag
     public function addModuleFlag(ModuleFlagBehavior behavior, ModuleFlag flag) {
         Metadata metadata = self.addMetadata();
-        metadata.addLine(metadata.ref(), "=", "!", "{", "i32", moduleFlagBehaviorToString.get(behavior),",",
-                         "!", "\"", flag[0], "\"", ",", "i32", flag[1].toString() ,"}");
-        string[] preambleWords  = [];
+        metadata.addLine(metadata.ref(), "=", "!", "{", "i32", moduleFlagBehaviorToString.get(behavior), ",",
+                        "!", "\"", flag[0], "\"", ",", "i32", flag[1].toString(), "}");
+        string[] preambleWords = [];
         preambleWords.push("!", "llvm", ".", "module", ".", "flags", "=", "!", "{");
         foreach var flagMetadata in self.moduleFlags {
             preambleWords.push(flagMetadata.ref(), ",");
@@ -306,14 +307,14 @@ public class Module {
 
     public function addFunctionDecl(string name, FunctionType fnType) returns FunctionDecl {
         string fnName = self.escapeGlobalIdent(name);
-        FunctionDecl fn = new(self.context, fnName, fnType);
+        FunctionDecl fn = new (self.context, fnName, fnType);
         self.globals[fnName] = fn;
         self.functionDecls.push(fn);
         return fn;
     }
 
     // Corresponds to LLVMSetTarget
-    public function setTarget(TargetTriple targetTriple){
+    public function setTarget(TargetTriple targetTriple) {
         self.target = targetTriple;
     }
 
@@ -325,20 +326,20 @@ public class Module {
         }
         if name is IntegerArithmeticIntrinsicName {
             return self.addIntrinsic(name,
-                                     { returnType: structType(["i64", "i1"]), paramTypes: ["i64", "i64"] },
-                                     ["nofree", "nosync", "nounwind", "readnone", "speculatable", "willreturn"]);
+                                    {returnType: structType(["i64", "i1"]), paramTypes: ["i64", "i64"]},
+                                    ["nofree", "nosync", "nounwind", "readnone", "speculatable", "willreturn"]);
 
         }
         else {
             GeneralIntrinsicName _ = name;
             return self.addIntrinsic(name,
-                                     { returnType: pointerType("i8", 1), paramTypes: [pointerType("i8", 1), "i64"] },
-                                     ["nofree", "nosync", "nounwind", "readnone", "speculatable", "willreturn"]);
+                                    {returnType: pointerType("i8", 1), paramTypes: [pointerType("i8", 1), "i64"]},
+                                    ["nofree", "nosync", "nounwind", "readnone", "speculatable", "willreturn"]);
         }
     }
 
     private function addIntrinsic(IntrinsicFunctionName name, FunctionType fnType, EnumAttribute[] attrs) returns FunctionDecl {
-        FunctionDecl fn = new(self.context, "llvm." + name, fnType);
+        FunctionDecl fn = new (self.context, "llvm." + name, fnType);
         foreach var attr in attrs {
             fn.addEnumAttribute(attr);
         }
@@ -351,7 +352,7 @@ public class Module {
     public function addGlobal(Type ty, string name, *GlobalProperties props) returns ConstPointerValue {
         string varName = self.escapeGlobalIdent(name);
         PointerType ptrType = pointerType(ty, props.addressSpace);
-        ConstPointerValue val = new ConstPointerValue(ptrType, "@" + varName); 
+        ConstPointerValue val = new ConstPointerValue(ptrType, "@" + varName);
         self.globals[varName] = val;
         self.globalVariables.push([val, props]);
         return val;
@@ -376,7 +377,6 @@ public class Module {
         self.aliases.push([alias, aliasee, props]);
         return alias;
     }
-
 
     private function escapeGlobalIdent(string name) returns string {
         string varName = escapeIdent(name);
@@ -443,11 +443,11 @@ public class Module {
         out.push(concat(...line));
     }
 
-    function outputGlobalVar(PointerValue val, GlobalProperties prop, Output out){
+    function outputGlobalVar(PointerValue val, GlobalProperties prop, Output out) {
         string[] words = [];
-        words.push(<string> val.operand, "=");
+        words.push(<string>val.operand, "=");
         if !(prop.initializer == ()) {
-            if prop.linkage == "internal"{
+            if prop.linkage == "internal" {
                 words.push(prop.linkage);
             }
         } else {
@@ -483,7 +483,7 @@ public class Module {
     }
 
     function addMetadata() returns Metadata {
-        Metadata metadata = new(self.genMetadataLabel());
+        Metadata metadata = new (self.genMetadataLabel());
         self.metadata.push(metadata);
         return metadata;
     }
@@ -633,7 +633,7 @@ public class FunctionDefn {
     }
 
     // Corresponds to LLVMAppendBasicBlock
-    public function appendBasicBlock(string? name=()) returns BasicBlock {
+    public function appendBasicBlock(string? name = ()) returns BasicBlock {
         string|Unnamed bbName = self.genName(name);
         BasicBlock bb = new (self.context, bbName, self);
         if bbName is Unnamed {
@@ -642,7 +642,6 @@ public class FunctionDefn {
         self.basicBlocks.push(bb);
         return bb;
     }
-
 
     function genName(string? name = ()) returns string|Unnamed {
         if name is string {
@@ -742,7 +741,7 @@ public class FunctionDefn {
             if !self.isBasicBlock[name] {
                 panic error("Variable names must be updated before updating basic block names");
             }
-            string newName =  self.nameTranslation[name];
+            string newName = self.nameTranslation[name];
             return newName;
         } else {
             return name;
@@ -764,11 +763,11 @@ public distinct class Metadata {
         self.label = ref;
     }
 
-    function addLine(string ...words) {
+    function addLine(string... words) {
         self.lines.push(concat(...words));
     }
 
-    function addPreamble(string ...words) {
+    function addPreamble(string... words) {
         self.preamble.push(concat(...words));
     }
 
@@ -785,13 +784,13 @@ public distinct class Metadata {
             out.push(string `${self.ref()} = !{}`);
         }
         foreach var line in self.lines {
-           out.push(line);
+            out.push(line);
         }
     }
 
     function outputPreamble(Output out) {
         foreach var line in self.preamble {
-           out.push(line);
+            out.push(line);
         }
     }
 
@@ -833,7 +832,7 @@ public class DIBuilder {
         Metadata metadata = self.m.addMetadata();
         string[] words = [];
         words.push(metadata.ref(), "=", "distinct", "!", "DICompileUnit", "(", "language",
-                   ":", sourceLangToString.get(props.language));
+                    ":", sourceLangToString.get(props.language));
         self.addMetadataToWords(words, props.file, "file");
         self.addStringToWords(words, props.producer, "producer");
         words.push(",", "isOptimized", ":", props.isOptimized.toString());
@@ -854,7 +853,7 @@ public class DIBuilder {
     public function createFile(string filename, string directory) returns Metadata {
         Metadata metadata = self.m.addMetadata();
         metadata.addLine(metadata.ref(), "=", "!", "DIFile", "(", "filename", ":", "\"", filename,
-                         "\"", ",", "directory", ":", "\"", directory, "\"", ")");
+                        "\"", ",", "directory", ":", "\"", directory, "\"", ")");
         return metadata;
     }
 
@@ -912,7 +911,7 @@ public class DIBuilder {
         return metadata;
     }
 
-    public function createSubroutineType(Metadata? file, Metadata[] parameterTypes=[], DIFlag flag="zero") returns Metadata {
+    public function createSubroutineType(Metadata? file, Metadata[] parameterTypes = [], DIFlag flag = "zero") returns Metadata {
         Metadata metadata = self.m.addMetadata();
         if parameterTypes.length() != 0 {
             panic error("Parameter types not implemented");
@@ -922,7 +921,7 @@ public class DIBuilder {
         return metadata;
     }
 
-    public function createDebugLocation(Context context, int line, int column, Metadata? scope, Metadata? inlinedAt=()) returns Metadata {
+    public function createDebugLocation(Context context, int line, int column, Metadata? scope, Metadata? inlinedAt = ()) returns Metadata {
         Metadata metadata = self.m.addMetadata();
         string[] words = [metadata.ref(), "=", "!", "DILocation", "("];
         words.push("line", ":", line.toString());
@@ -933,7 +932,7 @@ public class DIBuilder {
         return metadata;
     }
 
-    function addMetadataToWords(string[] words, Metadata? metadata, string label, string? prefix=",") {
+    function addMetadataToWords(string[] words, Metadata? metadata, string label, string? prefix = ",") {
         if prefix is string {
             words.push(prefix);
         }
@@ -946,7 +945,7 @@ public class DIBuilder {
         }
     }
 
-    function addStringToWords(string[] words, string? data, string label, string? prefix=",") {
+    function addStringToWords(string[] words, string? data, string label, string? prefix = ",") {
         if data is string {
             if prefix is string {
                 words.push(prefix);
@@ -955,7 +954,7 @@ public class DIBuilder {
         }
     }
 
-    function addBooleanToWords(string[] words, boolean? data, string label, string? prefix=","){
+    function addBooleanToWords(string[] words, boolean? data, string label, string? prefix = ",") {
         if prefix is string {
             words.push(prefix);
         }
@@ -991,7 +990,7 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildAlloca
-    public function alloca(SingleValueType ty, Alignment? align=(), string? name=()) returns PointerValue {
+    public function alloca(SingleValueType ty, Alignment? align = (), string? name = ()) returns PointerValue {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
         PointerType ptrTy = pointerType(ty);
@@ -1000,7 +999,7 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildLoad
-    public function load(PointerValue ptr, Alignment? align=(), string? name=()) returns Value {
+    public function load(PointerValue ptr, Alignment? align = (), string? name = ()) returns Value {
         BasicBlock bb = self.bb();
         Type ty = ptr.ty.pointsTo;
         string|Unnamed reg = bb.func.genReg(name);
@@ -1009,22 +1008,28 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildStore
-    public function store(Value val, PointerValue ptr, Alignment? align=()) {
+    public function store(Value val, PointerValue ptr, Alignment? align = ()) {
         Type ty = ptr.ty.pointsTo;
         if ty != val.ty {
             panic err:illegalArgument("store type mismatch: " + typeToString(val.ty, self.context) + ", " + typeToString(ptr.ty, self.context));
         }
-        addInsnWithAlign(self.bb(), ["store", typeToString(ty, self.context), val.operand, ",",
-                         typeToString(ptr.ty, self.context), ptr.operand], align, self.dbLocation);
+        addInsnWithAlign(self.bb(), [
+            "store",
+            typeToString(ty, self.context),
+            val.operand,
+            ",",
+            typeToString(ptr.ty, self.context),
+            ptr.operand
+        ], align, self.dbLocation);
     }
 
     // Corresponds to LLVMBuild{FAdd,FSub,FMul,FDiv,FRem}
-    public function fArithmetic(FloatArithmeticOp op, Value lhs, Value rhs, string? name=()) returns Value {
+    public function fArithmetic(FloatArithmeticOp op, Value lhs, Value rhs, string? name = ()) returns Value {
         return self.binaryOpWrap(op, lhs, rhs, name);
     }
 
     // Corresponds to LLVMBuildNSW{Add,Mul,Sub}
-    public function iArithmeticNoWrap(IntArithmeticOp op, Value lhs, Value rhs, string? name=()) returns Value {
+    public function iArithmeticNoWrap(IntArithmeticOp op, Value lhs, Value rhs, string? name = ()) returns Value {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
         IntType|FloatType ty = sameNumberType(lhs, rhs);
@@ -1032,22 +1037,22 @@ public class Builder {
         return new Value(ty, reg);
     }
     // Corresponds to LLVMBuild{Add,Mul,Sub}
-    public function iArithmeticWrap(IntArithmeticOp op, Value lhs, Value rhs, string? name=()) returns Value {
+    public function iArithmeticWrap(IntArithmeticOp op, Value lhs, Value rhs, string? name = ()) returns Value {
         return self.binaryOpWrap(op, lhs, rhs, name);
     }
 
     // Corresponds to LLVMBuild{SDiv,SRem}
-    public function iArithmeticSigned(IntArithmeticSignedOp op, Value lhs, Value rhs, string? name=()) returns Value {
+    public function iArithmeticSigned(IntArithmeticSignedOp op, Value lhs, Value rhs, string? name = ()) returns Value {
         return self.binaryOpWrap(op, lhs, rhs, name);
     }
 
     // Corresponds to LLVMBuild{And, Or, Xor}
-    public function iBitwise(IntBitwiseOp op, Value lhs, Value rhs, string? name=()) returns Value {
+    public function iBitwise(IntBitwiseOp op, Value lhs, Value rhs, string? name = ()) returns Value {
         return self.binaryOpWrap(op, lhs, rhs, name);
     }
 
     // Internally handle binary int operations without wrapping
-    function binaryOpWrap(BinaryOp op, Value lhs, Value rhs, string? name=()) returns Value {
+    function binaryOpWrap(BinaryOp op, Value lhs, Value rhs, string? name = ()) returns Value {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
         IntType|FloatType ty = sameNumberType(lhs, rhs);
@@ -1056,7 +1061,7 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildICmp
-    public function iCmp(IntPredicate op, Value lhs, Value rhs, string? name=()) returns Value {
+    public function iCmp(IntPredicate op, Value lhs, Value rhs, string? name = ()) returns Value {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
         IntegralType ty = sameIntegralType(lhs, rhs);
@@ -1065,7 +1070,7 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildFCmp
-    public function fCmp(FloatPredicate op, Value lhs, Value rhs, string? name=()) returns Value {
+    public function fCmp(FloatPredicate op, Value lhs, Value rhs, string? name = ()) returns Value {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
         IntType|FloatType ty = sameNumberType(lhs, rhs);
@@ -1079,7 +1084,7 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildBitCast
-    public function bitCast(PointerValue val, PointerType destTy, string? name=()) returns PointerValue {
+    public function bitCast(PointerValue val, PointerType destTy, string? name = ()) returns PointerValue {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
         (string|Unnamed)[] words = [reg, "="];
@@ -1091,7 +1096,7 @@ public class Builder {
 
     // Corresponds to LLVMBuildRet/LLVMBuildRetVoid
     // value of () represents void return value
-    public function ret(Value? value=()) {
+    public function ret(Value? value = ()) {
         BasicBlock bb = self.bb();
         if value == () {
             addInsnWithDbLocation(bb, ["ret", "void"], self.dbLocation);
@@ -1102,34 +1107,55 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildPtrToInt
-    public function ptrToInt(PointerValue ptr, IntType destTy, string? name=()) returns Value {
+    public function ptrToInt(PointerValue ptr, IntType destTy, string? name = ()) returns Value {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
-        addInsnWithDbLocation(bb, [reg, "=", "ptrtoint", typeToString(ptr.ty, self.context), ptr.operand, "to",
-                                   typeToString(destTy, self.context)], self.dbLocation);
+        addInsnWithDbLocation(bb, [
+            reg,
+            "=",
+            "ptrtoint",
+            typeToString(ptr.ty, self.context),
+            ptr.operand,
+            "to",
+            typeToString(destTy, self.context)
+        ], self.dbLocation);
         return new Value(destTy, reg);
     }
 
     // Corresponds to LLVMBuildZExt
-    public function zExt(Value val, IntType destTy, string? name=()) returns Value {
+    public function zExt(Value val, IntType destTy, string? name = ()) returns Value {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
-        addInsnWithDbLocation(bb, [reg, "=", "zext", typeToString(val.ty, self.context), val.operand, "to",
-                              typeToString(destTy, self.context)], self.dbLocation);
+        addInsnWithDbLocation(bb, [
+            reg,
+            "=",
+            "zext",
+            typeToString(val.ty, self.context),
+            val.operand,
+            "to",
+            typeToString(destTy, self.context)
+        ], self.dbLocation);
         return new Value(destTy, reg);
     }
 
     // Corresponds to LLVMBuildSExt
-    public function sExt(Value val, IntType destTy, string? name=()) returns Value {
+    public function sExt(Value val, IntType destTy, string? name = ()) returns Value {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
-        addInsnWithDbLocation(bb, [reg, "=", "sext", typeToString(val.ty, self.context), val.operand, "to",
-                                   typeToString(destTy, self.context)], self.dbLocation);
+        addInsnWithDbLocation(bb, [
+            reg,
+            "=",
+            "sext",
+            typeToString(val.ty, self.context),
+            val.operand,
+            "to",
+            typeToString(destTy, self.context)
+        ], self.dbLocation);
         return new Value(destTy, reg);
     }
 
     // Corresponds to LLVMBuildTrunc
-    public function trunc(Value val, IntType destinationType, string? name=()) returns Value {
+    public function trunc(Value val, IntType destinationType, string? name = ()) returns Value {
         Type valueType = val.ty;
         if valueType is IntType {
             if valueType == destinationType {
@@ -1137,8 +1163,15 @@ public class Builder {
             }
             BasicBlock bb = self.bb();
             string|Unnamed reg = bb.func.genReg(name);
-            addInsnWithDbLocation(bb, [reg, "=", "trunc", typeToString(val.ty, self.context), val.operand, "to",
-                                       typeToString(destinationType, self.context)], self.dbLocation);
+            addInsnWithDbLocation(bb, [
+                reg,
+                "=",
+                "trunc",
+                typeToString(val.ty, self.context),
+                val.operand,
+                "to",
+                typeToString(destinationType, self.context)
+            ], self.dbLocation);
             return new Value(destinationType, reg);
         }
         else {
@@ -1147,7 +1180,7 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildFNeg
-    public function fNeg(Value val, string? name=()) returns Value {
+    public function fNeg(Value val, string? name = ()) returns Value {
         Type valTy = val.ty;
         if valTy is FloatType {
             BasicBlock bb = self.bb();
@@ -1161,13 +1194,20 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildSIToFP
-    public function sIToFP(Value val, FloatType destTy, string? name=()) returns Value {
+    public function sIToFP(Value val, FloatType destTy, string? name = ()) returns Value {
         Type valTy = val.ty;
         if valTy is IntType {
             BasicBlock bb = self.bb();
             string|Unnamed reg = bb.func.genReg(name);
-            addInsnWithDbLocation(bb, [reg, "=", "sitofp", typeToString(val.ty, self.context), val.operand,
-                                       "to", typeToString(destTy, self.context)], self.dbLocation);
+            addInsnWithDbLocation(bb, [
+                reg,
+                "=",
+                "sitofp",
+                typeToString(val.ty, self.context),
+                val.operand,
+                "to",
+                typeToString(destTy, self.context)
+            ], self.dbLocation);
             return new Value(destTy, reg);
         }
         else {
@@ -1182,7 +1222,7 @@ public class Builder {
 
     // Corresponds to LLVMBuildCall
     // Returns () if there is no result i.e. function return type is void
-    public function call(Function|PointerValue fn, Value[] args, string? name=()) returns Value? {
+    public function call(Function|PointerValue fn, Value[] args, string? name = ()) returns Value? {
         (string|Unnamed)[] insnWords;
         RetType retType;
         BasicBlock bb = self.bb();
@@ -1203,7 +1243,7 @@ public class Builder {
             }
             retType = fn.functionType.returnType;
             string functionName = "@" + fn.functionName;
-            insnWords = self.buildFunctionCallBody(retType, functionName, args );
+            insnWords = self.buildFunctionCallBody(retType, functionName, args);
         }
         if retType != "void" {
             string|Unnamed reg = bb.func.genReg(name);
@@ -1239,12 +1279,19 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildExtractValue
-    public function extractValue(Value value, int index, string? name=()) returns Value {
+    public function extractValue(Value value, int index, string? name = ()) returns Value {
         if value.ty is StructType {
             BasicBlock bb = self.bb();
             string|Unnamed reg = bb.func.genReg(name);
-            addInsnWithDbLocation(bb, [reg, "=", "extractvalue", typeToString(value.ty, self.context),
-                                       value.operand, ",", index.toString()], self.dbLocation);
+            addInsnWithDbLocation(bb, [
+                reg,
+                "=",
+                "extractvalue",
+                typeToString(value.ty, self.context),
+                value.operand,
+                ",",
+                index.toString()
+            ], self.dbLocation);
             Type elementType = getTypeAtIndex(<StructType>value.ty, index, self.context);
             return new Value(elementType, reg);
         }
@@ -1272,7 +1319,7 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildGEP
-    public function getElementPtr(PointerValue ptr, Value[] indices, "inbounds"? inbounds=(), string? name=()) returns PointerValue {
+    public function getElementPtr(PointerValue ptr, Value[] indices, "inbounds"? inbounds = (), string? name = ()) returns PointerValue {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
         (string|Unnamed)[] words = [];
@@ -1287,7 +1334,7 @@ public class Builder {
     }
 
     // Corresponds to LLVMBuildAddrSpaceCast
-    public function addrSpaceCast(PointerValue val, PointerType destTy, string? name=()) returns PointerValue {
+    public function addrSpaceCast(PointerValue val, PointerType destTy, string? name = ()) returns PointerValue {
         BasicBlock bb = self.bb();
         string|Unnamed reg = bb.func.genReg(name);
         (string|Unnamed)[] words = [];
@@ -1353,8 +1400,8 @@ public distinct class BasicBlock {
     function addInsn((string|Unnamed)... words) {
         (string|Unnamed)[] chunks = [];
         string[] currentChunk = [];
-        foreach var word in words{
-            if word is string{
+        foreach var word in words {
+            if word is string {
                 currentChunk.push(word);
             } else {
                 chunks.push(concat(...currentChunk));
@@ -1431,7 +1478,7 @@ function sameNumberType(Value v1, Value v2) returns IntType|FloatType {
     panic err:illegalArgument("expected a number type");
 }
 
-function typeToString(RetType ty, Context context, boolean forceInline=false) returns string {
+function typeToString(RetType ty, Context context, boolean forceInline = false) returns string {
     if ty is PointerType {
         if ty.addressSpace == 0 {
             return typeToString(ty.pointsTo, context) + "*";
@@ -1572,8 +1619,8 @@ function concat(string... words) returns string {
             lastTail = lastTail.substring(lastTail.length() - 1);
         }
         string head = word.length() > 0 ? word.substring(0, 1) : "";
-        if !(omitSpaceBefore(word) || (head != "\"" && omitSpaceBefore(head))) 
-                && parts.length() > 0 
+        if !(omitSpaceBefore(word) || (head != "\"" && omitSpaceBefore(head)))
+                && parts.length() > 0
                 && !(omitSpaceAfter(parts[parts.length() - 1]) || (lastTail != "\"" && omitSpaceAfter(lastTail))) {
             parts.push(" ");
         }
@@ -1582,7 +1629,7 @@ function concat(string... words) returns string {
     return string:concat(...parts).trim();
 }
 
- // Identifier must be of the form [-a-zA-Z$._][-a-zA-Z$._0-9]* 
+// Identifier must be of the form [-a-zA-Z$._][-a-zA-Z$._0-9]* 
 function escapeIdent(string name) returns string {
     if isIdent(name) {
         return name;
@@ -1607,7 +1654,7 @@ function escapeIdentChar(string:Char ch) returns string {
             // UTF-8 representation of a code point >= 0x80 consists of bytes >= 0x80
             // so toHexString here will always produce two bytes
             result += "\\" + b.toHexString().toUpperAscii();
-        } 
+        }
         return result;
     }
     string hex = cp.toHexString().toUpperAscii();
@@ -1624,7 +1671,7 @@ function gepArgs((string|Unnamed)[] words, Value ptr, Value[] indices, "inbounds
     if ptrTy is PointerType {
         words.push(typeToString(ptrTy.pointsTo, context));
     } else {
-        panic err:illegalArgument("GEP on non-pointer type value"); 
+        panic err:illegalArgument("GEP on non-pointer type value");
     }
     words.push(",", typeToString(ptr.ty, context), ptr.operand);
     Type resultType = ptr.ty;
@@ -1650,7 +1697,7 @@ function gepArgs((string|Unnamed)[] words, Value ptr, Value[] indices, "inbounds
                 }
                 Type indexTy = index.ty;
                 if indexTy !is "i32" {
-                    panic err:illegalArgument("structures can be index only using i32 constants"); 
+                    panic err:illegalArgument("structures can be index only using i32 constants");
                 }
                 else {
                     resultType = getTypeAtIndex(resultType, i, context);
@@ -1726,7 +1773,7 @@ function isIdentFollow(string:Char ch) returns boolean {
 }
 
 function isIdentOther(string:Char ch) returns boolean {
-     return ch == "$" || ch == "." || ch == "_" || ch == "-";
+    return ch == "$" || ch == "." || ch == "_" || ch == "-";
 }
 
 function isAlnum(string:Char ch) returns boolean {

@@ -4,4 +4,3 @@ public function main() {
     INT_MAX *= 2; // @panic arithmetic overflow
 }
 
-

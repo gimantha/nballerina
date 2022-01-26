@@ -9,9 +9,14 @@
 // U<:UU
 // UU<:U
 type NN [int, int];
+
 type SS [string, string];
+
 type NS [int, string];
+
 type SN [string, int];
+
 type UU [int|string, int|string];
+
 type U NN|SS|NS|SN;
 

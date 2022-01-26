@@ -24,7 +24,7 @@ type ListConjunction record {|
 
 // This is atom index 0
 // Used by bddFixReadOnly
-final ListAtomicType LIST_SUBTYPE_RO = { members: { initial: [], fixedLength: 0 }, rest: READONLY };
+final ListAtomicType LIST_SUBTYPE_RO = {members: {initial: [], fixedLength: 0}, rest: READONLY};
 
 public class ListDefinition {
     *Definition;
@@ -50,8 +50,8 @@ public class ListDefinition {
     }
 
     public function define(Env env, SemType[] initial = [], int fixedLength = initial.length(), SemType rest = NEVER) returns ComplexSemType {
-        FixedLengthArray members = fixedLengthNormalize({ initial, fixedLength });
-        ListAtomicType rwType = { members: members.cloneReadOnly(), rest };
+        FixedLengthArray members = fixedLengthNormalize({initial, fixedLength});
+        ListAtomicType rwType = {members: members.cloneReadOnly(), rest};
         Atom rw;
         RecAtom? rwRec = self.rwRec;
         if rwRec != () {
@@ -97,7 +97,7 @@ public class ListDefinition {
         ComplexSemType s = createComplexSemType(0, [[UT_LIST_RO, roBdd], [UT_LIST_RW, rwBdd]]);
         self.semType = s;
         return s;
-    }       
+    }
 }
 
 function fixedLengthNormalize(FixedLengthArray array) returns FixedLengthArray {
@@ -114,15 +114,15 @@ function fixedLengthNormalize(FixedLengthArray array) returns FixedLengthArray {
         }
         i -= 1;
     }
-    return { initial: initial.slice(0, i + 2), fixedLength: array.fixedLength };
+    return {initial: initial.slice(0, i + 2), fixedLength: array.fixedLength};
 }
-    
+
 function readOnlyListAtomicType(ListAtomicType ty) returns ListAtomicType {
     if typeListIsReadOnly(ty.members.initial) && isReadOnly(ty.rest) {
         return ty;
     }
     return {
-        members: { initial: readOnlyTypeList(ty.members.initial), fixedLength: ty.members.fixedLength },
+        members: {initial: readOnlyTypeList(ty.members.initial), fixedLength: ty.members.fixedLength},
         rest: intersect(ty.rest, READONLY)
 
     };
@@ -142,7 +142,7 @@ function listSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
     BddMemo? mm = cx.listMemo[b];
     BddMemo m;
     if mm == () {
-        m = { bdd: b };
+        m = {bdd: b};
         cx.listMemo.add(m);
     }
     else {
@@ -159,14 +159,14 @@ function listSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
     }
     boolean isEmpty = bddEvery(cx, b, (), (), listFormulaIsEmpty);
     m.isEmpty = isEmpty;
-    return isEmpty;    
+    return isEmpty;
 }
 
 function listFormulaIsEmpty(Context cx, Conjunction? pos, Conjunction? neg) returns boolean {
     FixedLengthArray members;
     SemType rest;
     if pos == () {
-        members = { initial: [], fixedLength: 0 };
+        members = {initial: [], fixedLength: 0};
         rest = TOP;
     }
     else {
@@ -185,7 +185,7 @@ function listFormulaIsEmpty(Context cx, Conjunction? pos, Conjunction? neg) retu
             }
             else {
                 Atom d = p.atom;
-                p = p.next; 
+                p = p.next;
                 lt = cx.listAtomType(d);
                 var intersected = listIntersectWith(members, rest, lt);
                 if intersected is () {
@@ -217,9 +217,9 @@ function listIntersectWith(FixedLengthArray members, SemType rest, ListAtomicTyp
     }
     int nonRepeatedLen = int:max(members.initial.length(), lt.members.initial.length());
     foreach int i in 0 ..< nonRepeatedLen {
-        fixedArraySet(members, i, 
+        fixedArraySet(members, i,
             intersect(listMemberAt(members, rest, i), listMemberAt(lt.members, lt.rest, i)));
-    } 
+    }
     if ltLen < newLen {
         if isNever(lt.rest) {
             return ();
@@ -317,7 +317,7 @@ function listMemberAt(FixedLengthArray fixedArray, SemType rest, int index) retu
         return fixedArrayGet(fixedArray, index);
     }
     return rest;
-} 
+}
 
 function fixedArrayAnyEmpty(Context cx, FixedLengthArray array) returns boolean {
     foreach var t in array.initial {
@@ -355,7 +355,7 @@ function fixedArraySet(FixedLengthArray members, int setIndex, SemType m) {
         members.initial[setIndex] = m;
         return;
     }
-    SemType lastMember = members.initial[initCount - 1]; 
+    SemType lastMember = members.initial[initCount - 1];
     foreach int i in initCount ..< setIndex + 1 {
         members.initial.push(lastMember);
     }
@@ -363,7 +363,7 @@ function fixedArraySet(FixedLengthArray members, int setIndex, SemType m) {
 }
 
 function fixedArrayShallowCopy(FixedLengthArray array) returns FixedLengthArray {
-    return { initial: shallowCopyTypes(array.initial), fixedLength: array.fixedLength };
+    return {initial: shallowCopyTypes(array.initial), fixedLength: array.fixedLength};
 }
 
 function listConjunction(Context cx, Conjunction? con) returns ListConjunction? {
@@ -372,7 +372,7 @@ function listConjunction(Context cx, Conjunction? con) returns ListConjunction? 
         int len = listType.members.initial.length();
         ListConjunction? next = listConjunction(cx, con.next);
         int maxInitialLen = next == () ? len : int:max(len, next.maxInitialLen);
-        return { listType, maxInitialLen, next };
+        return {listType, maxInitialLen, next};
     }
     return ();
 }
@@ -383,10 +383,10 @@ function bddListMemberType(Context cx, Bdd b, int? key, SemType accum) returns S
     }
     else {
         return union(bddListMemberType(cx, b.left, key,
-                                       intersect(listAtomicMemberType(cx.listAtomType(b.atom), key),
-                                                 accum)),
-                     union(bddListMemberType(cx, b.middle, key, accum),
-                           bddListMemberType(cx, b.right, key, accum)));
+                                        intersect(listAtomicMemberType(cx.listAtomType(b.atom), key),
+                                                accum)),
+                    union(bddListMemberType(cx, b.middle, key, accum),
+                            bddListMemberType(cx, b.right, key, accum)));
     }
 }
 

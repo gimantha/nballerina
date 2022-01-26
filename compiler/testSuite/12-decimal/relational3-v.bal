@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     decimal x = 5d;
     io:println(1d < 2d); // @output true

@@ -1,3 +1,3 @@
 public function main() {
-    panic("panic"); // @error
+    panic ("panic"); // @error
 }

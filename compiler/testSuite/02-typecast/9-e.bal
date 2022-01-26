@@ -6,5 +6,5 @@ public function main() {
 }
 
 function ignore(boolean b) {
-    
+
 }

@@ -9,6 +9,7 @@ function buildCmpTestFn(FloatPredicate predicate, string name, Module m, Builder
     Value res = builder.fCmp(predicate, p0, p1);
     builder.ret(res);
 }
+
 function floatCmp() returns Module {
     Context context = new;
     Builder builder = context.createBuilder();

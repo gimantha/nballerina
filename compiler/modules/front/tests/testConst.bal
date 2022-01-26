@@ -4,8 +4,7 @@ import wso2/nballerina.comm.diagnostic as d;
 import wso2/nballerina.types as t;
 import wso2/nballerina.front.syntax as s;
 
-
-type ConstEvalTest [string,SimpleConst];
+type ConstEvalTest [string, SimpleConst];
 
 class TestFoldContext {
     // JBUG #33394 error if next line uncommented
@@ -22,7 +21,7 @@ class TestFoldContext {
     }
 
     public function semanticErr(d:Message msg, d:Position|d:Range pos, error? cause = ()) returns err:Semantic {
-        return err:semantic(msg, loc=d:location(self.file, pos), cause=cause);
+        return err:semantic(msg, loc = d:location(self.file, pos), cause = cause);
     }
 
     function typeContext() returns t:Context {
@@ -38,13 +37,13 @@ class TestFoldContext {
     function isConstDefn() returns boolean => true;
 }
 
-@test:Config{ dataProvider: validConstExprs }
+@test:Config {dataProvider: validConstExprs}
 function testConstExpr(string src, SimpleConst expected) {
-    s:SourceFile file = s:createSourceFile([src], { filename: "<internal>" });
+    s:SourceFile file = s:createSourceFile([src], {filename: "<internal>"});
     s:Expr parsed = checkpanic s:parseExpression(file);
-    TestFoldContext cx = new(file);
+    TestFoldContext cx = new (file);
     var result = foldExpr(cx, (), parsed);
-    test:assertTrue(result is s:ConstValueExpr && result.value == expected, "got: " + (result is s:ConstValueExpr ? result.value.toString()  : "not constant"));
+    test:assertTrue(result is s:ConstValueExpr && result.value == expected, "got: " + (result is s:ConstValueExpr ? result.value.toString() : "not constant"));
 }
 
 function validConstExprs() returns map<ConstEvalTest> {

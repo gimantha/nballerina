@@ -12,7 +12,6 @@ function basicMainDarwinX86() returns Module {
     return m;
 }
 
-
 function basicMainDarwinARM() returns Module {
     Module m = basicMain();
     m.setTarget("aarch64-apple-darwin");

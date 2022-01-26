@@ -20,6 +20,6 @@ function foo(int|string x) {
 }
 
 public function main() {
-    foo(2);          // @output This is integer
+    foo(2); // @output This is integer
     foo("test str"); // @output This is test str
 }

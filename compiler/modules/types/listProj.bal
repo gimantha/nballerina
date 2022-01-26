@@ -10,7 +10,7 @@ public function listProj(Context cx, SemType t, int k) returns SemType {
     }
     else {
         return union(listProjBdd(cx, k, <Bdd>getComplexSubtypeData(t, UT_LIST_RO), (), ()),
-                     listProjBdd(cx, k, <Bdd>getComplexSubtypeData(t, UT_LIST_RW), (), ()));
+                    listProjBdd(cx, k, <Bdd>getComplexSubtypeData(t, UT_LIST_RW), (), ()));
     }
 }
 
@@ -21,8 +21,8 @@ function listProjBdd(Context cx, int k, Bdd b, Conjunction? pos, Conjunction? ne
     }
     else {
         return union(listProjBdd(cx, k, b.left, and(b.atom, pos), neg),
-                     union(listProjBdd(cx, k, b.middle, pos, neg),
-                           listProjBdd(cx, k, b.right, pos, and(b.atom, neg)))); 
+                    union(listProjBdd(cx, k, b.middle, pos, neg),
+                            listProjBdd(cx, k, b.right, pos, and(b.atom, neg))));
     }
 }
 
@@ -31,7 +31,7 @@ function listProjPath(Context cx, int k, Conjunction? pos, Conjunction? neg) ret
     FixedLengthArray members;
     SemType rest;
     if pos == () {
-        members = { initial: [], fixedLength: 0 };
+        members = {initial: [], fixedLength: 0};
         rest = TOP;
     }
     else {
@@ -50,7 +50,7 @@ function listProjPath(Context cx, int k, Conjunction? pos, Conjunction? neg) ret
             }
             else {
                 Atom d = p.atom;
-                p = p.next; 
+                p = p.next;
                 lt = cx.listAtomType(d);
                 var intersected = listIntersectWith(members, rest, lt);
                 if intersected is () {
@@ -102,7 +102,7 @@ function listProjExclude(Context cx, int k, FixedLengthArray members, SemType re
                 FixedLengthArray s = fixedArrayShallowCopy(members);
                 fixedArraySet(s, i, d);
                 p = union(p, listProjExclude(cx, k, s, rest, neg.next));
-            }     
+            }
         }
         SemType rd = diff(rest, nt.rest);
         if !isEmpty(cx, rd) {

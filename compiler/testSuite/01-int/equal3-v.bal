@@ -11,7 +11,7 @@ public function main() {
     }
     b = 21 != 21;
     if b {
-        io:println(0); 
+        io:println(0);
     }
     else {
         io:println(21); // @output 21

@@ -6,6 +6,5 @@ function wrapper(boolean b) {
     // @end
 }
 
-
 function foo(int a) {
 }

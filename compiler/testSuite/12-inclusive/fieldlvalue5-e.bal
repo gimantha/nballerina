@@ -4,6 +4,6 @@ type R record {
 };
 
 public function main() {
-    R p = { x: 3, n: 4 };
+    R p = {x: 3, n: 4};
     p.n |= 3; // @error
 }

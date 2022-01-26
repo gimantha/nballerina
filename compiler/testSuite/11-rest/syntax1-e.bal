@@ -1,8 +1,9 @@
 type R record {|
     int x;
     string...;
-    string...; // @error
+string...; // @error
 |};
 
-public function main() { }
+public function main() {
+}
 

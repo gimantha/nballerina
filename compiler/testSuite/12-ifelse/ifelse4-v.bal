@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     if true {
     }

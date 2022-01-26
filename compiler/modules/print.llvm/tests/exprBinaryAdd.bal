@@ -31,13 +31,13 @@ function exprBinaryAdd() returns Module {
     BasicBlock ifTrue = foo.appendBasicBlock();
     BasicBlock ifFalse = foo.appendBasicBlock();
 
-    builder.condBr(R10,ifTrue, ifFalse);
+    builder.condBr(R10, ifTrue, ifFalse);
 
     builder.positionAtEnd(ifTrue);
     builder.ret(R8);
 
     builder.positionAtEnd(ifFalse);
-    _ = builder.call(abort,[]);
+    _ = builder.call(abort, []);
     return m;
 }
 

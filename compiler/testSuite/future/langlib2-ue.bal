@@ -2,7 +2,8 @@
 public function main() {
     any x = [];
     int n = x.length(); // @error
-    ignore(n); 
+    ignore(n);
 }
 
-function ignore(int n) { }
+function ignore(int n) {
+}

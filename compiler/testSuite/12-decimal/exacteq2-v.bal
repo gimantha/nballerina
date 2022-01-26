@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     decimal d1 = 0d;
     decimal d2 = 0d;

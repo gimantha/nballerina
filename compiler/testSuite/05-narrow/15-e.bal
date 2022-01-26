@@ -6,7 +6,7 @@ public function main() {
     if v == "x" {
         // Narrowed type of `v` is a singleton and type of `"x"`` is a singleton,
         // so type of `v != x` is singleton false, which means this is unreachable.
-        if v != "x" {            
+        if v != "x" {
             io:println("unreachable"); // @error
         }
         else {

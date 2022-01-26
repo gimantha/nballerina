@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     map<int> m = {};
     m["a"] = 5;

@@ -16,5 +16,7 @@ type R2 record {|
 // @type T1 = T
 // @type T2 < T
 type T [R...];
+
 type T1 [R1...];
+
 type T2 [R2...];

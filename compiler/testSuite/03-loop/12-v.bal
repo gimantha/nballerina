@@ -7,7 +7,7 @@ public function main() {
             continue;
         }
         io:println(i); // @output 6
-                       // @output 7
-                       // @output 9
+        // @output 7
+        // @output 9
     }
 }

@@ -4,10 +4,10 @@ function exprBinarySub() returns Module {
     Context context = new;
     Module m = context.createModule();
     FunctionDecl sub = m.getIntrinsicDeclaration("ssub.with.overflow.i64");
-    Function abort = m.addFunctionDefn("abort", {returnType:"void", paramTypes:[]});
+    Function abort = m.addFunctionDefn("abort", {returnType: "void", paramTypes: []});
     FunctionDefn foo = m.addFunctionDefn("foo", {returnType: "i64", paramTypes: ["i64", "i64"]});
     BasicBlock initBlock = foo.appendBasicBlock();
-    Builder builder =  context.createBuilder();
+    Builder builder = context.createBuilder();
     builder.positionAtEnd(initBlock);
     PointerValue R3 = builder.alloca("i64");
     PointerValue R4 = builder.alloca("i64");

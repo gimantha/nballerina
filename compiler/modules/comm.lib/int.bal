@@ -30,4 +30,3 @@ public function numberOfTrailingZeros(int bits) returns int {
     return n;
 }
 
-

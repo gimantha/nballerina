@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     () a = ();
     anydata val = a;

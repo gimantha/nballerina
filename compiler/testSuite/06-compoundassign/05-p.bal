@@ -1,7 +1,6 @@
 // @productions compound-assignment-stmt local-var-decl-stmt int-literal
 public function main() {
     int INT_MAX = 9223372036854775807;
-    INT_MAX +=1; // @panic arithmetic overflow
+    INT_MAX += 1; // @panic arithmetic overflow
 }
-
 

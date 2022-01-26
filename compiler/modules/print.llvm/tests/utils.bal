@@ -2,7 +2,7 @@ import ballerina/io;
 import ballerina/file;
 import ballerina/test;
 
-type TestFunction function() returns Module;
+type TestFunction function () returns Module;
 
 function runTest(TestFunction func, string expectedFilename) returns io:Error|file:Error? {
     string expectedPath = check file:joinPath(file:getCurrentDir(), "modules", "print.llvm", "tests", "testOutputs", expectedFilename);

@@ -25,7 +25,7 @@ function readOnlyTypeList(SemType[] mt) returns readonly & SemType[] {
         }
         types.push(t);
     }
-    return types.cloneReadOnly(); 
+    return types.cloneReadOnly();
 }
 
 type Conjunction record {
@@ -34,10 +34,10 @@ type Conjunction record {
 };
 
 function and(Atom atom, Conjunction? next) returns Conjunction {
-    return { atom, next };
+    return {atom, next};
 }
 
-type BddPredicate function(Context cx, Conjunction? pos, Conjunction? neg) returns boolean;
+type BddPredicate function (Context cx, Conjunction? pos, Conjunction? neg) returns boolean;
 
 // A Bdd represents a disjunction of conjunctions of atoms, where each atom is either positive or
 // negative (negated). Each path from the root to a leaf that is true represents one of the conjunctions
@@ -49,8 +49,8 @@ function bddEvery(Context cx, Bdd b, Conjunction? pos, Conjunction? neg, BddPred
     }
     else {
         return bddEvery(cx, b.left, and(b.atom, pos), neg, predicate)
-          && bddEvery(cx, b.middle, pos, neg, predicate)
-          && bddEvery(cx, b.right, pos, and(b.atom, neg), predicate); 
+        && bddEvery(cx, b.middle, pos, neg, predicate)
+        && bddEvery(cx, b.right, pos, and(b.atom, neg), predicate);
     }
 }
 
@@ -60,8 +60,8 @@ function bddEveryPositive(Context cx, Bdd b, Conjunction? pos, Conjunction? neg,
     }
     else {
         return bddEveryPositive(cx, b.left, andIfPositive(b.atom, pos), neg, predicate)
-          && bddEveryPositive(cx, b.middle, pos, neg, predicate)
-          && bddEveryPositive(cx, b.right, pos, andIfPositive(b.atom, neg), predicate); 
+        && bddEveryPositive(cx, b.middle, pos, neg, predicate)
+        && bddEveryPositive(cx, b.right, pos, andIfPositive(b.atom, neg), predicate);
     }
 }
 
@@ -84,12 +84,12 @@ function bddPosMaybeEmpty(Bdd b) returns boolean {
         return bddPosMaybeEmpty(b.middle) || bddPosMaybeEmpty(b.right);
     }
 }
-   
+
 function andIfPositive(Atom atom, Conjunction? next) returns Conjunction? {
     if atom is int && atom < 0 {
         return next;
     }
-    return { atom, next };
+    return {atom, next};
 }
 
 function bddSubtypeUnion(SubtypeData t1, SubtypeData t2) returns SubtypeData {
@@ -137,11 +137,13 @@ function bddPaths(Bdd b, BddPath[] paths, BddPath accum) {
 
 // Feels like this should be a lang library function.
 function shallowCopyTypes(SemType[] v) returns SemType[] {
-    return from var x in v select x;
+    return from var x in v
+        select x;
 }
 
 function shallowCopyStrings(string[] v) returns string[] {
-    return from var x in v select x;
+    return from var x in v
+        select x;
 }
 
 function notIsEmpty(Context cx, SubtypeData d) returns boolean {

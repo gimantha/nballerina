@@ -5,8 +5,8 @@ import wso2/nballerina.comm.diagnostic as d;
 public type Position d:Position;
 
 type PositionFields record {|
-   Position startPos;
-   Position endPos;
+    Position startPos;
+    Position endPos;
 |};
 
 public type ModulePart record {|
@@ -50,6 +50,7 @@ public type FunctionParam record {|
 |};
 
 public type ResolvedConst readonly & [t:SemType, t:SingleValue];
+
 public type ConstDefn record {|
     *PositionFields;
     readonly string name;
@@ -58,14 +59,19 @@ public type ConstDefn record {|
     Visibility vis;
     Expr expr;
     Position namePos;
-    ResolvedConst|false? resolved = ();    
+    ResolvedConst|false? resolved = ();
 |};
 
 public type Stmt VarDeclStmt|AssignStmt|CallStmt|ReturnStmt|IfElseStmt|MatchStmt|WhileStmt|ForeachStmt|BreakContinueStmt|CompoundAssignStmt|PanicStmt;
+
 public type CallExpr FunctionCallExpr|MethodCallExpr|CheckingCallExpr;
+
 public type Expr GroupingExpr|NumericLiteralExpr|ConstValueExpr|VarRefExpr|CompoundExpr|FunctionCallExpr|MethodCallExpr;
+
 public type CompoundExpr BinaryExpr|UnaryExpr|CheckingExpr|FunctionCallExpr|MethodCallExpr|TypeCastExpr|TypeTestExpr|ConstructorExpr|MemberAccessExpr|FieldAccessExpr;
+
 public type ConstructorExpr ListConstructorExpr|MappingConstructorExpr|ErrorConstructorExpr;
+
 public type SimpleConstExpr ConstValueExpr|VarRefExpr|NumericLiteralExpr|SimpleConstNegateExpr;
 
 // L-value expression
@@ -134,6 +140,7 @@ public type MatchClause record {|
 public type MatchPattern SimpleConstExpr|WildcardMatchPattern;
 
 const WILDCARD_MATCH_PATTERN = "_";
+
 public type WildcardMatchPattern record {|
     *PositionFields;
     WILDCARD_MATCH_PATTERN pattern = WILDCARD_MATCH_PATTERN;
@@ -158,8 +165,8 @@ public type ForeachStmt record {|
 public type BreakContinue "break"|"continue";
 
 public type BreakContinueStmt record {|
-   *PositionFields;
-   BreakContinue breakContinue;
+    *PositionFields;
+    BreakContinue breakContinue;
 |};
 
 public type VarDeclStmt record {|
@@ -179,20 +186,25 @@ public type GroupingExpr record {|
     Expr innerExpr;
 |};
 
-public type BinaryArithmeticOp "+" | "-" | "*" | "/" | "%";
-public type BinaryBitwiseOp "|" | "^" | "&" | "<<" | ">>" | ">>>";
-public type BinaryLogicalOp "&&" | "||";
-public type BinaryRelationalOp "<" | ">" | "<=" | ">=";
-public type BinaryEqualityOp  "==" | "!=" | "===" | "!==";
-public type RangeOp  "..." | "..<";
+public type BinaryArithmeticOp "+"|"-"|"*"|"/"|"%";
 
-type CompoundAssignOp  "+=" | "-=" | "/=" | "*=" | "&=" | "|=" | "^=" | "<<=" | ">>=" | ">>>=";
+public type BinaryBitwiseOp "|"|"^"|"&"|"<<"|">>"|">>>";
+
+public type BinaryLogicalOp "&&"|"||";
+
+public type BinaryRelationalOp "<"|">"|"<="|">=";
+
+public type BinaryEqualityOp "=="|"!="|"==="|"!==";
+
+public type RangeOp "..."|"..<";
+
+type CompoundAssignOp "+="|"-="|"/="|"*="|"&="|"|="|"^="|"<<="|">>="|">>>=";
 
 public type BinaryExprOp BinaryArithmeticOp|BinaryRelationalOp|BinaryEqualityOp;
 
 const NegateOp = "-";
 
-public type UnaryExprOp NegateOp | "!" | "~";
+public type UnaryExprOp NegateOp|"!"|"~";
 
 public type BinaryExpr BinaryRelationalExpr|BinaryEqualityExpr|BinaryArithmeticExpr|BinaryBitwiseExpr|BinaryLogicalExpr;
 
@@ -210,7 +222,7 @@ public type BinaryEqualityExpr record {|
 |};
 
 public type BinaryRelationalExpr record {|
-    *BinaryExprBase;    
+    *BinaryExprBase;
     BinaryRelationalOp relationalOp;
 |};
 
@@ -405,7 +417,6 @@ public type FpLiteralExpr record {|
     FpTypeSuffix? typeSuffix;
 |};
 
-
 // Types
 
 public type TypeDefn record {|
@@ -449,6 +460,7 @@ public type FieldDesc record {|
 |};
 
 public const INCLUSIVE_RECORD_TYPE_DESC = true;
+
 public type MappingTypeDesc record {|
     *PositionFields;
     FieldDesc[] fields;
@@ -476,7 +488,8 @@ public type ErrorTypeDesc record {|
     TypeDesc detail;
 |};
 
-public type BinaryTypeOp "|" | "&";
+public type BinaryTypeOp "|"|"&";
+
 public const UnaryTypeOp = "!";
 
 public type BinaryTypeDesc record {|

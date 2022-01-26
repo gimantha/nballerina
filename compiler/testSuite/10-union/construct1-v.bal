@@ -11,10 +11,9 @@ type Y record {|
 type XY X|Y;
 
 public function main() {
-    XY x = { x: 17 };
+    XY x = {x: 17};
     if x is X {
         io:println(x.x); // @output 17
     }
 }
-
 

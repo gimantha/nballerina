@@ -1,6 +1,7 @@
 import ballerina/io;
 
 type String string;
+
 type Int int;
 
 public function main() {

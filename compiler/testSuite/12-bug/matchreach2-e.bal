@@ -2,8 +2,12 @@ import ballerina/io;
 
 function foo(boolean b) {
     match b {
-        true => { return; }
-        false => { return; }
+        true => {
+            return;
+        }
+        false => {
+            return;
+        }
     }
     io:println("unreached"); // @error
 }

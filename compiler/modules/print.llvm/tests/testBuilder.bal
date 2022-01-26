@@ -55,7 +55,7 @@ function builderCondBrCheck() {
     Builder builder = context.createBuilder();
     builder.positionAtEnd(bb);
     DataValue s = new ("i64", "s");
-    error? e = trap builder.condBr(s,bb,bb);
+    error? e = trap builder.condBr(s, bb, bb);
     if e !is error {
         test:assertFail("invalid cond br allowed");
     }

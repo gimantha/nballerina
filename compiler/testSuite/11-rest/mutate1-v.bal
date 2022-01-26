@@ -7,7 +7,7 @@ type R record {|
 |};
 
 public function main() {
-    R r = { x: 1, y: false };
+    R r = {x: 1, y: false};
     r["stuff"] = "xyzzy";
     r["stuff"] = "abc";
     r.x = 2;
