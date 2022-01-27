@@ -11,8 +11,11 @@ final int CASE_START_LENGTH = CASE_START.length();
 const CASE_END = "// @end";
 
 type Kind "V"|"E"|"UV"|"UE";
+
 type ParserTestCase [Kind, string, string[], string[]];
+
 type SingleStringParserTestCase [Kind, string, string, string];
+
 @test:Config {
     dataProvider: readParserTests
 }
@@ -40,12 +43,14 @@ function testParser(Kind k, string rule, string[] subject, string[] expected) re
 }
 
 type TokenizerTestCase [string, string[]];
+
 type SingleStringTokenizerTestCase [string, string];
+
 @test:Config {
     dataProvider: getTokenizerTests
 }
 function testTokenizer(string k, string[] lines) returns error? {
-    SourceFile file = createSourceFile(lines, { filename: k });
+    SourceFile file = createSourceFile(lines, {filename: k});
     Tokenizer tok = new (file);
     while true {
         err:Syntax|Token? t = advance(tok, k, lines);
@@ -66,7 +71,7 @@ function testTokenizer(string k, string[] lines) returns error? {
                 test:assertTrue(t is err:Syntax, "expected a syntax error on: " + "\n".'join(...lines));
             }
             break;
-        } 
+        }
     }
 }
 
@@ -107,10 +112,10 @@ function tokenToString(Token t) returns string {
 function reduceToWords(string k, string rule, string[] fragment) returns err:Syntax|Word[] {
     Word[] w = [];
     if rule == "mod" {
-        modulePartToWords(w, check scanAndParseModulePart(createSourceFile(fragment, { filename: k }), 0));
+        modulePartToWords(w, check scanAndParseModulePart(createSourceFile(fragment, {filename: k}), 0));
     }
     else {
-        SourceFile file = createSourceFile(fragment, { filename: k });
+        SourceFile file = createSourceFile(fragment, {filename: k});
         Tokenizer tok = new (file);
         check tok.advance();
         match rule {
@@ -134,39 +139,41 @@ function reduceToWords(string k, string rule, string[] fragment) returns err:Syn
     return w;
 }
 
-
 function getTokenizerTests() returns map<TokenizerTestCase>|error {
-     map<TokenizerTestCase> all = check invalidTokenSourceFragments();
-     int invalidCases = all.length();
-     map<ParserTestCase> valid = check readParserTests();
-     foreach var [k, v] in valid.entries() {
-         all[k] = ["V", v[2]];
-     }
-     test:assertEquals(all.length(), invalidCases + valid.length(), "duplicate test");
-     return all;
+    map<TokenizerTestCase> all = check invalidTokenSourceFragments();
+    int invalidCases = all.length();
+    map<ParserTestCase> valid = check readParserTests();
+    foreach var [k, v] in valid.entries() {
+        all[k] = ["V", v[2]];
+    }
+    test:assertEquals(all.length(), invalidCases + valid.length(), "duplicate test");
+    return all;
 }
 
 function invalidTokenSourceFragments() returns map<TokenizerTestCase>|error {
     SingleStringTokenizerTestCase[] sources = [
-        ["E", string`"`],
+        ["E", string `"`],
         ["E", "'"],
         ["E", "`"],
-        ["E", string`"\"`],
-        ["E", string`"\a"`],
-        ["E", string`\`],
-        ["E", string`"${ "\n" }"`],
-        ["E", string`"${ "\r" }"`],
-        ["E", string`"\\`],
-        ["E", string`"\u{}"`],
+        ["E", string `"\"`],
+        ["E", string `"\a"`],
+        ["E", string `\`],
+        ["E", string `"${"\n"}"`],
+        ["E", string `"${"\r"}"`],
+        ["E", string `"\\`],
+        ["E", string `"\u{}"`],
         // JBUG #33390 using template string complains about invalid unicodes
-        ["E", "\"\\" + "u{D800}\""],
+        [
+            "E",
+            "\"\\" + "u{D800}\""
+        ],
         ["E", "\"\\" + "u{DFFF}\""],
         ["E", "\"\\" + "u{110000}\""],
-        ["E", string`"\u{X}"`],
-        ["E", string`"\u{-6A}"`],
-        ["E", string`"\u"`],
-        ["E", string`"\u{"`],
-        ["E", string`"\u{0"`]
+        ["E", string `"\u{X}"`],
+        ["E", string `"\u{-6A}"`],
+        ["E", string `"\u"`],
+        ["E", string `"\u{"`],
+        ["E", string `"\u{0"`]
     ];
 
     map<TokenizerTestCase> tests = {};
@@ -254,7 +261,7 @@ function readCase(string path) returns string[]|error {
     int indented = 0;
     foreach var line in lines {
         string trimLine = line.trim();
-        if  trimLine == CASE_START && line.endsWith(CASE_START) {
+        if trimLine == CASE_START && line.endsWith(CASE_START) {
             inCase = true;
             indented = line.length() - CASE_START_LENGTH;
             continue;
@@ -269,7 +276,7 @@ function readCase(string path) returns string[]|error {
     return caseLines;
 }
 
-function canonFileName(string base) returns string{
+function canonFileName(string base) returns string {
     string sansExt = base.substring(0, base.length() - SOURCE_EXTENSION.length());
     return sansExt + "-canon" + SOURCE_EXTENSION;
 }

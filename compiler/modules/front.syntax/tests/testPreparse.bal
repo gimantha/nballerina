@@ -3,6 +3,7 @@ import wso2/nballerina.comm.err;
 import ballerina/test;
 
 const SYNTAX_ERROR = ();
+
 type PreparseTestResult PREPARSE_TYPE_DESC|PREPARSE_EXPR|SYNTAX_ERROR;
 
 // `()` Within the subset grammar syntax
@@ -16,7 +17,7 @@ type PreparseTestCase [string, PreparseTestResult, int, PreparseTestKind];
     dataProvider: parenStmtBeginnings
 }
 function testPreparse(string src, PreparseTestResult expected, int minLookahead, PreparseTestKind k) returns err:Syntax? {
-    SourceFile file = createSourceFile([src], { filename: "<preparse-test>" });
+    SourceFile file = createSourceFile([src], {filename: "<preparse-test>"});
     Tokenizer tok = new (file);
     check tok.advance();
     TokenizerState state = tok.save();
@@ -78,7 +79,11 @@ function parenStmtBeginnings() returns map<PreparseTestCase>|error {
         ["()?", " n = ();", PREPARSE_TYPE_DESC],
         // SUBSET enable after optional field access
         // ["()?.", " method();", PREPARSE_EXPR]
-        ["()|", "int i = ();", PREPARSE_TYPE_DESC],
+        [
+            "()|",
+            "int i = ();",
+            PREPARSE_TYPE_DESC
+        ],
         ["(()|", "int) i = ();", PREPARSE_TYPE_DESC, "W"],
         ["(()) n", " = ();", PREPARSE_TYPE_DESC],
         ["(()).", "m();", PREPARSE_EXPR], // semantically invalid
@@ -104,7 +109,11 @@ function parenStmtBeginnings() returns map<PreparseTestCase>|error {
         ["(int|", "string[])[] a = [1];", PREPARSE_TYPE_DESC, "W"],
         ["(int:Signed32) i", " = 2;", PREPARSE_TYPE_DESC],
         // SUBSET this should a semantic error, not a syntax error
-        ["(int:MAX).", "toHex();", SYNTAX_ERROR],
+        [
+            "(int:MAX).",
+            "toHex();",
+            SYNTAX_ERROR
+        ],
 
         ["(map<", "int>|())[] maybeMaps = [];", PREPARSE_TYPE_DESC, "W"],
         ["(map:entries(", "m)).removeAll();", PREPARSE_EXPR, "O"],

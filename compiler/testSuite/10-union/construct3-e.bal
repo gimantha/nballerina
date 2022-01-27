@@ -8,6 +8,6 @@ type X2 record {|
 
 public function main() {
     X1|X2 x =
-        { x: 1 }; // @error
+        {x: 1}; // @error
     _ = x;
 }

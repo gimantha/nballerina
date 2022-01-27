@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     int|boolean|float|string x = "two";
     if x is int|boolean|string {

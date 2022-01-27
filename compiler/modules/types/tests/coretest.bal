@@ -1,6 +1,6 @@
 import ballerina/test;
 
-@test:Config{}
+@test:Config {}
 function testSubtypeSimple() {
     test:assertTrue(isSubtypeSimple(NIL, ANY));
     test:assertTrue(isSubtypeSimple(INT, TOP));
@@ -9,7 +9,7 @@ function testSubtypeSimple() {
     test:assertFalse(isSubtypeSimple(ERROR, ANY));
 }
 
-@test:Config{}
+@test:Config {}
 function testSingleNumericType() {
     test:assertEquals(singleNumericType(INT), INT);
     test:assertEquals(singleNumericType(BOOLEAN), ());
@@ -18,7 +18,7 @@ function testSingleNumericType() {
     test:assertEquals(singleNumericType(union(INT, FLOAT)), ());
 }
 
-@test:Config{}
+@test:Config {}
 function test1() {
     Env env = new;
     disjoint(typeContext(env), STRING, INT);
@@ -35,12 +35,12 @@ function disjoint(Context cx, SemType t1, SemType t2) {
     test:assertTrue(isEmpty(cx, intersect(t1, t2)));
 }
 
-@test:Config{}
+@test:Config {}
 function test2() {
     test:assertTrue(isSubtype(typeContext(new), INT, TOP));
 }
 
-@test:Config{}
+@test:Config {}
 function test3() {
     Env env = new;
     SemType s = tuple(env, INT, union(INT, STRING));
@@ -49,11 +49,11 @@ function test3() {
 }
 
 function equiv(Env env, SemType s, SemType t) {
-    test:assertTrue(isSubtype(typeContext(env), s, t)); 
+    test:assertTrue(isSubtype(typeContext(env), s, t));
     test:assertTrue(isSubtype(typeContext(env), t, s));
 }
 
-@test:Config{}
+@test:Config {}
 function test4() {
     Env env = new;
     SemType isT = tuple(env, INT, STRING);
@@ -67,7 +67,7 @@ function test4() {
     test:assertTrue(isSubtype(cx, iiT, ttT));
 }
 
-@test:Config{}
+@test:Config {}
 function test5() {
     Env env = new;
     SemType s = tuple(env, INT, union(NIL, union(INT, STRING)));
@@ -75,14 +75,14 @@ function test5() {
     equiv(env, s, t);
 }
 
-function recursiveTuple(Env env, function(Env, SemType) returns SemType[] f) returns SemType {
-    ListDefinition def = new; 
+function recursiveTuple(Env env, function (Env, SemType) returns SemType[] f) returns SemType {
+    ListDefinition def = new;
     SemType t = def.getSemType(env);
     SemType[] members = f(env, t);
     return def.define(env, members);
 }
 
-@test:Config{}
+@test:Config {}
 function recTest() {
     Env env = new;
     SemType t1 = recursiveTuple(env, (e, t) => [INT, union(t, NIL)]);
@@ -91,7 +91,7 @@ function recTest() {
     test:assertFalse(isSubtype(typeContext(env), t2, t1));
 }
 
-@test:Config{}
+@test:Config {}
 function recTest2() {
     Env env = new;
     SemType t1 = union(NIL, recursiveTuple(env, (e, t) => [INT, union(t, NIL)]));
@@ -99,7 +99,7 @@ function recTest2() {
     test:assertTrue(isSubtype(typeContext(env), t2, t1));
 }
 
-@test:Config{}
+@test:Config {}
 function recTest3() {
     Env env = new;
     SemType t1 = recursiveTuple(env, (e, t) => [INT, union(t, NIL)]);
@@ -110,7 +110,7 @@ function recTest3() {
     equiv(env, t1, t2);
 }
 
-@test:Config{}
+@test:Config {}
 function tupleTest1() {
     Env env = new;
     SemType s = tuple(env, INT, STRING, NIL);
@@ -119,7 +119,7 @@ function tupleTest1() {
     test:assertFalse(isSubtype(typeContext(env), t, s));
 }
 
-@test:Config{}
+@test:Config {}
 function tupleTest2() {
     Env env = new;
     SemType s = tuple(env, INT, STRING, NIL);
@@ -128,7 +128,7 @@ function tupleTest2() {
     test:assertFalse(isSubtype(typeContext(env), t, s));
 }
 
-@test:Config{}
+@test:Config {}
 function tupleTest3() {
     Env env = new;
     SemType z1 = tuple(env);
@@ -140,8 +140,7 @@ function tupleTest3() {
     test:assertFalse(isEmpty(typeContext(env), diff(INT, z1)));
 }
 
-
-@test:Config{}
+@test:Config {}
 function tupleTest4() {
     Env env = new;
     SemType s = tuple(env, INT, INT);
@@ -154,11 +153,11 @@ function tupleTest4() {
 }
 
 function func(Env env, SemType args, SemType ret) returns SemType {
-    FunctionDefinition def = new(env);
-    return def.define(env, args, ret);  
+    FunctionDefinition def = new (env);
+    return def.define(env, args, ret);
 }
 
-@test:Config{}
+@test:Config {}
 function funcTest1() {
     Env env = new;
     SemType s = func(env, INT, INT);
@@ -167,8 +166,7 @@ function funcTest1() {
     test:assertFalse(isSubtype(typeContext(env), t, s));
 }
 
-
-@test:Config{}
+@test:Config {}
 function funcTest2() {
     Env env = new;
     SemType s = func(env, union(NIL, INT), INT);
@@ -177,7 +175,7 @@ function funcTest2() {
     test:assertFalse(isSubtype(typeContext(env), t, s));
 }
 
-@test:Config{}
+@test:Config {}
 function funcTest3() {
     Env env = new;
     SemType s = func(env, tuple(env, union(NIL, INT)), INT);
@@ -186,7 +184,7 @@ function funcTest3() {
     test:assertFalse(isSubtype(typeContext(env), t, s));
 }
 
-@test:Config{}
+@test:Config {}
 function funcTest4() {
     Env env = new;
     SemType s = func(env, tuple(env, union(NIL, INT)), INT);
@@ -195,9 +193,9 @@ function funcTest4() {
     test:assertFalse(isSubtype(typeContext(env), t, s));
 }
 
-@test:Config{}
+@test:Config {}
 function stringTest() {
-    string [] result = [];
+    string[] result = [];
     enumerableListUnion(["a", "b", "d"], ["c"], result);
     test:assertEquals(result, ["a", "b", "c", "d"]);
 
@@ -210,7 +208,7 @@ function stringTest() {
     test:assertEquals(result, ["b", "d"]);
 }
 
-@test:Config{}
+@test:Config {}
 function roTest() {
     SemType t1 = uniformType(UT_LIST_RO);
     Env env = new;
@@ -222,7 +220,7 @@ function roTest() {
     test:assertTrue(b);
 }
 
-@test:Config{}
+@test:Config {}
 function simpleArrayMemberTypeTest() {
     Context cx = typeContext(new);
     testArrayMemberTypeOk(cx, ANY);
@@ -249,23 +247,23 @@ function testArrayMemberTypeFail(Context cx, SemType memberType) {
     test:assertTrue(bits == ());
 }
 
-@test:Config{}
+@test:Config {}
 function testIntSubtypeWidenUnsigned() {
-    test:assertTrue(<boolean> intSubtypeWidenUnsigned(true));
-    test:assertTrue(<boolean> intSubtypeWidenUnsigned([{ min: -1, max: 10 }]));
-    IntSubtype intType1 = <IntSubtype> intSubtypeWidenUnsigned([{ min: 0, max: 0 }]);
+    test:assertTrue(<boolean>intSubtypeWidenUnsigned(true));
+    test:assertTrue(<boolean>intSubtypeWidenUnsigned([{min: -1, max: 10}]));
+    IntSubtype intType1 = <IntSubtype>intSubtypeWidenUnsigned([{min: 0, max: 0}]);
     test:assertEquals(intType1[0].min, 0);
     test:assertEquals(intType1[0].max, 255);
-    IntSubtype intType2 = <IntSubtype> intSubtypeWidenUnsigned([{ min: 0, max: 257 }]);
+    IntSubtype intType2 = <IntSubtype>intSubtypeWidenUnsigned([{min: 0, max: 257}]);
     test:assertEquals(intType2[0].min, 0);
     test:assertEquals(intType2[0].max, 65535);
 }
 
-@test:Config{}
+@test:Config {}
 function testStringCharSubtype() {
-    ComplexSemType st = <ComplexSemType> stringConst("a");
+    ComplexSemType st = <ComplexSemType>stringConst("a");
     test:assertEquals(st.subtypeDataList.length(), 1);
-    StringSubtype subType = <StringSubtype> st.subtypeDataList[0];
+    StringSubtype subType = <StringSubtype>st.subtypeDataList[0];
     test:assertEquals(subType.char.values.length(), 1);
     test:assertEquals(subType.char.values[0], "a");
     test:assertEquals(subType.char.allowed, true);
@@ -273,11 +271,11 @@ function testStringCharSubtype() {
     test:assertEquals(subType.nonChar.allowed, true);
 }
 
-@test:Config{}
+@test:Config {}
 function testStringNonCharSubtype() {
-    ComplexSemType st = <ComplexSemType> stringConst("abc");
+    ComplexSemType st = <ComplexSemType>stringConst("abc");
     test:assertEquals(st.subtypeDataList.length(), 1);
-    StringSubtype subType = <StringSubtype> st.subtypeDataList[0];
+    StringSubtype subType = <StringSubtype>st.subtypeDataList[0];
     test:assertEquals(subType.char.values.length(), 0);
     test:assertEquals(subType.char.allowed, true);
     test:assertEquals(subType.nonChar.values.length(), 1);
@@ -285,13 +283,13 @@ function testStringNonCharSubtype() {
     test:assertEquals(subType.nonChar.allowed, true);
 }
 
-@test:Config{}
+@test:Config {}
 function testStringSubtypeSingleValue() {
-    ComplexSemType abc = <ComplexSemType> stringConst("abc");
+    ComplexSemType abc = <ComplexSemType>stringConst("abc");
     StringSubtype abcSD = <StringSubtype>abc.subtypeDataList[0];
     test:assertEquals(stringSubtypeSingleValue(abcSD), "abc");
 
-    ComplexSemType a = <ComplexSemType> stringConst("a");
+    ComplexSemType a = <ComplexSemType>stringConst("a");
     StringSubtype aSD = <StringSubtype>a.subtypeDataList[0];
     test:assertEquals(stringSubtypeSingleValue(aSD), "a");
 
@@ -299,11 +297,11 @@ function testStringSubtypeSingleValue() {
     test:assertEquals(stringSubtypeSingleValue(<StringSubtype>aAndAbc.subtypeDataList[0]), ());
 
     ComplexSemType intersect1 = <ComplexSemType>intersect(aAndAbc, a);
-    test:assertEquals(stringSubtypeSingleValue(<StringSubtype>intersect1.subtypeDataList[0]), "a");    
+    test:assertEquals(stringSubtypeSingleValue(<StringSubtype>intersect1.subtypeDataList[0]), "a");
     ComplexSemType intersect2 = <ComplexSemType>intersect(aAndAbc, abc);
     test:assertEquals(stringSubtypeSingleValue(<StringSubtype>intersect2.subtypeDataList[0]), "abc");
     SemType intersect3 = intersect(a, abc);
-    test:assertEquals(intersect3, NEVER);  
-    SemType intersect4 = intersect(a, STRING);  
+    test:assertEquals(intersect3, NEVER);
+    SemType intersect4 = intersect(a, STRING);
     test:assertEquals(intersect4, a);
 }

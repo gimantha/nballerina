@@ -12,7 +12,7 @@ public function foo(int x) returns string {
     match x {
         1|2|3 => {
             match x + x {
-                2 => { 
+                2 => {
                     return "1 + 1";
                 }
                 4 => {

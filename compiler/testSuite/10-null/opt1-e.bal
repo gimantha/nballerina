@@ -1,6 +1,7 @@
 import ballerina/io;
 
 type MyNil null;
+
 type AnotherNil MyNil?;
 
 public function main() {

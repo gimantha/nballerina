@@ -6,7 +6,7 @@ public type FloatSubtype readonly & record {|
 |};
 
 public function floatConst(float value) returns ComplexSemType {
-    FloatSubtype st = { allowed: true, values: [value] };
+    FloatSubtype st = {allowed: true, values: [value]};
     return uniformSubtype(UT_FLOAT, st);
 }
 
@@ -63,7 +63,7 @@ function createFloatSubtype(boolean allowed, float[] values) returns SubtypeData
     if values.length() == 0 {
         return !allowed;
     }
-    FloatSubtype res = { allowed, values: values.cloneReadOnly() };
+    FloatSubtype res = {allowed, values: values.cloneReadOnly()};
     return res;
 }
 

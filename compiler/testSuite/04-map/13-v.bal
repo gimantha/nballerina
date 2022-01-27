@@ -12,7 +12,7 @@ function populate(map<any> m, int max) {
     string x = "x";
     int xLen = 1;
 
-    foreach int i in 0..<max {
+    foreach int i in 0 ..< max {
         x = x + x;
         xLen = xLen * 2;
         m[x + ""] = xLen + 0;
@@ -26,21 +26,20 @@ function populate(map<any> m, int max) {
     }
 }
 
-
-function retrieve(map<any> m, int max) returns int{
+function retrieve(map<any> m, int max) returns int {
     string x = "x";
     int res = 0;
 
-    foreach int i in 0..<max {
+    foreach int i in 0 ..< max {
         x = x + x;
-        res = res + (<int>m[x + ""]) 
-                  + (<int>m[x + "a"])
-                  + (<int>m[x + "ab"])
-                  + (<int>m[x + "abc"])
-                  + (<int>m[x + "abcd"])
-                  + (<int>m[x + "abcde"])
-                  + (<int>m[x + "abcdef"])
-                  + (<int>m[x + "abcdefg"]);
+        res = res + (<int>m[x + ""])
+                + (<int>m[x + "a"])
+                + (<int>m[x + "ab"])
+                + (<int>m[x + "abc"])
+                + (<int>m[x + "abcd"])
+                + (<int>m[x + "abcde"])
+                + (<int>m[x + "abcdef"])
+                + (<int>m[x + "abcdefg"]);
     }
     return res;
 }

@@ -2,6 +2,7 @@
 import ballerina/io;
 
 type Int int;
+
 type Nil ();
 
 public function main() {
@@ -9,5 +10,5 @@ public function main() {
 }
 
 function foo(Int n) returns Nil {
-    io:println(n); 
+    io:println(n);
 }

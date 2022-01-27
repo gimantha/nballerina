@@ -1,6 +1,7 @@
 import ballerina/io;
 
 type T true;
+
 type F false;
 
 public function main() {

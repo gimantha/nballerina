@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     io:println(1d + 1d); // @output 2
     io:println(1000d + 1d); // @output 1001

@@ -21,9 +21,15 @@
 // SC<:S
 
 type S string;
+
 type C string:Char;
+
 type A "A";
+
 type Foo "Foo";
+
 type Bar A|Foo;
+
 type Baz Bar|S|C;
+
 type SC S|C;

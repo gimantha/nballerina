@@ -9,20 +9,20 @@ public function main() {
     io:println(floatCmp(-1.0, 1.0)); // @output lt
     io:println(floatCmp(-0.5, -1.0)); // @output gt
 
-    io:println(floatCmp(-0.5, 1.0/0.0)); // @output lt
-    io:println(floatCmp(-0.5, -1.0/0.0)); // @output gt
+    io:println(floatCmp(-0.5, 1.0 / 0.0)); // @output lt
+    io:println(floatCmp(-0.5, -1.0 / 0.0)); // @output gt
 
     io:println(floatCmp(-0.0, 0.0)); // @output eq
 
-    io:println(floatCmp(0.0, 0.0/0.0)); // @output one nan
-    io:println(floatCmp(0.0/0.0, 0.0)); // @output one nan
-    io:println(floatCmp(0.0/0.0, 0.0/0.0)); // @output both nan
+    io:println(floatCmp(0.0, 0.0 / 0.0)); // @output one nan
+    io:println(floatCmp(0.0 / 0.0, 0.0)); // @output one nan
+    io:println(floatCmp(0.0 / 0.0, 0.0 / 0.0)); // @output both nan
 }
 
 function floatCmp(float f1, float f2) returns string {
     if f1 < f2 {
         if !(f1 > f2) {
-            if  f1 <= f1 {
+            if f1 <= f1 {
                 return "lt";
             }
             else {
@@ -35,7 +35,7 @@ function floatCmp(float f1, float f2) returns string {
     }
     if f1 > f2 {
         if !(f1 < f2) {
-            if  f1 >= f1 {
+            if f1 >= f1 {
                 return "gt";
             }
             else {
@@ -51,8 +51,8 @@ function floatCmp(float f1, float f2) returns string {
             return "both nan";
         }
 
-        if  f1 <= f1 {
-            if  f1 >= f1 {
+        if f1 <= f1 {
+            if f1 >= f1 {
                 return "eq";
             }
             else {

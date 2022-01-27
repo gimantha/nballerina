@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     f("a"); // @output non-empty str
     f(""); // @output empty str

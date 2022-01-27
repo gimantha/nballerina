@@ -11,7 +11,7 @@ public type MappingAtomicType readonly & record {|
 
 // This is mapping index 0
 // Used by bddFixReadOnly
-final MappingAtomicType MAPPING_SUBTYPE_RO = { names: [], types: [], rest: READONLY };
+final MappingAtomicType MAPPING_SUBTYPE_RO = {names: [], types: [], rest: READONLY};
 
 public class MappingDefinition {
     *Definition;
@@ -71,7 +71,7 @@ public class MappingDefinition {
         }
         return self.createSemType(env, ro, rw);
     }
-    
+
     private function createSemType(Env env, Atom ro, Atom rw) returns SemType {
         BddNode roBdd = bddAtom(ro);
         BddNode rwBdd;
@@ -83,9 +83,9 @@ public class MappingDefinition {
             rwBdd = bddAtom(rw);
         }
         SemType s = createComplexSemType(0, [[UT_MAPPING_RO, roBdd], [UT_MAPPING_RW, rwBdd]]);
-        self.semType = s; 
+        self.semType = s;
         return s;
-    }       
+    }
 }
 
 function readOnlyMappingAtomicType(MappingAtomicType ty) returns MappingAtomicType {
@@ -96,7 +96,7 @@ function readOnlyMappingAtomicType(MappingAtomicType ty) returns MappingAtomicTy
         names: ty.names,
         types: readOnlyTypeList(ty.types),
         rest: intersect(ty.rest, READONLY)
-    };   
+    };
 }
 
 function splitFields(Field[] fields) returns [string[], SemType[]] {
@@ -123,7 +123,7 @@ function mappingSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
     BddMemo? mm = cx.mappingMemo[b];
     BddMemo m;
     if mm == () {
-        m = { bdd: b };
+        m = {bdd: b};
         cx.mappingMemo.add(m);
     }
     else {
@@ -140,7 +140,7 @@ function mappingSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
     }
     boolean isEmpty = bddEvery(cx, b, (), (), mappingFormulaIsEmpty);
     m.isEmpty = isEmpty;
-    return isEmpty;    
+    return isEmpty;
 }
 
 // This works the same as the tuple case, except that instead of
@@ -180,7 +180,7 @@ function mappingFormulaIsEmpty(Context cx, Conjunction? posList, Conjunction? ne
                 return true;
             }
         }
-       
+
     }
     return !mappingInhabited(cx, combined, negList);
 }
@@ -218,7 +218,7 @@ function mappingInhabited(Context cx, TempMappingSubtype pos, Conjunction? negLi
         if !isEmpty(cx, diff(pos.rest, neg.rest)) {
             return true;
         }
-        foreach var { name, index1, type1: posType, type2: negType } in pairing {
+        foreach var {name, index1, type1: posType, type2: negType} in pairing {
             SemType d = diff(posType, negType);
             if !isEmpty(cx, d) {
                 TempMappingSubtype mt;
@@ -229,14 +229,14 @@ function mappingInhabited(Context cx, TempMappingSubtype pos, Conjunction? negLi
                 else {
                     SemType[] posTypes = shallowCopyTypes(pos.types);
                     posTypes[index1] = d;
-                    mt = { types: posTypes, names: pos.names, rest: pos.rest };
+                    mt = {types: posTypes, names: pos.names, rest: pos.rest};
                 }
                 if mappingInhabited(cx, mt, negList.next) {
                     return true;
                 }
-            }          
+            }
         }
-        return false; 
+        return false;
     }
 }
 
@@ -254,7 +254,7 @@ function insertField(TempMappingSubtype m, string name, SemType t) returns TempM
         types[i] = types[i - 1];
         i -= 1;
     }
-    return { names, types, rest: m.rest };
+    return {names, types, rest: m.rest};
 }
 
 type TempMappingSubtype record {|
@@ -267,7 +267,7 @@ type TempMappingSubtype record {|
 function intersectMapping(TempMappingSubtype m1, TempMappingSubtype m2) returns TempMappingSubtype? {
     string[] names = [];
     SemType[] types = [];
-    foreach var { name, type1, type2 } in new MappingPairing(m1, m2) {
+    foreach var {name, type1, type2} in new MappingPairing(m1, m2) {
         names.push(name);
         SemType t = intersect(type1, type2);
         if isNever(t) {
@@ -276,7 +276,7 @@ function intersectMapping(TempMappingSubtype m1, TempMappingSubtype m2) returns 
         types.push(t);
     }
     SemType rest = intersect(m1.rest, m2.rest);
-    return { names, types, rest };
+    return {names, types, rest};
 }
 
 type FieldPair record {|
@@ -288,7 +288,7 @@ type FieldPair record {|
 |};
 
 public type MappingPairIterator object {
-    public function next() returns record {| FieldPair value; |}?;
+    public function next() returns record {|FieldPair value;|}?;
 };
 
 class MappingPairing {
@@ -325,7 +325,7 @@ class MappingPairing {
         self.i2 = 0;
     }
 
-    public function next() returns record {| FieldPair value; |}? {
+    public function next() returns record {|FieldPair value;|}? {
         FieldPair p;
         if self.i1 >= self.len1 {
             if self.i2 >= self.len2 {
@@ -359,7 +359,7 @@ class MappingPairing {
                     index1: self.i1
                 };
                 self.i1 += 1;
-            }          
+            }
             else if name2 < name1 {
                 p = {
                     name: name2,
@@ -381,13 +381,13 @@ class MappingPairing {
                 self.i2 += 1;
             }
         }
-        return { value: p };
+        return {value: p};
     }
-    
+
     private function curType1() returns SemType => self.types1[self.i1];
-    
+
     private function curType2() returns SemType => self.types2[self.i2];
-    
+
     private function curName1() returns string => self.names1[self.i1];
 
     private function curName2() returns string => self.names2[self.i2];
@@ -399,13 +399,12 @@ function bddMappingMemberType(Context cx, Bdd b, string? key, SemType accum) ret
     }
     else {
         return union(bddMappingMemberType(cx, b.left, key,
-                                          intersect(mappingAtomicMemberType(cx.mappingAtomType(b.atom), key),
+                                        intersect(mappingAtomicMemberType(cx.mappingAtomType(b.atom), key),
                                                     accum)),
-                     union(bddMappingMemberType(cx, b.middle, key, accum),
-                           bddMappingMemberType(cx, b.right, key, accum)));
+                    union(bddMappingMemberType(cx, b.middle, key, accum),
+                            bddMappingMemberType(cx, b.right, key, accum)));
     }
 }
-
 
 function mappingAtomicMemberType(MappingAtomicType atomic, string? key) returns SemType {
     if key != () {
@@ -429,11 +428,10 @@ function bddMappingMemberRequired(Context cx, Bdd b, string k, boolean requiredO
     else {
         return bddMappingMemberRequired(cx, b.left, k,
                                         requiredOnPath || cx.mappingAtomType(b.atom).names.indexOf(k) != ())
-               && bddMappingMemberRequired(cx, b.middle, k, requiredOnPath)
-               && bddMappingMemberRequired(cx, b.right, k, requiredOnPath);
+                && bddMappingMemberRequired(cx, b.middle, k, requiredOnPath)
+                && bddMappingMemberRequired(cx, b.right, k, requiredOnPath);
     }
 }
-
 
 final UniformTypeOps mappingRoOps = {
     union: bddSubtypeUnion,

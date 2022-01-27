@@ -10,11 +10,11 @@ function foo(any v) {
         1 => {
             io:println("one");
         }
-        _ => { 
+        _ => {
             io:println("any");
         }
-        _ => {  // @error
+        _ => { // @error
             io:println("any");
-        }   
+        }
     }
 }

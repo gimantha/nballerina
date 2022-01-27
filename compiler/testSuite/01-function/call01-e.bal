@@ -4,5 +4,5 @@ public function main() {
 }
 
 function foo() returns boolean {
-    return true;  
+    return true;
 }

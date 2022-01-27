@@ -8,7 +8,11 @@
 // FpOne<:One
 
 type Zero 0d;
+
 type MinusZero -0d;
+
 type One 1d;
+
 type FpOne 1.0d;
+
 type DECIMAL decimal;

@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     decimal? d1 = ();
     if d1 is () {

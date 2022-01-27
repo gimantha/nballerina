@@ -19,7 +19,7 @@ public function main() {
     io:println(exactEq(nInf, pInf)); // @output false
     io:println(exactEq(pInf, pInf)); // @output true
     io:println(exactEq(nInf, nInf)); // @output true
-    
+
     io:println(100.0 === 10e1); // @output true
     io:println(0.0 === 0.0); // @output true
     io:println(0.0 === -0.0); // @output false

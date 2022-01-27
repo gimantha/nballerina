@@ -22,7 +22,7 @@ public type BddNode readonly & record {|
 |};
 
 isolated function bddAtom(Atom atom) returns BddNode {
-     return { atom, left: true, middle: false, right: false };
+    return {atom, left: true, middle: false, right: false};
 }
 
 isolated function bddUnion(Bdd b1, Bdd b2) returns Bdd {
@@ -35,25 +35,25 @@ isolated function bddUnion(Bdd b1, Bdd b2) returns Bdd {
     else if b2 is boolean {
         return b2 == true ? true : b1;
     }
-    else {  
+    else {
         int cmp = atomCmp(b1.atom, b2.atom);
         if cmp < 0 {
             return bddCreate(b1.atom,
-                          b1.left,
-                          bddUnion(b1.middle, b2),
-                          b1.right);
+                        b1.left,
+                        bddUnion(b1.middle, b2),
+                        b1.right);
         }
         else if cmp > 0 {
-             return bddCreate(b2.atom,
-                           b2.left,
-                           bddUnion(b1, b2.middle),
-                           b2.right);
+            return bddCreate(b2.atom,
+                            b2.left,
+                            bddUnion(b1, b2.middle),
+                            b2.right);
         }
         else {
             return bddCreate(b1.atom,
-                          bddUnion(b1.left, b2.left),
-                          bddUnion(b1.middle, b2.middle),
-                          bddUnion(b1.right, b2.right));
+                        bddUnion(b1.left, b2.left),
+                        bddUnion(b1.middle, b2.middle),
+                        bddUnion(b1.right, b2.right));
         }
     }
 }
@@ -68,27 +68,27 @@ isolated function bddIntersect(Bdd b1, Bdd b2) returns Bdd {
     else if b2 is boolean {
         return b2 == true ? b1 : false;
     }
-    else { 
+    else {
         int cmp = atomCmp(b1.atom, b2.atom);
         if cmp < 0 {
             return bddCreate(b1.atom,
-                          bddIntersect(b1.left, b2),
-                          bddIntersect(b1.middle, b2),
-                          bddIntersect(b1.right, b2));
+                        bddIntersect(b1.left, b2),
+                        bddIntersect(b1.middle, b2),
+                        bddIntersect(b1.right, b2));
         }
         else if cmp > 0 {
             return bddCreate(b2.atom,
-                          bddIntersect(b1, b2.left),
-                          bddIntersect(b1, b2.middle),
-                          bddIntersect(b1, b2.right));
+                        bddIntersect(b1, b2.left),
+                        bddIntersect(b1, b2.middle),
+                        bddIntersect(b1, b2.right));
         }
         else {
             return bddCreate(b1.atom,
-                          bddIntersect(bddUnion(b1.left, b1.middle), bddUnion(b2.left, b2.middle)),
-                          false,
-                          bddIntersect(bddUnion(b1.right, b1.middle), bddUnion(b2.right, b2.middle)));
+                        bddIntersect(bddUnion(b1.left, b1.middle), bddUnion(b2.left, b2.middle)),
+                        false,
+                        bddIntersect(bddUnion(b1.right, b1.middle), bddUnion(b2.right, b2.middle)));
         }
-    }       
+    }
 }
 
 isolated function bddDiff(Bdd b1, Bdd b2) returns Bdd {
@@ -101,19 +101,19 @@ isolated function bddDiff(Bdd b1, Bdd b2) returns Bdd {
     else if b1 is boolean {
         return b1 == true ? bddComplement(b2) : false;
     }
-    else {  
+    else {
         int cmp = atomCmp(b1.atom, b2.atom);
         if cmp < 0 {
             return bddCreate(b1.atom,
-                          bddDiff(bddUnion(b1.left, b1.middle), b2),
-                          false,
-                          bddDiff(bddUnion(b1.right, b1.middle), b2));
+                        bddDiff(bddUnion(b1.left, b1.middle), b2),
+                        false,
+                        bddDiff(bddUnion(b1.right, b1.middle), b2));
         }
         else if cmp > 0 {
             return bddCreate(b2.atom,
-                          bddDiff(b1, bddUnion(b2.left, b2.middle)),
-                          false,
-                          bddDiff(b1, bddUnion(b2.right, b2.middle)));
+                        bddDiff(b1, bddUnion(b2.left, b2.middle)),
+                        false,
+                        bddDiff(b1, bddUnion(b2.right, b2.middle)));
 
         }
         else {
@@ -122,9 +122,9 @@ isolated function bddDiff(Bdd b1, Bdd b2) returns Bdd {
             // The original formula does not work in a case like (a0|a1) - a0.
             // Castagna confirms that the following formula is the correct one.
             return bddCreate(b1.atom,
-                          bddDiff(bddUnion(b1.left, b1.middle), bddUnion(b2.left, b2.middle)),
-                          false,
-                          bddDiff(bddUnion(b1.right, b1.middle), bddUnion(b2.right, b2.middle)));
+                        bddDiff(bddUnion(b1.left, b1.middle), bddUnion(b2.left, b2.middle)),
+                        false,
+                        bddDiff(bddUnion(b1.right, b1.middle), bddUnion(b2.right, b2.middle)));
         }
     }
 }
@@ -136,30 +136,30 @@ isolated function bddComplement(Bdd b) returns Bdd {
     else {
         if b.right === false {
             return bddCreate(b.atom,
-                          false,
-                          bddComplement(bddUnion(b.left, b.middle)),
-                          bddComplement(b.middle));
+                        false,
+                        bddComplement(bddUnion(b.left, b.middle)),
+                        bddComplement(b.middle));
         }
         else if b.left === false {
             return bddCreate(b.atom,
-                          bddComplement(b.middle),
-                          bddComplement(bddUnion(b.right, b.middle)),
-                          false);
+                        bddComplement(b.middle),
+                        bddComplement(bddUnion(b.right, b.middle)),
+                        false);
         }
         else if b.middle === false {
-             return bddCreate(b.atom,
-                           bddComplement(b.left),
-                           bddComplement(bddUnion(b.left, b.right)),
-                           bddComplement(b.right));
+            return bddCreate(b.atom,
+                            bddComplement(b.left),
+                            bddComplement(bddUnion(b.left, b.right)),
+                            bddComplement(b.right));
         }
         else {
             // There is a typo in the Frisch PhD thesis for this formula.
             // (It has left and right swapped.)
             // Castagna (the PhD supervisor) confirms that this is the correct formula.
             return bddCreate(b.atom,
-                          bddComplement(bddUnion(b.left, b.middle)),
-                          false,
-                          bddComplement(bddUnion(b.right, b.middle)));
+                        bddComplement(bddUnion(b.left, b.middle)),
+                        false,
+                        bddComplement(bddUnion(b.right, b.middle)));
         }
     }
 }
@@ -176,14 +176,14 @@ isolated function bddCreate(Atom atom, Bdd left, Bdd middle, Bdd right) returns 
     }
     lock {
         bddCount += 1;
-    }  
-    return { atom, left, middle, right };
+    }
+    return {atom, left, middle, right};
 }
 
 public isolated function bddGetCount() returns int {
     lock {
         return bddCount;
-    } 
+    }
 }
 
 // order RecAtom < TypeAtom

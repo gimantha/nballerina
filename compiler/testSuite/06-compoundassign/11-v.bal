@@ -7,6 +7,6 @@ public function main() {
     io:println(x); // @output 7
 }
 
-function foo(int i) returns int{
-    return i+3;
+function foo(int i) returns int {
+    return i + 3;
 }

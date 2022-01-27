@@ -4,7 +4,7 @@ function exprBinaryDiv() returns Module {
     Context context = new;
     Module m = context.createModule();
     Builder builder = context.createBuilder();
-    FunctionDefn abort = m.addFunctionDefn("abort", {returnType:"void", paramTypes:[]});
+    FunctionDefn abort = m.addFunctionDefn("abort", {returnType: "void", paramTypes: []});
     FunctionDefn foo = m.addFunctionDefn("foo", {returnType: "i64", paramTypes: ["i64", "i64"]});
     BasicBlock initBlock = foo.appendBasicBlock();
     builder.positionAtEnd(initBlock);
@@ -26,7 +26,7 @@ function exprBinaryDiv() returns Module {
 
     builder.positionAtEnd(bb7);
     Value R8 = builder.load(R3);
-    Value R9 = builder.iCmp("eq", R8, constInt("i64",-9223372036854775808));
+    Value R9 = builder.iCmp("eq", R8, constInt("i64", -9223372036854775808));
     builder.condBr(R9, bb10, bb14);
 
     builder.positionAtEnd(bb10);
@@ -35,7 +35,7 @@ function exprBinaryDiv() returns Module {
     builder.condBr(R12, bb13, bb14);
 
     builder.positionAtEnd(bb13);
-    _ = builder.call(abort,[]);
+    _ = builder.call(abort, []);
 
     builder.positionAtEnd(bb14);
     Value R15 = builder.load(R3);

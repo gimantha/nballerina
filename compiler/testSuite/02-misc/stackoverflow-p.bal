@@ -5,5 +5,5 @@ public function main() {
 }
 
 function f() { // @panic stack overflow
-    f(); 
+    f();
 }

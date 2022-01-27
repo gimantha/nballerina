@@ -1,4 +1,4 @@
 public function main() {
     string x = "msg";
-    panic(x); // @error
+    panic (x); // @error
 }

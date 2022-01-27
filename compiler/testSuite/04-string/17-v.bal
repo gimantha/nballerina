@@ -16,7 +16,7 @@ public function main() {
     io:println(s2 == s2); // @output true
     io:println("a" < s2); // @output true
     io:println("z" < s2); // @output false
-    
+
     io:println(s1 == s2); // @output false
     io:println(s1 < s2); // @output true
     io:println(s1 > s2); // @output false

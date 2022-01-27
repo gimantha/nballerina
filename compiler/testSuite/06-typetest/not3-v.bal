@@ -8,12 +8,12 @@ public function main() {
     foo(i); // @output not string
 }
 
-function foo(any x){
+function foo(any x) {
     if x !is string {
         io:println("not string");
     }
     else {
         io:println("string");
     }
-    
+
 }

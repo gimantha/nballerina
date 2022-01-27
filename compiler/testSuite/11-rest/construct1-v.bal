@@ -6,6 +6,6 @@ type R record {|
 |};
 
 public function main() {
-    R r = { x: 17 };
+    R r = {x: 17};
     io:println(r.x); // @output 17
 }

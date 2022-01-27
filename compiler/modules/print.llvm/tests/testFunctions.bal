@@ -33,7 +33,7 @@ function testIntrinsicRepeatedAddition() {
 function testFunctionAttributeAddition() {
     Context context = new;
     Module m = context.createModule();
-    FunctionEnumAttribute[] attributes = ["noreturn", "cold", "nounwind", "readnone", "speculatable", "willreturn"]; 
+    FunctionEnumAttribute[] attributes = ["noreturn", "cold", "nounwind", "readnone", "speculatable", "willreturn"];
     FunctionDecl fDecl = m.addFunctionDecl("decl", {returnType: "void", paramTypes: []});
     foreach var attribute in attributes {
         fDecl.addEnumAttribute(attribute);

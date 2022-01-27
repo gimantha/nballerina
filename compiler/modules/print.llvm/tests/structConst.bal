@@ -24,7 +24,7 @@ function structConst() returns Module {
 
     Value constFnStruct = context.constStruct([test]);
     Type constFnStructTy = structType([pointerType(testTy)]);
-    FunctionDefn test3 = m.addFunctionDefn("test3", {returnType:constFnStructTy, paramTypes: []});
+    FunctionDefn test3 = m.addFunctionDefn("test3", {returnType: constFnStructTy, paramTypes: []});
     BasicBlock bb = test3.appendBasicBlock();
     builder.positionAtEnd(bb);
     builder.ret(constFnStruct);

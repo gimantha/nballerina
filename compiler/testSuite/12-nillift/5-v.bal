@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     string? a = "a";
     string? b = "b";

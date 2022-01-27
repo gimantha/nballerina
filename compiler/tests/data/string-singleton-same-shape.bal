@@ -19,10 +19,17 @@
 // Y<:Y1
 
 type X "X";
+
 type X1 "X";
+
 type X2 "x";
+
 type Y "Why";
+
 type Y1 "Why";
+
 type XES X|X1|X2;
+
 type WHY Y|Y1;
+
 type S string;

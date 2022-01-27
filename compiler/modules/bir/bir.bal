@@ -3,7 +3,9 @@ import wso2/nballerina.comm.err;
 import wso2/nballerina.comm.diagnostic as d;
 
 public type SemType t:SemType;
+
 public type Position d:Position;
+
 public type File d:File;
 
 public type Module object {
@@ -119,13 +121,13 @@ public type InsnRef readonly & record {|
 
 public function createBasicBlock(FunctionCode code, string? name = ()) returns BasicBlock {
     int label = code.blocks.length();
-    BasicBlock bb = { label, name };
+    BasicBlock bb = {label, name};
     code.blocks.push(bb);
     return bb;
 }
 
 public function lastInsnRef(BasicBlock bb) returns InsnRef {
-    return { block: bb.label, index: bb.insns.length() - 1 };
+    return {block: bb.label, index: bb.insns.length() - 1};
 }
 
 public type Register readonly & record {|
@@ -139,7 +141,7 @@ public type Register readonly & record {|
 
 public function createRegister(FunctionCode code, SemType semType, string? varName = (), Position? pos = ()) returns Register {
     int number = code.registers.length();
-    Register r = { number, semType, varName, pos };
+    Register r = {number, semType, varName, pos};
     code.registers.push(r);
     return r;
 }
@@ -148,11 +150,15 @@ public function getRegister(FunctionCode code, int registerNum) returns Register
     return code.registers[registerNum];
 }
 
-public type ArithmeticBinaryOp "+" | "-" | "*" | "/" | "%";
-public type BitwiseBinaryOp "|" | "^" | "&" | BitwiseShiftOp;
-public type BitwiseShiftOp "<<" | ">>" | ">>>";
-public type OrderOp "<=" | ">=" | "<" | ">";
-public type EqualityOp "==" | "!=" | "===" | "!==";
+public type ArithmeticBinaryOp "+"|"-"|"*"|"/"|"%";
+
+public type BitwiseBinaryOp "|"|"^"|"&"|BitwiseShiftOp;
+
+public type BitwiseShiftOp "<<"|">>"|">>>";
+
+public type OrderOp "<="|">="|"<"|">";
+
+public type EqualityOp "=="|"!="|"==="|"!==";
 
 public enum InsnName {
     INSN_INT_ARITHMETIC_BINARY,
@@ -203,7 +209,7 @@ public type InsnBase record {
     Position pos;
 };
 
-public type Insn 
+public type Insn
     IntArithmeticBinaryInsn|IntNoPanicArithmeticBinaryInsn|IntBitwiseBinaryInsn
     |FloatArithmeticBinaryInsn|FloatNegateInsn
     |DecimalArithmeticBinaryInsn|DecimalNegateInsn
@@ -217,7 +223,7 @@ public type Insn
 
 public type Operand ConstOperand|Register;
 
-public type ConstOperand  readonly & record {|
+public type ConstOperand readonly & record {|
     t:SemType semType;
     t:SingleValue value;
 |};
@@ -227,7 +233,7 @@ public type NilConstOperand readonly & record {|
     () value;
 |};
 
-public final NilConstOperand NIL_OPERAND = { value: (), semType: t:NIL };
+public final NilConstOperand NIL_OPERAND = {value: (), semType: t:NIL};
 
 public type BooleanConstOperand readonly & record {|
     t:SemType semType;
@@ -255,10 +261,15 @@ public type StringConstOperand readonly & record {|
 |};
 
 public type IntOperand IntConstOperand|Register;
+
 public type FloatOperand FloatConstOperand|Register;
+
 public type DecimalOperand DecimalConstOperand|Register;
+
 public type BooleanOperand BooleanConstOperand|Register;
+
 public type StringOperand StringConstOperand|Register;
+
 public type FunctionOperand FunctionRef|Register;
 
 public function operandHasType(t:Context tc, Operand operand, t:SemType semType) returns boolean {
@@ -407,7 +418,7 @@ public type ListGetInsn readonly & record {|
     *InsnBase;
     INSN_LIST_GET name = INSN_LIST_GET;
     // fill must be false unless the result type is a subtype of list or mapping
-    boolean fill = false;  // if true do a filling read
+    boolean fill = false; // if true do a filling read
     Register result;
     [Register, IntOperand] operands;
 |};
@@ -515,7 +526,6 @@ public type TypeCastInsn readonly & record {|
     SemType semType;
 |};
 
-
 # Tests whether a value belongs to a type
 # Used for `is` expressions
 # Typing rule:
@@ -534,7 +544,6 @@ public type TypeTestInsn readonly & record {|
     SemType semType;
     boolean negated;
 |};
-
 
 # A type narrowing that is based on the result of one or more previous instructions.
 # The result in each case is a boolean and the instruction is a TypeTestInsn or an EqualInsn.
@@ -606,11 +615,10 @@ public type AbnormalRetInsn readonly & record {|
 # The operand contains the associated error value.
 public type PanicInsn readonly & record {|
     *InsnBase;
-    INSN_PANIC name = INSN_PANIC; 
+    INSN_PANIC name = INSN_PANIC;
     # Must be of type error
     Register operand;
 |};
-
 
 # A CatchInsn is allowed as the first insn of a block that
 # is the target of an onPanic label of a basic block.
@@ -642,7 +650,6 @@ public type BranchInsn readonly & record {|
     Label dest;
 |};
 
-
 public function isBasicBlockPotentiallyPanicking(BasicBlock block) returns boolean {
     foreach Insn insn in block.insns {
         if isInsnPotentiallyPanicking(insn) {
@@ -658,16 +665,16 @@ final readonly & map<true> PPI_INSNS = {
     // If we allow this, we need to be careful about not generating
     // code from the catch block if the only PPIs in the basic block are calls.
     // [INSN_CALL]: true,
-    [INSN_PANIC]: true,
-    [INSN_INT_ARITHMETIC_BINARY]: true,
-    [INSN_DECIMAL_ARITHMETIC_BINARY]: true,
-    [INSN_CONVERT_TO_INT]: true,
-    [INSN_CONVERT_TO_DECIMAL]: true,
-    [INSN_TYPE_CAST]: true,
-    [INSN_LIST_GET]: true,
-    [INSN_LIST_SET]: true,
-    [INSN_MAPPING_FILLING_GET]: true,
-    [INSN_MAPPING_SET]: true
+    [INSN_PANIC] : true,
+    [INSN_INT_ARITHMETIC_BINARY] : true,
+    [INSN_DECIMAL_ARITHMETIC_BINARY] : true,
+    [INSN_CONVERT_TO_INT] : true,
+    [INSN_CONVERT_TO_DECIMAL] : true,
+    [INSN_TYPE_CAST] : true,
+    [INSN_LIST_GET] : true,
+    [INSN_LIST_SET] : true,
+    [INSN_MAPPING_FILLING_GET] : true,
+    [INSN_MAPPING_SET] : true
 };
 
 public function isInsnPotentiallyPanicking(Insn insn) returns boolean {

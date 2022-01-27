@@ -6,7 +6,7 @@ public type DecimalSubtype readonly & record {|
 |};
 
 public function decimalConst(decimal value) returns ComplexSemType {
-    DecimalSubtype st = { allowed: true, values: [value] };
+    DecimalSubtype st = {allowed: true, values: [value]};
     return uniformSubtype(UT_DECIMAL, st);
 }
 
@@ -63,7 +63,7 @@ function createDecimalSubtype(boolean allowed, decimal[] values) returns Subtype
     if values.length() == 0 {
         return !allowed;
     }
-    DecimalSubtype res = { allowed, values: values.cloneReadOnly() };
+    DecimalSubtype res = {allowed, values: values.cloneReadOnly()};
     return res;
 }
 

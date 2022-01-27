@@ -3,6 +3,7 @@ public type R record {|
     int y;
     int...;
 |};
+
 public function foo(R r) returns int? {
     return r.z; // @error
 }

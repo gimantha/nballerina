@@ -4,8 +4,8 @@ import wso2/nballerina.types as t;
 import wso2/nballerina.bir;
 
 // JBUG runtime InherentTypeViolation if initializer used without cloneReadOnly
-final readonly & Environment constEnvironment = (<Environment>{ bindings: () }).cloneReadOnly();
-final readonly & bir:BasicBlock constBasicBlock = (<bir:BasicBlock>{ label: 0 }).cloneReadOnly();
+final readonly & Environment constEnvironment = (<Environment>{bindings: ()}).cloneReadOnly();
+final readonly & bir:BasicBlock constBasicBlock = (<bir:BasicBlock>{label: 0}).cloneReadOnly();
 final readonly & bir:FunctionCode constCode = (<bir:FunctionCode>{}).cloneReadOnly();
 
 function resolveConstDefn(ModuleSymbols mod, s:ConstDefn defn) returns s:ResolvedConst|ResolveTypeError {
@@ -28,7 +28,7 @@ function resolveConstDefn(ModuleSymbols mod, s:ConstDefn defn) returns s:Resolve
 
 function resolveConstExpr(ModuleSymbols mod, s:ModuleLevelDefn defn, s:Expr expr, t:SemType? expectedType) returns s:ResolvedConst|ResolveTypeError {
     ExprContext cx = new ExprContext(mod, defn, constCode, constEnvironment, ());
-    var { result } = check codeGenExpr(cx, constBasicBlock, expectedType, expr);
+    var {result} = check codeGenExpr(cx, constBasicBlock, expectedType, expr);
     bir:ConstOperand operand = <bir:ConstOperand>result;
     if expectedType != () && !t:isSubtype(mod.tc, operand.semType, expectedType) {
         return err:semantic(`initializer of ${defn.name} is not a subtype of the declared type`, s:defnLocation(defn));

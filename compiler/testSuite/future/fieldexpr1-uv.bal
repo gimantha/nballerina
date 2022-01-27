@@ -9,7 +9,7 @@ type B readonly & record {|
 |};
 
 public function main() {
-    B x = { a : true };
+    B x = {a: true};
     A|B y = x;
     if y is A {
         // ignore

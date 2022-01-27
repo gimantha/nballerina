@@ -9,5 +9,6 @@ const ZERO = 0;
 const INT_MIN = -9223372036854775807 - 1;
 
 type ZERO_OR_ONE ZERO|ONE;
+
 type Int int;
 

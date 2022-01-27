@@ -28,7 +28,7 @@ type UU record {|
 type U NN|SS|NS|SN;
 
 public function main() {
-    UU r = { x: 1, y: "yyy" };
+    UU r = {x: 1, y: "yyy"};
     if r is U {
         io:println("yes"); // @output yes
     }

@@ -1,5 +1,6 @@
 // @productions while-stmt boolean-literal
 import ballerina/io;
+
 public function main() {
     while true {
 

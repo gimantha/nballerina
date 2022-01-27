@@ -4,4 +4,3 @@ public function main() {
     INT_MIN /= -1; // @panic arithmetic overflow
 }
 
-

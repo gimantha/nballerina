@@ -11,16 +11,16 @@ const ALIGN_HEAP = 8;
 // JBUG #28334 type-descriptor is not needed
 const int POINTER_MASK = ((1 << TAG_SHIFT) - 1) & ~(ALIGN_HEAP - 1);
 
-const int TAG_MASK     = 0x1f << TAG_SHIFT;
-const int TAG_NIL      = 0;
-const int TAG_BOOLEAN  = t:UT_BOOLEAN << TAG_SHIFT;
-const int TAG_INT      = t:UT_INT << TAG_SHIFT;
-const int TAG_FLOAT    = t:UT_FLOAT << TAG_SHIFT;
-const int TAG_DECIMAL  = t:UT_DECIMAL << TAG_SHIFT;
-const int TAG_STRING   = t:UT_STRING << TAG_SHIFT;
-const int TAG_ERROR   = t:UT_ERROR << TAG_SHIFT;
+const int TAG_MASK = 0x1f << TAG_SHIFT;
+const int TAG_NIL = 0;
+const int TAG_BOOLEAN = t:UT_BOOLEAN << TAG_SHIFT;
+const int TAG_INT = t:UT_INT << TAG_SHIFT;
+const int TAG_FLOAT = t:UT_FLOAT << TAG_SHIFT;
+const int TAG_DECIMAL = t:UT_DECIMAL << TAG_SHIFT;
+const int TAG_STRING = t:UT_STRING << TAG_SHIFT;
+const int TAG_ERROR = t:UT_ERROR << TAG_SHIFT;
 
-const int TAG_LIST_RW  = t:UT_LIST_RW << TAG_SHIFT;
+const int TAG_LIST_RW = t:UT_LIST_RW << TAG_SHIFT;
 
 const int TAG_BASIC_TYPE_MASK = 0xf << TAG_SHIFT;
 
@@ -45,7 +45,7 @@ type PanicIndex PANIC_ARITHMETIC_OVERFLOW|PANIC_DIVIDE_BY_ZERO|PANIC_TYPE_CAST|P
 
 final llvm:StructType LLVM_TAGGED_WITH_PANIC_CODE = llvm:structType([LLVM_TAGGED_PTR, LLVM_INT]);
 
-final t:UniformTypeBitSet POTENTIALLY_EXACT = t:uniformTypeUnion(t:LIST_RW|t:MAPPING_RW);
+final t:UniformTypeBitSet POTENTIALLY_EXACT = t:uniformTypeUnion(t:LIST_RW | t:MAPPING_RW);
 
 type RuntimeFunction readonly & record {|
     string name;
@@ -159,17 +159,17 @@ function buildErrorForPackedPanic(llvm:Builder builder, Scaffold scaffold, llvm:
 
 function buildStoreInt(llvm:Builder builder, Scaffold scaffold, llvm:Value value, bir:Register reg) {
     builder.store(scaffold.getRepr(reg).base == BASE_REPR_TAGGED ? buildTaggedInt(builder, scaffold, value) : value,
-                  scaffold.address(reg));
+                scaffold.address(reg));
 }
 
 function buildStoreFloat(llvm:Builder builder, Scaffold scaffold, llvm:Value value, bir:Register reg) {
     builder.store(scaffold.getRepr(reg).base == BASE_REPR_TAGGED ? buildTaggedFloat(builder, scaffold, value) : value,
-                  scaffold.address(reg));
+                scaffold.address(reg));
 }
 
 function buildStoreBoolean(llvm:Builder builder, Scaffold scaffold, llvm:Value value, bir:Register reg) {
     builder.store(scaffold.getRepr(reg).base == BASE_REPR_TAGGED ? buildTaggedBoolean(builder, value) : value,
-                  scaffold.address(reg));
+                scaffold.address(reg));
 }
 
 function buildStoreTagged(llvm:Builder builder, Scaffold scaffold, llvm:Value value, bir:Register reg) {
@@ -267,9 +267,11 @@ function buildConvertRepr(llvm:Builder builder, Scaffold scaffold, Repr sourceRe
 
 function buildTaggedBoolean(llvm:Builder builder, llvm:Value value) returns llvm:Value {
     return builder.getElementPtr(llvm:constNull(LLVM_TAGGED_PTR),
-                                     [builder.iBitwise("or",
-                                                       builder.zExt(value, LLVM_INT),
-                                                       llvm:constInt(LLVM_INT, TAG_BOOLEAN))]);
+                                    [
+        builder.iBitwise("or",
+                                                        builder.zExt(value, LLVM_INT),
+                                                        llvm:constInt(LLVM_INT, TAG_BOOLEAN))
+    ]);
 }
 
 function buildTaggedInt(llvm:Builder builder, Scaffold scaffold, llvm:Value value) returns llvm:PointerValue {
@@ -285,13 +287,13 @@ function buildTaggedPtr(llvm:Builder builder, llvm:PointerValue mem, int tag) re
 }
 
 function buildHasTag(llvm:Builder builder, llvm:PointerValue tagged, int tag) returns llvm:Value {
-    return buildTestTag(builder, tagged, tag, TAG_MASK);    
+    return buildTestTag(builder, tagged, tag, TAG_MASK);
 }
 
 function buildTestTag(llvm:Builder builder, llvm:PointerValue tagged, int tag, int mask) returns llvm:Value {
     return builder.iCmp("eq", builder.iBitwise("and", buildTaggedPtrToInt(builder, tagged),
-                                                       llvm:constInt(LLVM_INT, mask)),
-                              llvm:constInt(LLVM_INT, tag));
+                                                        llvm:constInt(LLVM_INT, mask)),
+                            llvm:constInt(LLVM_INT, tag));
 
 }
 
@@ -339,7 +341,7 @@ function buildReprValue(llvm:Builder builder, Scaffold scaffold, bir:Operand ope
     }
 }
 
-function buildConstString(llvm:Builder builder, Scaffold scaffold, string str) returns llvm:ConstPointerValue|BuildError {   
+function buildConstString(llvm:Builder builder, Scaffold scaffold, string str) returns llvm:ConstPointerValue|BuildError {
     return scaffold.getString(str);
 }
 
@@ -388,13 +390,13 @@ function buildConstBoolean(boolean b) returns llvm:Value {
     return llvm:constInt(LLVM_BOOLEAN, b ? 1 : 0);
 }
 
-
 function heapPointerType(llvm:Type ty) returns llvm:PointerType {
     return llvm:pointerType(ty, HEAP_ADDR_SPACE);
 }
 
 function buildFunctionSignature(bir:FunctionSignature signature) returns llvm:FunctionType {
-    llvm:Type[] paramTypes = from var ty in signature.paramTypes select (semTypeRepr(ty)).llvm;
+    llvm:Type[] paramTypes = from var ty in signature.paramTypes
+        select (semTypeRepr(ty)).llvm;
     RetRepr repr = semTypeRetRepr(signature.returnType);
     llvm:FunctionType ty = {
         returnType: repr.llvm,

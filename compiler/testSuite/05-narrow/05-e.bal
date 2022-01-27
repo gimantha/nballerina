@@ -1,6 +1,6 @@
 // @productions is-expr while-stmt if-else-stmt relational-expr additive-expr any function-call-expr assign-stmt local-var-decl-stmt int-literal
 public function main() {
-   foo(1);
+    foo(1);
 }
 
 function foo(any v) {
@@ -9,7 +9,7 @@ function foo(any v) {
         // it's an error because x can be assigned to before this is executed
         while x > 0 {
             x = x - 1; // @error
-	        x = ();
+            x = ();
         }
     }
 }

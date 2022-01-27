@@ -10,7 +10,7 @@ public function main() {
 
 function foo(IS v) {
     if v is string[] {
-    
+
     }
     else {
         int i = v[0]; // @error

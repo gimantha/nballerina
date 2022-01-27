@@ -28,7 +28,7 @@ function enumerableSubtypeUnion(EnumerableSubtype t1, EnumerableSubtype t2, Enum
         allowed = false;
     }
     else {
-         // !b1 && b2
+        // !b1 && b2
         enumerableListDiff(t1.values, t2.values, result);
         allowed = false;
     }
@@ -175,7 +175,7 @@ function compareEnumerable(EnumerableType v1, EnumerableType v2) returns Order {
             return EQ;
         }
         else if v1 == float:NaN {
-             return LT;
+            return LT;
         }
         else if f2 == float:NaN {
             return GT;

@@ -1,4 +1,5 @@
 type R readonly;
+
 type X xml;
 
 // @type N < R

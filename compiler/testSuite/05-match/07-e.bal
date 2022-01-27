@@ -7,7 +7,7 @@ public function main() {
 
 function foo() {
     match 1 + 2 {
-        3 => { 
+        3 => {
             io:println("three");
         }
         4 => { // @error

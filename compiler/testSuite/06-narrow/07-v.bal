@@ -9,10 +9,10 @@ public function main() {
 
 function foo(float f) {
     if f == 0.0 {
-        if 1.0/f == 2.0/0.0  {
+        if 1.0 / f == 2.0 / 0.0 {
             io:println("positive zero");
         }
-        else if 3.0/f == 4.0/-0.0 {
+        else if 3.0 / f == 4.0 / -0.0 {
             io:println("negative zero");
         }
     }

@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     int|float x = 1;
     float f = <float>x;

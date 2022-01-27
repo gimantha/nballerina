@@ -4,7 +4,7 @@ import ballerina/io;
 public function main() {
     any[] v = [];
     int i = 0;
-    while i < 1000*1000 {
+    while i < 1000 * 1000 {
         v[i] = 1;
         i = i + 1;
     }

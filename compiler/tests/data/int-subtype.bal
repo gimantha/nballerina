@@ -17,10 +17,17 @@
 // Uint8<:Uint16
 // Uint8<:Uint32
 type Byte byte;
+
 type Uint8 int:Unsigned8;
+
 type Uint16 int:Unsigned16;
+
 type Uint32 int:Unsigned32;
+
 type Sint8 int:Signed8;
+
 type Sint16 int:Signed16;
+
 type Sint32 int:Signed32;
+
 const N33000 = 33000;

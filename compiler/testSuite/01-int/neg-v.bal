@@ -1,5 +1,6 @@
 // @productions return-stmt unary-expr function-call-expr local-var-decl-stmt int-literal
 import ballerina/io;
+
 public function main() {
     int neg1 = neg(17);
     io:println(neg1); // @output -17
@@ -9,9 +10,9 @@ public function main() {
 }
 
 function neg(int x) returns int {
-  return -x;
+    return -x;
 }
 
 function negneg(int x) returns int {
-    return - -x;
+    return --x;
 }

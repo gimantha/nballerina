@@ -21,10 +21,11 @@ public type Options record {
 };
 
 const DEFAULT_ROOT_MODULE_NAME = "root";
-final bir:ModuleId DEFAULT_ROOT_MODULE_ID = { org: "", names: [DEFAULT_ROOT_MODULE_NAME] };
+final bir:ModuleId DEFAULT_ROOT_MODULE_ID = {org: "", names: [DEFAULT_ROOT_MODULE_NAME]};
 
 const SOURCE_EXTENSION = ".bal";
 const TEST_EXTENSION = ".balt";
+
 public function main(string[] filenames, *Options opts) returns error? {
     if filenames.length() == 0 {
         return error("no input files");
@@ -40,7 +41,7 @@ public function main(string[] filenames, *Options opts) returns error? {
         if filenames.length() > 1 {
             return error("multiple input files not supported with --showTypes");
         }
-        check printDiagnostic(showTypes([{ filename: filenames[0] }]));
+        check printDiagnostic(showTypes([{filename: filenames[0]}]));
         return;
     }
     nback:Options nbackOptions = {

@@ -6,7 +6,7 @@ type Point record {
 };
 
 public function main() {
-    Point p = { x: 44, y: 88, "z": 10 };
+    Point p = {x: 44, y: 88, "z": 10};
     p["z"] = 22;
     io:println(p["z"]); // @output 22
 }

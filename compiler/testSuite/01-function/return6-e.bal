@@ -5,6 +5,6 @@ public function main() {
 }
 
 function foo() returns boolean {
-     
+
 } // @error
 

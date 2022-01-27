@@ -3,4 +3,5 @@ public function main() {
     ignore(s % "y"); // @error
 }
 
-function ignore(string s) { }
+function ignore(string s) {
+}

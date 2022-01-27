@@ -11,7 +11,7 @@ function parseStmtBlock(Tokenizer tok) returns StmtBlock|err:Syntax {
         Position endPos = tok.currentEndPos();
         Position closeBracePos = tok.currentStartPos();
         check tok.advance();
-        return { startPos, endPos, stmts, closeBracePos };
+        return {startPos, endPos, stmts, closeBracePos};
     }
     return parseError(tok, "unhandled condition in statement block");
 }
@@ -21,8 +21,8 @@ function parseStmt(Tokenizer tok) returns Stmt|err:Syntax {
     Position startPos = tok.currentStartPos();
     match cur {
         [IDENTIFIER, var identifier] => {
-            var peeked = tok.peek(skipQualIdent=true);
-            if peeked is "|" | "?" | "&" | "_" | IDENTIFIER {
+            var peeked = tok.peek(skipQualIdent = true);
+            if peeked is "|"|"?"|"&"|"_"|IDENTIFIER {
                 TypeDesc td = check parseTypeDesc(tok);
                 return finishVarDeclStmt(tok, td, startPos);
             }
@@ -53,7 +53,7 @@ function parseStmt(Tokenizer tok) returns Stmt|err:Syntax {
             check tok.advance();
             Position endPos = check tok.expectEnd(";");
             // JBUG #33341 cast
-            BreakContinueStmt stmt = { startPos, endPos, breakContinue:<BreakContinue>cur };
+            BreakContinueStmt stmt = {startPos, endPos, breakContinue: <BreakContinue>cur};
             return stmt;
         }
         "if" => {
@@ -106,12 +106,12 @@ function parseStmt(Tokenizer tok) returns Stmt|err:Syntax {
             }
         }
         [DECIMAL_NUMBER, _]
-        | [STRING_LITERAL, _]
-        | "true"
-        | "false"
-        | "null"
-        | [HEX_INT_LITERAL, _]
-        | [DECIMAL_FP_NUMBER, _, _] => {
+        |[STRING_LITERAL, _]
+        |"true"
+        |"false"
+        |"null"
+        |[HEX_INT_LITERAL, _]
+        |[DECIMAL_FP_NUMBER, _, _] => {
             var peeked = tok.peek();
             if peeked == "." || (peeked == "[" && !check savePreparseRestore(tok, preparseArrayTypeDesc)) {
                 return parseMethodCallStmt(tok);
@@ -126,7 +126,8 @@ function parseStmt(Tokenizer tok) returns Stmt|err:Syntax {
 }
 
 type AssignOp "="|CompoundAssignOp;
-type PreparseFunc function(Tokenizer) returns boolean|err:Syntax;
+
+type PreparseFunc function (Tokenizer) returns boolean|err:Syntax;
 
 function savePreparseRestore(Tokenizer tok, PreparseFunc func) returns boolean|err:Syntax {
     TokenizerState state = tok.save();
@@ -153,7 +154,7 @@ function finishIdentifierStmt(Tokenizer tok, string name1, Position startPos, Po
         return finishCallStmt(tok, expr, startPos);
     }
     Position endPos = tok.previousEndPos();
-    LExpr lExpr = { startPos, endPos, name, qNamePos: startPos, prefix };
+    LExpr lExpr = {startPos, endPos, name, qNamePos: startPos, prefix};
     Token? cur = tok.current();
     while true {
         Position opPos = tok.currentStartPos();
@@ -162,15 +163,15 @@ function finishIdentifierStmt(Tokenizer tok, string name1, Position startPos, Po
             Position namePos = tok.currentStartPos();
             name = check parseIdentifierOrMethodName(tok);
             if tok.current() == "(" {
-                 return finishCallStmt(tok, check finishMethodCallExpr(tok, lExpr, name, startPos, namePos, opPos), startPos);
+                return finishCallStmt(tok, check finishMethodCallExpr(tok, lExpr, name, startPos, namePos, opPos), startPos);
             }
-            lExpr = { startPos, endPos, fieldName: name, container: lExpr, opPos };
+            lExpr = {startPos, endPos, fieldName: name, container: lExpr, opPos};
         }
         else if cur == "[" {
             check tok.advance();
             Expr index = check parseInnerExpr(tok);
             endPos = check tok.expectEnd("]");
-            lExpr =  { startPos, endPos, container: lExpr, index, opPos };
+            lExpr = {startPos, endPos, container: lExpr, index, opPos};
         }
         else {
             break;
@@ -191,7 +192,7 @@ function parseMethodCallStmt(Tokenizer tok) returns CallStmt|err:Syntax {
         expr = check finishPrimaryExpr(tok, expr, startPos);
         if expr is MethodCallExpr {
             Position endPos = check tok.expectEnd(";");
-            return { startPos, endPos, expr };
+            return {startPos, endPos, expr};
         }
     }
     return parseError(tok, "expression not allowed as a statement");
@@ -202,10 +203,10 @@ function finishCallStmt(Tokenizer tok, CallExpr expr, Position startPos) returns
     Position endPos = check tok.expectEnd(";");
     CallStmt stmt;
     if primary === expr {
-        stmt = { startPos, endPos, expr };
+        stmt = {startPos, endPos, expr};
     }
     else if primary is MethodCallExpr {
-        stmt = { startPos, endPos, expr: primary };
+        stmt = {startPos, endPos, expr: primary};
     }
     else {
         return parseError(tok, "member access expr not allowed as a statement");
@@ -231,15 +232,15 @@ function finishCheckingCallStmt(Tokenizer tok, CheckingKeyword checkingKeyword, 
     }
     Expr operand = check parsePrimaryExpr(tok);
     if operand is FunctionCallExpr|MethodCallExpr {
-        CheckingCallExpr expr = { startPos: kwPos, endPos: operand.endPos, checkingKeyword, kwPos, operand};
+        CheckingCallExpr expr = {startPos: kwPos, endPos: operand.endPos, checkingKeyword, kwPos, operand};
         Position endPos = check tok.expectEnd(";");
-        return { startPos: kwPos, endPos, expr };
+        return {startPos: kwPos, endPos, expr};
     }
     return parseError(tok, "function call, method call or checking expression expected");
 }
 
 function callStmtAddChecking(Position kwPos, Position endPos, CallStmt stmt, CheckingKeyword checkingKeyword) {
-    stmt.expr = { startPos: kwPos, endPos: stmt.expr.endPos, checkingKeyword, kwPos, operand: stmt.expr };
+    stmt.expr = {startPos: kwPos, endPos: stmt.expr.endPos, checkingKeyword, kwPos, operand: stmt.expr};
     stmt.startPos = kwPos;
 }
 
@@ -250,13 +251,13 @@ function finishAssignStmt(Tokenizer tok, LExpr|WILDCARD lValue, AssignOp op, Pos
     Position endPos = check tok.expectEnd(";");
     // the `||` makes the narrowings work
     if op is "=" || lValue == WILDCARD {
-        AssignStmt stmt = { startPos, endPos, opPos, lValue, expr };
+        AssignStmt stmt = {startPos, endPos, opPos, lValue, expr};
         return stmt;
     }
     else {
         string opStr = op;
-        BinaryArithmeticOp|BinaryBitwiseOp binOp = <BinaryArithmeticOp|BinaryBitwiseOp> opStr.substring(0, opStr.length() - 1);
-        CompoundAssignStmt stmt = { startPos, endPos, opPos, lValue, expr, op: binOp };
+        BinaryArithmeticOp|BinaryBitwiseOp binOp = <BinaryArithmeticOp|BinaryBitwiseOp>opStr.substring(0, opStr.length() - 1);
+        CompoundAssignStmt stmt = {startPos, endPos, opPos, lValue, expr, op: binOp};
         return stmt;
     }
 }
@@ -281,7 +282,7 @@ function finishVarDeclStmt(Tokenizer tok, TypeDesc td, Position startPos, boolea
     Position opPos = check tok.expectStart("=");
     Expr initExpr = check parseExpr(tok);
     Position endPos = check tok.expectEnd(";");
-    return { startPos, endPos, opPos, td, name, namePos, initExpr, isFinal };
+    return {startPos, endPos, opPos, td, name, namePos, initExpr, isFinal};
 }
 
 function parseReturnStmt(Tokenizer tok, Position startPos) returns ReturnStmt|err:Syntax {
@@ -296,13 +297,13 @@ function parseReturnStmt(Tokenizer tok, Position startPos) returns ReturnStmt|er
         returnExpr = check parseExpr(tok);
         endPos = check tok.expectEnd(";");
     }
-    return { startPos, endPos, returnExpr, kwPos: startPos };
+    return {startPos, endPos, returnExpr, kwPos: startPos};
 }
 
 function parsePanicStmt(Tokenizer tok, Position startPos) returns PanicStmt|err:Syntax {
     Expr panicExpr = check parseExpr(tok);
     Position endPos = check tok.expectEnd(";");
-    return { startPos, endPos, panicExpr, kwPos: startPos };
+    return {startPos, endPos, panicExpr, kwPos: startPos};
 }
 
 function parseIfElseStmt(Tokenizer tok, Position startPos) returns IfElseStmt|err:Syntax {
@@ -331,14 +332,14 @@ function parseIfElseStmt(Tokenizer tok, Position startPos) returns IfElseStmt|er
     else {
         ifFalse = ();
     }
-    return { startPos, endPos, condition, ifTrue, ifFalse };
+    return {startPos, endPos, condition, ifTrue, ifFalse};
 }
 
 function parseWhileStmt(Tokenizer tok, Position startPos) returns WhileStmt|err:Syntax {
     Expr condition = check parseExpr(tok);
     StmtBlock body = check parseStmtBlock(tok);
     Position endPos = tok.previousEndPos();
-    return { startPos, endPos, condition, body };
+    return {startPos, endPos, condition, body};
 }
 
 function parseForeachStmt(Tokenizer tok, Position startPos) returns ForeachStmt|err:Syntax {
@@ -352,7 +353,7 @@ function parseForeachStmt(Tokenizer tok, Position startPos) returns ForeachStmt|
     RangeExpr range = check parseRangeExpr(tok);
     StmtBlock body = check parseStmtBlock(tok);
     Position endPos = tok.previousEndPos();
-    return { startPos, endPos, namePos, kwPos, name, range, body };
+    return {startPos, endPos, namePos, kwPos, name, range, body};
 }
 
 function parseMatchStmt(Tokenizer tok, Position startPos) returns MatchStmt|err:Syntax {
@@ -365,7 +366,7 @@ function parseMatchStmt(Tokenizer tok, Position startPos) returns MatchStmt|err:
     }
     Position endPos = tok.currentEndPos();
     check tok.advance();
-    return { startPos, endPos, expr, clauses };
+    return {startPos, endPos, expr, clauses};
 }
 
 function parseMatchClause(Tokenizer tok) returns MatchClause|err:Syntax {
@@ -374,7 +375,7 @@ function parseMatchClause(Tokenizer tok) returns MatchClause|err:Syntax {
     Position opPos = check tok.expectStart("=>");
     StmtBlock block = check parseStmtBlock(tok);
     Position endPos = tok.previousEndPos();
-    return { startPos, endPos, patterns, block, opPos };
+    return {startPos, endPos, patterns, block, opPos};
 }
 
 function parseMatchPatternList(Tokenizer tok) returns MatchPattern[]|err:Syntax {
@@ -393,7 +394,7 @@ function parseMatchPattern(Tokenizer tok) returns MatchPattern|err:Syntax {
         Position startPos = tok.currentStartPos();
         Position endPos = tok.currentEndPos();
         check tok.advance();
-        return <WildcardMatchPattern> { startPos, endPos };
+        return <WildcardMatchPattern>{startPos, endPos};
     }
     return check parseSimpleConstExpr(tok);
 }

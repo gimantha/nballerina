@@ -9,13 +9,13 @@ public type TypeTest record {
     Identifier|TypeProjection right;
 };
 
-public type SubtypeTestOp "<" | "=" | "<>";
+public type SubtypeTestOp "<"|"="|"<>";
 
 public type Identifier string;
 
 public function parseTypeTest(string str) returns TypeTest|error {
-    SourceFile file = createSourceFile([str], { filename: "<internal>" });
-    Tokenizer tok = new(file);
+    SourceFile file = createSourceFile([str], {filename: "<internal>"});
+    Tokenizer tok = new (file);
     check tok.advance();
     Identifier|TypeProjection left = check parseTypeProjection(tok);
     Token? t = tok.current();
@@ -27,13 +27,13 @@ public function parseTypeTest(string str) returns TypeTest|error {
             op = "<>";
         }
         else {
-            op = t;     
+            op = t;
         }
         Identifier|TypeProjection right = check parseTypeProjection(tok);
-        return { op, left, right };
+        return {op, left, right};
     }
     return parseError(tok);
-    
+
 }
 
 function parseTypeProjection(Tokenizer tok) returns Identifier|TypeProjection|error {
@@ -47,10 +47,10 @@ function parseTypeProjection(Tokenizer tok) returns Identifier|TypeProjection|er
             check tok.advance();
         }
         else {
-            index = check tok.expectIdentifier(); 
+            index = check tok.expectIdentifier();
         }
         check tok.expect("]");
-        return { identifier, index};
+        return {identifier, index};
     }
     return identifier;
 }

@@ -7,7 +7,7 @@ public function main() {
         io:println(4); // @output 4
     }
     else {
-        io:println(5); 
+        io:println(5);
     }
     b = false == false;
     if b {
@@ -18,7 +18,7 @@ public function main() {
     }
     b = true != true;
     if b {
-        io:println(8);  
+        io:println(8);
     }
     else {
         io:println(9); // @output 9
@@ -32,7 +32,7 @@ public function main() {
     }
     b = false;
     if true == b {
-        io:println(12); 
+        io:println(12);
     }
     else {
         io:println(13); // @output 13

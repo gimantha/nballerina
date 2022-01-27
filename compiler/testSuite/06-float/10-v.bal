@@ -18,7 +18,7 @@ public function main() {
     io:println(eq(nInf, pInf)); // @output false
     io:println(eq(pInf, pInf)); // @output true
     io:println(eq(nInf, nInf)); // @output true
-    
+
     io:println(100.0 == 10e1); // @output true
     io:println(0.0 == 0.0); // @output true
     io:println(0.0 == -0.0); // @output true

@@ -3,7 +3,9 @@ import ballerina/io;
 public function main() {
     () nil = ();
     match nil {
-        () => { return; }
+        () => {
+            return;
+        }
     }
     io:println("unreached"); // @error
 }

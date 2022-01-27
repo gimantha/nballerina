@@ -3,6 +3,6 @@ type R record {|
 |};
 
 public function main() {
-    R r = { m: {} };
+    R r = {m: {}};
     r.m.x = 32; // @error
 }

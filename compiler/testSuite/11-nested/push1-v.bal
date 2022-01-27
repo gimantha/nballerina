@@ -6,6 +6,7 @@ type C record {|
 |};
 
 const N = 10;
+
 public function main() {
     C[] v = [];
     foreach int i in 0 ..< N {
@@ -23,5 +24,5 @@ public function main() {
         total1 += c.x + c.y;
         total2 += 3.0 * <float>i;
     }
-    io:println(total1 == total2);  // @output true
+    io:println(total1 == total2); // @output true
 }

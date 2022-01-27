@@ -1,5 +1,6 @@
 // @productions list-constructor-expr exact-equality equality-expr any function-call-expr local-var-decl-stmt int-literal
 import ballerina/io;
+
 public function main() {
     any x = [1];
     any y = x;

@@ -11,10 +11,10 @@ public function main() {
     cmp("", "\u{0}"); // @output lt
     cmp("\u{0}", "\u{0}"); // @output eq
     cmp("\u{0}", "\u{0}\u{0}\u{0}"); // @output lt
-    cmp("\u{7F}","\u{80}"); // @output lt
-    cmp("\u{80}","\u{81}"); // @output lt
-    cmp("1234\u{80}","1234\u{81}"); // @output lt
-    cmp("x","\u{1F600}"); // @output lt
+    cmp("\u{7F}", "\u{80}"); // @output lt
+    cmp("\u{80}", "\u{81}"); // @output lt
+    cmp("1234\u{80}", "1234\u{81}"); // @output lt
+    cmp("x", "\u{1F600}"); // @output lt
 }
 
 function cmp(string s1, string s2) {

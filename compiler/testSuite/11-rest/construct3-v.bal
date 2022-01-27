@@ -7,7 +7,7 @@ type R record {|
 |};
 
 public function main() {
-    R r = { x: 28, y: true, "x-stuff": "whatever" };
+    R r = {x: 28, y: true, "x-stuff": "whatever"};
     int x = r.x;
     io:println(x); // @output 28
     boolean y = r.y;

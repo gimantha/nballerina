@@ -8,7 +8,7 @@ function constArray() returns Module {
     ConstValue array = context.constArray("i64", elements);
 
     ArrayType retTy = arrayType("i64", 3);
-    FunctionDefn fn = m.addFunctionDefn("test", {returnType: retTy, paramTypes:[]});
+    FunctionDefn fn = m.addFunctionDefn("test", {returnType: retTy, paramTypes: []});
     BasicBlock bb = fn.appendBasicBlock();
     builder.positionAtEnd(bb);
     builder.ret(array);

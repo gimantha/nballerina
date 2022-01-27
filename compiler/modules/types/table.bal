@@ -45,7 +45,7 @@ function createRwTableSubtype(Bdd ro, Bdd rw) returns SubtypeData {
     if ro is boolean && ro == rw {
         return ro;
     }
-    return { ro, rw };
+    return {ro, rw};
 }
 
 final UniformTypeOps tableRoOps = {

@@ -3,6 +3,7 @@ import ballerina/io;
 import wso2/nballerina.front;
 import wso2/nballerina.comm.err;
 import wso2/nballerina.types as t;
+
 // import wso2/nballerina.types.bdd;
 
 public function showTypes(front:SourcePart[] sources) returns err:Diagnostic|io:Error? {
@@ -14,12 +15,14 @@ public function showTypes(front:SourcePart[] sources) returns err:Diagnostic|io:
 }
 
 function subtypeRels(front:SourcePart[] sources) returns string[]|err:Diagnostic|io:Error {
-    
+
     var [env, m] = check front:typesFromString(sources);
 
     var tc = t:typeContext(env);
 
-    var entries = from var [name, t] in m.entries() order by name select [name, t];
+    var entries = from var [name, t] in m.entries()
+        order by name
+        select [name, t];
     [string, string][] results = [];
     foreach int i in 0 ..< entries.length() {
         foreach int j in i + 1 ..< entries.length() {
@@ -33,10 +36,10 @@ function subtypeRels(front:SourcePart[] sources) returns string[]|err:Diagnostic
             }
         }
     }
-    string[] rels = 
+    string[] rels =
         from var [name1, name2] in results
-        let string s = name1 + "<:" + name2
-        order by s
-        select s;
+    let string s = name1 + "<:" + name2
+    order by s
+    select s;
     return rels;
 }

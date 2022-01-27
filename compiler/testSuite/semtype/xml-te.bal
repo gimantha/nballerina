@@ -1,5 +1,7 @@
 type X xml;
+
 type RX readonly & X;
+
 type NEVER never;
 
 type RWX X & !readonly;

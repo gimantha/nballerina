@@ -12,7 +12,7 @@ type Name record {|
 
 public function main() {
     Person p = {
-        name: { first: "John", last: "Smith" },
+        name: {first: "John", last: "Smith"},
         age: 30
     };
     io:println(p["name"]); // @output {"first":"John","last":"Smith"}

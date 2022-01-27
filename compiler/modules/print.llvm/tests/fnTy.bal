@@ -11,7 +11,7 @@ function fnTy() returns Module {
     StructType structTy = structType(["i32", fnPointerTy]);
     _ = m.addGlobal(structTy, "g1");
     _ = m.addGlobal(fnPointerTy, "g2");
-    _ = m.addGlobal(otherFnPtrTy, "g3", initializer=fn);
+    _ = m.addGlobal(otherFnPtrTy, "g3", initializer = fn);
     return m;
 }
 

@@ -5,12 +5,12 @@ function alias() returns Module {
     Builder builder = context.createBuilder();
     Module m = context.createModule();
 
-    ConstPointerValue g = m.addGlobal("i64", "g", initializer=constInt("i64", 5),
-                                      addressSpace=1, linkage="internal");
-    ConstPointerValue a = m.addAlias("i64", g, "a", addressSpace=1);
-    _ = m.addAlias("i64", g, "b", linkage="internal", addressSpace=1);
-    _ = m.addAlias("i64", g, "c", linkage="internal", unnamedAddr=true, addressSpace=1);
-    _ = m.addAlias("i64", g, "d", unnamedAddr=true, addressSpace=1);
+    ConstPointerValue g = m.addGlobal("i64", "g", initializer = constInt("i64", 5),
+                                    addressSpace = 1, linkage = "internal");
+    ConstPointerValue a = m.addAlias("i64", g, "a", addressSpace = 1);
+    _ = m.addAlias("i64", g, "b", linkage = "internal", addressSpace = 1);
+    _ = m.addAlias("i64", g, "c", linkage = "internal", unnamedAddr = true, addressSpace = 1);
+    _ = m.addAlias("i64", g, "d", unnamedAddr = true, addressSpace = 1);
     FunctionDefn mainFunction = m.addFunctionDefn("main", {returnType: "i64", paramTypes: []});
     BasicBlock initBlock = mainFunction.appendBasicBlock();
     builder.positionAtEnd(initBlock);

@@ -2,7 +2,7 @@
 import ballerina/io;
 
 public function main() {
-   foo(1); // @output 2
+    foo(1); // @output 2
 }
 
 function foo(any v) {

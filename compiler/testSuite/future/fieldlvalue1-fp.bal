@@ -11,7 +11,7 @@ type C record {|
 |};
 
 public function main() {
-    A a = { b: { c: { i: 0 } } };
+    A a = {b: {c: {i: 0}}};
     string m = "j";
     a.b.c[m] = 8; // @panic bad mapping store
 }

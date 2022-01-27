@@ -12,7 +12,7 @@ function foo(any p) returns int {
             1 => {
                 v = 1;
             }
-            2 => { 
+            2 => {
                 return 17;
             }
         }

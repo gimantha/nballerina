@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     // This test case corresponds to a float operation which gives NaN.
     decimal d1 = 0d;

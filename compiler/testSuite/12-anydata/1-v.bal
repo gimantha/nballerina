@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     anydata val = ();
     io:println(val); // @output 

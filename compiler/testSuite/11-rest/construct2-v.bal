@@ -7,7 +7,7 @@ type R record {|
 |};
 
 public function main() {
-    R r = { "b": 3, "a": 4, y: 2, x: 1 };
+    R r = {"b": 3, "a": 4, y: 2, x: 1};
     // The spec doesn't require a particular output order here,
     // but we put required fields in sorted order,
     // followed by optional fields in order specified in constructor

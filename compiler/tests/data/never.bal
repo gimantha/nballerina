@@ -11,11 +11,16 @@
 // Never<:Key
 // Never<:KeyOrNever
 type Never never;
-type Int int;
-type Fun function(int);
-type FunOrNever Fun|never;
-type IntOrNever Int|never;
-type Key "key";
-type KeyOrNever Key|never;
 
+type Int int;
+
+type Fun function (int);
+
+type FunOrNever Fun|never;
+
+type IntOrNever Int|never;
+
+type Key "key";
+
+type KeyOrNever Key|never;
 

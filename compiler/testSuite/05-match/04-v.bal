@@ -12,7 +12,6 @@ public function main() {
     io:println(foo(false)); // @output other
 }
 
-
 function foo(any v) returns string {
     match v {
         0 => {
@@ -25,7 +24,7 @@ function foo(any v) returns string {
             return "boolean";
         }
         "hello" => {
-           return "greeting";
+            return "greeting";
         }
         _ => {
             return "other";

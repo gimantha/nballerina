@@ -1,6 +1,6 @@
 import ballerina/test;
 
-@test:Config{}
+@test:Config {}
 function bddTest() {
     Bdd b1 = bddAtom(1);
     Bdd b2 = bddAtom(2);

@@ -1,5 +1,5 @@
 function wrapper() {
-    boolean b  = false;
+    boolean b = false;
     // @case
     if b {
     }

@@ -13,7 +13,7 @@ const CP_RIGHT_PAREN = 0x29;
 const CP_ASTERISK = 0x2A;
 const CP_PLUS = 0x2B;
 const CP_COMMA = 0x2C;
-const CP_MINUS= 0x2D;
+const CP_MINUS = 0x2D;
 const CP_DOT = 0x2E;
 const CP_SLASH = 0x2F;
 
@@ -27,7 +27,6 @@ const CP_DIGIT_6 = 0x36;
 const CP_DIGIT_7 = 0x37;
 const CP_DIGIT_8 = 0x38;
 const CP_DIGIT_9 = 0x39;
-
 
 const CP_COLON = 0x3A;
 const CP_SEMICOLON = 0x3B;

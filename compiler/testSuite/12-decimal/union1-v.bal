@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     decimal|int d1 = 1;
     io:println(d1); // @output 1

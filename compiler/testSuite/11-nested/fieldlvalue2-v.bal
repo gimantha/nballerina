@@ -9,7 +9,7 @@ type B record {|
 |};
 
 public function main() {
-    A a = { b: { i: 0 } };
+    A a = {b: {i: 0}};
     a.b.i += 4;
     a.b.i -= 2;
     io:println(a.b.i); // @output 2

@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     float? a = 5;
     float? b = 6;

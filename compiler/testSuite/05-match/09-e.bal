@@ -7,7 +7,7 @@ public function main() {
 
 function foo(any v) {
     match v {
-        _ => { 
+        _ => {
             io:println("any");
         }
         1 => { // @error

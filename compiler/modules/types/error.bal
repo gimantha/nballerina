@@ -5,7 +5,7 @@ public function errorDetail(SemType detail) returns SemType {
     if sd is boolean {
         if sd {
             return ERROR;
-         }
+        }
         else {
             // XXX This should be reported as an error
             return NEVER;
@@ -29,7 +29,7 @@ function errorSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
     BddMemo? mm = cx.mappingMemo[b];
     BddMemo m;
     if mm == () {
-        m = { bdd: b };
+        m = {bdd: b};
         cx.mappingMemo.add(m);
     }
     else {
@@ -44,7 +44,7 @@ function errorSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
     }
     boolean isEmpty = bddEveryPositive(cx, b, (), (), mappingFormulaIsEmpty);
     m.isEmpty = isEmpty;
-    return isEmpty;    
+    return isEmpty;
 }
 
 final UniformTypeOps errorOps = {
@@ -54,5 +54,4 @@ final UniformTypeOps errorOps = {
     complement: bddSubtypeComplement,
     isEmpty: errorSubtypeIsEmpty
 };
-
 

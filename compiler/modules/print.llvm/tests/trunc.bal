@@ -1,7 +1,7 @@
 import ballerina/test;
 
 function trunc() returns Module {
-    Context context = new();
+    Context context = new ();
     Builder builder = context.createBuilder();
 
     Module m = context.createModule();
@@ -28,7 +28,7 @@ function testTruncSuccess() returns error? {
 
 @test:Config {}
 function testTruncSameType() returns error? {
-    Context context = new();
+    Context context = new ();
     Builder builder = context.createBuilder();
 
     Module m = context.createModule();
@@ -37,7 +37,7 @@ function testTruncSameType() returns error? {
     builder.positionAtEnd(fooBB);
     Value arg = foo.getParam(0);
     Value|error v1 = trap builder.trunc(arg, "i64");
-    if v1 !is error{
-	    test:assertFail("Same type trunc must not be allowed");
+    if v1 !is error {
+        test:assertFail("Same type trunc must not be allowed");
     }
 }

@@ -6,7 +6,7 @@ public function main() {
 }
 
 function foo(int i, int j) returns int {
-    return i*j;
+    return i * j;
 }
 
 function getArg1() returns int {

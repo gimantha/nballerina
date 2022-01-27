@@ -2,7 +2,7 @@
 import ballerina/io;
 
 public function main() {
-    map<float> m = { x: 1.5, y: 2.0 };
+    map<float> m = {x: 1.5, y: 2.0};
     float? x = m["x"];
     float? y = m["y"];
     if x != () {

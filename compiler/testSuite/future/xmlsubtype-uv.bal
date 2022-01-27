@@ -2,6 +2,7 @@
 import ballerina/io;
 
 type XE xml:Element;
+
 public function main() {
     XE? x = ();
     if x == () {

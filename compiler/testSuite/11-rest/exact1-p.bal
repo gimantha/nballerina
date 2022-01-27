@@ -4,7 +4,7 @@ type R record {|
 |};
 
 public function main() {
-    R r = { x: [], "y": [] };
+    R r = {x: [], "y": []};
     string k = "y";
     int?[]? xy = r[k];
     if xy != () {

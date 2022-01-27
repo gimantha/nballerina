@@ -17,7 +17,9 @@ type R3 record {|
 type READ readonly;
 
 type T1 table<R1>;
+
 type T2 table<R2>;
+
 type T3 table<R3>;
 
 // @type TI < T1
@@ -25,6 +27,7 @@ type T3 table<R3>;
 // @type T1 < TU
 // @type T2 < TU
 type TI T1 & T3;
+
 type TU T1|T2;
 
 // @type T1 <> TC

@@ -6,7 +6,7 @@ type R record {|
 |};
 
 public function main() {
-    R r = { x: 17, y: 1 };
+    R r = {x: 17, y: 1};
     int x = r["x"];
     io:println(x); // @output 17
     float y = r["y"];

@@ -1,5 +1,6 @@
 // @productions return-stmt unary-expr function-call-expr local-var-decl-stmt int-literal
 import ballerina/io;
+
 public function main() {
     int i = 0;
     io:println(~i); // @output -1
@@ -15,14 +16,14 @@ public function main() {
     io:println(addTwo(-98)); // @output -96
 }
 
-
-public function twiddle(int i) returns int{
+public function twiddle(int i) returns int {
     return ~i;
 }
 
-public function minusTwo(int i) returns int{
+public function minusTwo(int i) returns int {
     return ~-~-i;
 }
-public function addTwo(int i) returns int{
+
+public function addTwo(int i) returns int {
     return -~-~i;
 }

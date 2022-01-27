@@ -14,11 +14,15 @@
 // Z<:XYZ
 // Z<:XZ
 type X "x";
+
 type Y "y-y";
+
 type Z "z-z";
 
 type XYZ X|Y|Z;
+
 type XY X|Y;
+
 type XZ X|Z;
 
 type S string;

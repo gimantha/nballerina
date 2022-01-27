@@ -15,11 +15,15 @@
 // T<:ZT
 
 type Z 0.0;
+
 type O 1.0;
+
 type T -2.0;
 
 type ZOT Z|O|T;
+
 type ZO Z|O;
+
 type ZT Z|T;
 
 type F float;

@@ -10,7 +10,7 @@ public type Range readonly & record {|
 |};
 
 public function intConst(int value) returns ComplexSemType {
-    IntSubtype t = [{ min: value, max: value }];
+    IntSubtype t = [{min: value, max: value}];
     return uniformSubtype(UT_INT, t);
 }
 
@@ -31,6 +31,7 @@ function validIntWidth(boolean signed, int bits) returns error? {
 }
 
 public function validIntWidthSigned(int bits) returns error? => validIntWidth(true, bits);
+
 public function validIntWidthUnsigned(int bits) returns error? => validIntWidth(false, bits);
 
 public function intWidthSigned(int bits) returns SemType {
@@ -38,13 +39,13 @@ public function intWidthSigned(int bits) returns SemType {
     if bits == 64 {
         return INT;
     }
-    IntSubtype t = [{ min: -(1 << (bits - 1)), max: (1 << (bits - 1)) - 1 }];
+    IntSubtype t = [{min: -(1 << (bits - 1)), max: (1 << (bits - 1)) - 1}];
     return uniformSubtype(UT_INT, t);
 }
 
 public function intWidthUnsigned(int bits) returns SemType {
     checkpanic validIntWidth(false, bits);
-    IntSubtype t = [{ min: 0, max: (1 << bits) - 1 }];
+    IntSubtype t = [{min: 0, max: (1 << bits) - 1}];
     return uniformSubtype(UT_INT, t);
 }
 
@@ -61,7 +62,7 @@ function intSubtypeWidenUnsigned(SubtypeData d) returns SubtypeData {
     int i = 8;
     while i <= 32 {
         if r.max < (1 << i) {
-            IntSubtype w = [{ min: 0, max: (1 << i) - 1 }];
+            IntSubtype w = [{min: 0, max: (1 << i) - 1}];
             return w;
         }
         i = i * 2;
@@ -205,8 +206,9 @@ function rangeUnion(Range r1, Range r2) returns -1|1|Range {
             return 1;
         }
     }
-    return { min: int:min(r1.min, r2.min), max: int:max(r1.max, r2.max) };
+    return {min: int:min(r1.min, r2.min), max: int:max(r1.max, r2.max)};
 }
+
 function rangeListIntersect(Range[] v1, Range[] v2) returns Range[] {
     Range[] result = [];
     int i1 = 0;
@@ -250,7 +252,7 @@ function rangeIntersect(Range r1, Range r2) returns -1|1|Range {
         return 1;
     }
     // we know they have a non-empty overlap
-    return { min: int:max(r1.min, r2.min), max: int:min(r1.max, r2.max) };
+    return {min: int:max(r1.min, r2.min), max: int:min(r1.max, r2.max)};
 
 }
 
@@ -263,11 +265,11 @@ function rangeListComplement(Range[] v) returns Range[] {
         result.push({min: int:MIN_VALUE, max: min - 1});
     }
     foreach int i in 1 ..< len {
-        result.push({ min: v[i - 1].max + 1, max: v[i].min - 1 });
+        result.push({min: v[i - 1].max + 1, max: v[i].min - 1});
     }
     int max = v[v.length() - 1].max;
     if max < int:MAX_VALUE {
-        result.push({ min: max + 1, max: int:MAX_VALUE });
+        result.push({min: max + 1, max: int:MAX_VALUE});
     }
     return result;
 }

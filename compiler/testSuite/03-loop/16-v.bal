@@ -7,7 +7,7 @@ public function main() {
             break;
         }
         io:println(i); // @output 6
-                       // @output 7
+        // @output 7
     }
     io:println(true); // @output true
 

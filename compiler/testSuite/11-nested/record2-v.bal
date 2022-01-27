@@ -5,6 +5,6 @@ type T record {|
 |};
 
 public function main() {
-    T v = { x: [42] };
+    T v = {x: [42]};
     io:println(v.x[0]); // @output 42
 }

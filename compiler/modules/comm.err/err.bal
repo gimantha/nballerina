@@ -4,27 +4,30 @@ import wso2/nballerina.comm.diagnostic as d;
 public type Diagnostic error<d:Diagnostic>;
 
 public type Syntax error<d:SyntaxDiagnostic>;
+
 public type Semantic error<d:SemanticDiagnostic>;
+
 public type Unimplemented error<d:UnimplementedDiagnostic>;
+
 public type Internal error<d:InternalDiagnostic>;
 
 public type Panic distinct error;
 
 // XXX the `cause` argument here is not really right: we just it for errors from numeric conversion functions
 public function syntax(d:Message m, d:Location loc, string? defnName = (), error? cause = ()) returns Syntax {
-    return error Syntax("syntax error", cause, message=d:messageToString(m), location=loc, defnName=defnName);
-} 
+    return error Syntax("syntax error", cause, message = d:messageToString(m), location = loc, defnName = defnName);
+}
 
 public function semantic(d:Message m, d:Location loc, string? defnName = (), error? cause = ()) returns Semantic {
-    return error Semantic("semantic error", cause, message=d:messageToString(m), location=loc, defnName=defnName);
+    return error Semantic("semantic error", cause, message = d:messageToString(m), location = loc, defnName = defnName);
 }
 
 public function unimplemented(d:Message m, d:Location loc, string? defnName = (), error? cause = ()) returns Unimplemented {
-    return error Unimplemented("unimplemented error", cause, message=d:messageToString(m), location=loc, defnName=defnName);
+    return error Unimplemented("unimplemented error", cause, message = d:messageToString(m), location = loc, defnName = defnName);
 }
 
 public function internal(d:Message m, d:Location loc, string? defnName = (), error? cause = ()) returns Internal {
-    return error Internal("internal error", cause, message=d:messageToString(m), location=loc, defnName=defnName);
+    return error Internal("internal error", cause, message = d:messageToString(m), location = loc, defnName = defnName);
 }
 
 // This is intended to be used with `panic`.

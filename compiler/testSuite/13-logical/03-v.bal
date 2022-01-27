@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     f(1); // @output i
     f("x"); // @output s

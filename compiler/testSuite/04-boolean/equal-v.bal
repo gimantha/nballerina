@@ -15,7 +15,7 @@ public function main() {
         io:println(4); // @output 4
     }
     else {
-        io:println(5); 
+        io:println(5);
     }
     b = checkEquality(false, false);
     if b {
@@ -26,7 +26,7 @@ public function main() {
     }
     b = checkInEquality(true, true);
     if b {
-        io:println(8);  
+        io:println(8);
     }
     else {
         io:println(9); // @output 9

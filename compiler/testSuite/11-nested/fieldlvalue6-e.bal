@@ -13,6 +13,6 @@ type C record {|
 const m = "j";
 
 public function main() {
-    A a = { b: { c: { i: 0 } } };
+    A a = {b: {c: {i: 0}}};
     a.b.c[m] = 8; // @error
 }

@@ -5,7 +5,7 @@ public type BooleanSubtype readonly & record {|
 |};
 
 public function booleanConst(boolean value) returns ComplexSemType {
-    BooleanSubtype t = { value };
+    BooleanSubtype t = {value};
     return uniformSubtype(UT_BOOLEAN, t);
 }
 
@@ -45,7 +45,7 @@ function booleanSubtypeDiff(SubtypeData d1, SubtypeData d2) returns SubtypeData 
 
 function booleanSubtypeComplement(SubtypeData d) returns SubtypeData {
     BooleanSubtype v = <BooleanSubtype>d;
-    BooleanSubtype t = { value: !v.value };
+    BooleanSubtype t = {value: !v.value};
     return t;
 }
 

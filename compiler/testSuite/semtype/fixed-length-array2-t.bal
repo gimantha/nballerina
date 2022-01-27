@@ -1,9 +1,13 @@
 type IntArray int[];
+
 type ISArray (int|string)[];
 
 type Int4 int[4];
+
 type Int1 int[1];
+
 type Int14 Int4|Int1;
+
 type NegInt14 (!Int14 & IntArray);
 
 // @type I4A = IntArray

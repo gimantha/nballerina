@@ -56,7 +56,7 @@ const VAR_FRAG_MAX = 0x0C;
 const FRAG_FIXED = 0x1D; // >= this corre
 
 // Comes from greater than
-const FRAG_GREATER_THAN = 0x1D; 
+const FRAG_GREATER_THAN = 0x1D;
 // Comes from a double quote that starts a string
 const FRAG_STRING_OPEN = 0x1E;
 // Comes from a double quote that ends a string
@@ -141,7 +141,8 @@ final readonly & Keyword[] keywords = [
 ];
 
 final readonly & string:Char?[] fragFixed = createFragFixed();
-function createFragFixed () returns readonly & string:Char?[] {
+
+function createFragFixed() returns readonly & string:Char?[] {
     string:Char?[] fragFixed = [];
     fragFixed[<int>FRAG_GREATER_THAN] = ">";
     fragFixed[<int>FRAG_STRING_OPEN] = "\"";
@@ -193,7 +194,7 @@ function createFragTokens() returns readonly & FixedToken?[] {
 
 function scanLineFragIndex(ScannedLine line, int codePointIndex) returns [int, int] {
     if codePointIndex == 0 {
-        return  [0, 0];
+        return [0, 0];
     }
     readonly & FragCode[] fragCodes = line.fragCodes;
     readonly & string[] fragments = line.fragments;
@@ -253,7 +254,8 @@ function unicodeEscapeValue(string fragment) returns string|error {
 }
 
 function scanLines(string[] lines) returns readonly & ScannedLine[] {
-    ScannedLine[] result = from var l in lines select scanLine(l);
+    ScannedLine[] result = from var l in lines
+        select scanLine(l);
     //JBUG #33355 shouldn't clone, query syntax should produce readonly arrays
     return result.cloneReadOnly();
 }
@@ -263,7 +265,7 @@ function scanLine(string line) returns ScannedLine {
     FragCode[] fragCodes = [];
     int[] endIndex = [];
     //io:println("nCodePoints: ", codePoints.length());
-    scanNormal(codePoints, 0, { fragCodes, endIndex });
+    scanNormal(codePoints, 0, {fragCodes, endIndex});
     //io:println("nFragCodes: ", fragCodes.length());
     //io:println(fragCodes);
     //io:println("nEndIndex: ", endIndex.length());
@@ -286,7 +288,7 @@ function scanLine(string line) returns ScannedLine {
     //io:println("nVarFragments: ", nVarFragments);
 
     fragments.setLength(nVarFragments);
-    return { fragCodes: fragCodes.cloneReadOnly(), fragments: fragments.cloneReadOnly() };
+    return {fragCodes: fragCodes.cloneReadOnly(), fragments: fragments.cloneReadOnly()};
 }
 
 // Might want to do this in native code
@@ -313,10 +315,10 @@ function splitIntoLines(string str) returns string[] {
             }
             lineStartIndex = i + 1;
         }
-        else if ch == "\r"  {
+        else if ch == "\r" {
             lines.push(str.substring(lineStartIndex, i));
             cr = i;
-            lineStartIndex = i + 1;           
+            lineStartIndex = i + 1;
         }
         i += 1;
     }
@@ -350,8 +352,8 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
                 cp = codePoints[i];
                 if cp == CP_EQUAL {
                     i += 1;
-                   endFragment(FRAG_SLASH_EQUAL, i, result);
-                   continue; 
+                    endFragment(FRAG_SLASH_EQUAL, i, result);
+                    continue;
                 }
                 if cp != CP_SLASH {
                     endFragment(CP_SLASH, i, result);
@@ -377,14 +379,14 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
                         continue;
                     }
                     if cp2 == CP_EQUAL {
-                       i += 1;
-                       endFragment(FRAG_VBAR_EQUAL, i, result);
-                       continue;
+                        i += 1;
+                        endFragment(FRAG_VBAR_EQUAL, i, result);
+                        continue;
                     }
                     if cp2 == CP_VBAR {
-                       i += 1;
-                       endFragment(FRAG_VBAR_VBAR, i, result);
-                       continue;
+                        i += 1;
+                        endFragment(FRAG_VBAR_VBAR, i, result);
+                        continue;
                     }
                 }
                 endFragment(CP_VBAR, i, result);
@@ -392,7 +394,7 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
             CP_DOT => {
                 if i < len {
                     int cp2 = codePoints[i];
-        
+
                     if cp2 == CP_DOT {
                         if i + 1 < len && codePoints[i + 1] == CP_DOT {
                             i += 2;
@@ -458,7 +460,7 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
                     if cp2 == CP_LESS_THAN {
                         i += 1;
                         if codePoints[i] == CP_EQUAL {
-                            i+=1;
+                            i += 1;
                             endFragment(FRAG_LESS_THAN_LESS_THAN_EQUAL, i, result);
                             continue;
                         }
@@ -480,12 +482,12 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
                     continue;
                 }
                 if i < len && codePoints[i] == CP_GREATER_THAN {
-                    if i+2 < len && codePoints[i+1] == CP_GREATER_THAN && codePoints[i+2] == CP_EQUAL{
+                    if i + 2 < len && codePoints[i + 1] == CP_GREATER_THAN && codePoints[i + 2] == CP_EQUAL {
                         i += 3;
                         endFragment(FRAG_GREATER_THAN_GREATER_THAN_GREATER_THAN_EQUAL, i, result);
                         continue;
                     }
-                    else if i+1 < len && codePoints[i+1] == CP_EQUAL{
+                    else if i + 1 < len && codePoints[i + 1] == CP_EQUAL {
                         i += 2;
                         endFragment(FRAG_GREATER_THAN_GREATER_THAN_EQUAL, i, result);
                         continue;
@@ -512,7 +514,7 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
                         continue;
                     }
                 }
-                i = scanDecimal(codePoints, i, result);   
+                i = scanDecimal(codePoints, i, result);
             }
             CP_DIGIT_1
             |CP_DIGIT_2
@@ -526,11 +528,11 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
                 i = scanDecimal(codePoints, i, result);
             }
             CP_PERCENT
-            |CP_LEFT_PAREN 
+            |CP_LEFT_PAREN
             |CP_RIGHT_PAREN
             |CP_COMMA
             |CP_COLON
-            |CP_SEMICOLON 
+            |CP_SEMICOLON
             |CP_QUESTION
             |CP_LEFT_SQUARE
             |CP_RIGHT_SQUARE
@@ -541,7 +543,7 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
             }
             CP_CIRCUMFLEX => {
                 i = endFragmentCompoundAssign(codePoints, i, CP_CIRCUMFLEX, FRAG_CIRCUMFLEX_EQUAL, result);
-                
+
             }
             CP_PLUS => {
                 i = endFragmentCompoundAssign(codePoints, i, CP_PLUS, FRAG_PLUS_EQUAL, result);
@@ -652,7 +654,7 @@ function scanNormal(int[] codePoints, int startIndex, Scanned result) {
                 else {
                     endFragment(FRAG_INVALID, i, result);
                 }
-                
+
             }
         }
 
@@ -791,7 +793,7 @@ function endDecimal(FragCode fragCodeIfNoSuffix, int[] codePoints, int i, Scanne
         if cp == CP_UPPER_F || cp == CP_LOWER_F {
             endFragment(FRAG_DECIMAL_FP_NUMBER_F, i + 1, result);
             return i + 1;
-        } 
+        }
         else if cp == CP_UPPER_D || cp == CP_LOWER_D {
             endFragment(FRAG_DECIMAL_FP_NUMBER_D, i + 1, result);
             return i + 1;
@@ -824,7 +826,7 @@ function scanFractionExponent(int[] codePoints, int startIndex) returns int? {
         return i;
     }
     int cp = codePoints[i];
-    if  cp == CP_UPPER_E || cp == CP_LOWER_E {
+    if cp == CP_UPPER_E || cp == CP_LOWER_E {
         int? endIndex = scanExponent(codePoints, i + 1);
         if endIndex != () {
             return endIndex;
@@ -913,11 +915,11 @@ function endFragmentCompoundAssign(int[] codePoints, int i, byte CP, byte FCP, S
 }
 
 function isCodePointIdentifierFollowing(int cp) returns boolean {
-   return isCodePointAsciiUpper(cp)
-          || isCodePointAsciiLower(cp)
-          || isCodePointAsciiDigit(cp)
-          || cp == CP_UNDERSCORE
-          || isCodePointUnicodeIdentifier(cp);
+    return isCodePointAsciiUpper(cp)
+        || isCodePointAsciiLower(cp)
+        || isCodePointAsciiDigit(cp)
+        || cp == CP_UNDERSCORE
+        || isCodePointUnicodeIdentifier(cp);
 }
 
 function isCodePointAsciiDigit(int cp) returns boolean {

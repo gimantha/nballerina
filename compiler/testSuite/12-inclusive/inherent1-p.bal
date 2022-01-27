@@ -6,7 +6,7 @@ type Person record {
 };
 
 public function main() {
-    Person p = { name: "James", age: 99 };
+    Person p = {name: "James", age: 99};
     foo(p);
     io:println(p["age"]);
 }

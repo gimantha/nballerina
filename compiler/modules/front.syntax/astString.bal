@@ -256,7 +256,7 @@ function typeDescToWords(Word[] w, TypeDesc td, boolean|BinaryTypeOp wrap = fals
                 w.push(f.name, CLING, ";");
             }
             if rest is TypeDesc {
-                w.push(<Word> LF);
+                w.push(<Word>LF);
                 typeDescToWords(w, rest);
                 w.push("...", CLING, ";");
             }
@@ -336,7 +336,7 @@ function typeDescToWords(Word[] w, TypeDesc td, boolean|BinaryTypeOp wrap = fals
         w.push("table", CLING, "<", CLING);
         typeDescToWords(w, td.row);
         w.push(CLING, ">");
-    }    
+    }
     else if td is UnaryTypeDesc {
         if td.op == "(" {
             return typeDescToWords(w, td.td, wrap);
@@ -425,7 +425,7 @@ function exprToWords(Word[] w, Expr expr, boolean wrap = false) {
         exprToWords(w, expr.innerExpr, wrap);
     }
     else if expr is ConstValueExpr {
-        valueToWords(w, expr.value);      
+        valueToWords(w, expr.value);
     }
     else if expr is IntLiteralExpr {
         if expr.base == 16 {
@@ -611,7 +611,7 @@ final readonly & map<string:Char> REVERSE_ESCAPES = {
 function stringLiteral(string str) returns string {
     string[] chunks = ["\""];
     foreach var ch in str {
-        string:Char? singleEscaped =  REVERSE_ESCAPES[ch];
+        string:Char? singleEscaped = REVERSE_ESCAPES[ch];
         if singleEscaped == () {
             int cp = ch.toCodePointInt();
             if 0x20 <= cp && cp < 0x7F {
@@ -643,7 +643,7 @@ function wordsToLines(Word[] s) returns string[] {
             clingNext = false;
             firstInLine = false;
             buf.push(a);
-            
+
             if alwaysClingAfter(a) {
                 clingNext = true;
             }

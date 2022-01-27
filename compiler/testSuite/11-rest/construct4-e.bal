@@ -7,6 +7,6 @@ type R record {|
 |};
 
 public function main() {
-    R r = { x: 28, y: true, "x-stuff": 21 }; // @error
+    R r = {x: 28, y: true, "x-stuff": 21}; // @error
     io:println(r);
 }

@@ -35,7 +35,7 @@ function testCompileVPO(string path, string kind) returns io:Error? {
 }
 function testSemTypes(string path, string kind) returns error? {
     SubtypeTestCase res = check readSubtypeTests(path);
-    error? err =  testSubtypes([{ lines : res[1], filename : res[0] }], res[2]);
+    error? err = testSubtypes([{lines: res[1], filename: res[0]}], res[2]);
     if kind == "te" {
         if err is () {
             test:assertNotExactEquals(err, (), "expected an error " + path);
@@ -86,12 +86,12 @@ function testCompileEU(string path, string kind) returns file:Error|io:Error? {
 type FilenameLine [string, int];
 
 function checkErrorLocation(err:Diagnostic err, string path) returns file:Error|io:Error? {
-    var [expectedFilename, expectedLineNo] = <FilenameLine> check expectedErrorLocation(err, path);
+    var [expectedFilename, expectedLineNo] = <FilenameLine>check expectedErrorLocation(err, path);
     d:Location loc = err.detail().location;
     string filename = loc.file.filename();
     test:assertEquals(file:getAbsolutePath(filename), expectedFilename, "invalid error filename" + filename);
     d:LineColumn lc = d:locationLineColumn(loc);
-    test:assertEquals(lc[0], expectedLineNo, "invalid error line number in " + expectedFilename);    
+    test:assertEquals(lc[0], expectedLineNo, "invalid error line number in " + expectedFilename);
 }
 
 function expectedErrorLocation(CompileError err, string path) returns FilenameLine|file:Error|io:Error? {
@@ -112,7 +112,7 @@ function expectedErrorLocation(CompileError err, string path) returns FilenameLi
 }
 
 function moduleDir(string filePath) returns string|file:Error? {
-    string subModPath = filePath.substring(0, filePath.length()-4) + ".modules";
+    string subModPath = filePath.substring(0, filePath.length() - 4) + ".modules";
     if check file:test(subModPath, file:IS_DIR) {
         return check file:normalizePath(subModPath, file:CLEAN);
     }
@@ -164,7 +164,7 @@ function listSources(string initialChars) returns TestSuiteCases|io:Error|file:E
 function testKind(string base) returns string:Char {
     int? dash = base.lastIndexOf("-");
     test:assertTrue(dash is int, "test file name must be in <name>-<kind>.bal format");
-    return <string:Char> base.substring(1 + <int>dash, 2 + <int>dash).toLowerAscii();
+    return <string:Char>base.substring(1 + <int>dash, 2 + <int>dash).toLowerAscii();
 }
 
 function includePath(string path, string initialChars) returns boolean|file:Error {
@@ -202,11 +202,11 @@ function testSubtypes(front:SourcePart[] sources, string[] expected) returns err
 
         string lhsStr = test.left.toString();
         string rhsStr = test.right.toString();
-        
+
         boolean lsr = t:isSubtype(tc, left, right);
         boolean rsl = t:isSubtype(tc, right, left);
-        boolean[2] testPair = [lsr, rsl]; 
-        match test.op { 
+        boolean[2] testPair = [lsr, rsl];
+        match test.op {
             "<" => {
                 test:assertEquals(testPair, [true, false], string `${lhsStr} is not a proper subtype of ${rhsStr}`);
             }
@@ -258,7 +258,7 @@ function resolveTestSemtype(t:Context tc, map<t:SemType> m, s:Identifier|s:TypeP
         }
         else {
             test:assertFail(tn.identifier + " is not a list or a mapping type");
-        } 
+        }
     }
 }
 

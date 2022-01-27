@@ -86,7 +86,7 @@ function createDecimalArithmeticFuncs() returns readonly & map<RuntimeFunction> 
         paramTypes: [LLVM_TAGGED_PTR, LLVM_TAGGED_PTR]
     };
     foreach var [op, name] in decimalArithmeticFuncNames.entries() {
-        m[op] = { name: "decimal_" + name, ty, attrs: ["readonly"] };
+        m[op] = {name: "decimal_" + name, ty, attrs: ["readonly"]};
     }
     return m.cloneReadOnly();
 }
@@ -132,8 +132,8 @@ function buildArithmeticBinary(llvm:Builder builder, Scaffold scaffold, bir:IntA
         builder.condBr(builder.iBitwise("and",
                                         builder.iCmp("eq", lhs, llvm:constInt(LLVM_INT, int:MIN_VALUE)),
                                         builder.iCmp("eq", rhs, llvm:constInt(LLVM_INT, -1))),
-                       overflowBlock,
-                       continueBlock);
+                        overflowBlock,
+                        continueBlock);
         builder.positionAtEnd(overflowBlock);
         llvm:IntArithmeticSignedOp op;
         if insn.op == "/" {
@@ -151,11 +151,11 @@ function buildArithmeticBinary(llvm:Builder builder, Scaffold scaffold, bir:IntA
         builder.positionAtEnd(continueBlock);
         result = builder.iArithmeticSigned(op, lhs, rhs);
     }
-    buildStoreInt(builder, scaffold, result, insn.result);                                  
+    buildStoreInt(builder, scaffold, result, insn.result);
     if joinBlock != () {
         builder.br(joinBlock);
         builder.positionAtEnd(joinBlock);
-    }                         
+    }
 }
 
 function buildNoPanicArithmeticBinary(llvm:Builder builder, Scaffold scaffold, bir:IntNoPanicArithmeticBinaryInsn insn) {
@@ -163,7 +163,7 @@ function buildNoPanicArithmeticBinary(llvm:Builder builder, Scaffold scaffold, b
     llvm:Value rhs = buildInt(builder, scaffold, insn.operands[1]);
     llvm:IntArithmeticOp op = intArithmeticOps.get(insn.op);
     llvm:Value result = builder.iArithmeticNoWrap(op, lhs, rhs);
-    buildStoreInt(builder, scaffold, result, insn.result);                                  
+    buildStoreInt(builder, scaffold, result, insn.result);
 }
 
 function buildFloatArithmeticBinary(llvm:Builder builder, Scaffold scaffold, bir:FloatArithmeticBinaryInsn insn) {
@@ -171,14 +171,14 @@ function buildFloatArithmeticBinary(llvm:Builder builder, Scaffold scaffold, bir
     llvm:Value rhs = buildFloat(builder, scaffold, insn.operands[1]);
     llvm:FloatArithmeticOp op = floatArithmeticOps.get(insn.op);
     llvm:Value result = builder.fArithmetic(op, lhs, rhs);
-    buildStoreFloat(builder, scaffold, result, insn.result);                                  
+    buildStoreFloat(builder, scaffold, result, insn.result);
 }
 
 function buildDecimalArithmeticBinary(llvm:Builder builder, Scaffold scaffold, bir:DecimalArithmeticBinaryInsn insn) {
     llvm:Value lhs = buildDecimal(builder, scaffold, insn.operands[0]);
     llvm:Value rhs = buildDecimal(builder, scaffold, insn.operands[1]);
     llvm:Value resultWithErr = <llvm:Value>builder.call(scaffold.getRuntimeFunctionDecl(decimalArithmeticFuncs.get(insn.op)), [lhs, rhs]);
-    buildStoreDecimal(builder, scaffold, buildCheckPanicCode(builder, scaffold, resultWithErr, insn.pos), insn.result);                                  
+    buildStoreDecimal(builder, scaffold, buildCheckPanicCode(builder, scaffold, resultWithErr, insn.pos), insn.result);
 }
 
 function buildFloatNegate(llvm:Builder builder, Scaffold scaffold, bir:FloatNegateInsn insn) {
@@ -193,7 +193,7 @@ final readonly & map<llvm:IntBitwiseOp> binaryBitwiseOp = {
     "|": "or",
     "<<": "shl",
     ">>": "ashr",
-    ">>>" : "lshr"
+    ">>>": "lshr"
 };
 
 function buildBitwiseBinary(llvm:Builder builder, Scaffold scaffold, bir:IntBitwiseBinaryInsn insn) {
@@ -204,9 +204,8 @@ function buildBitwiseBinary(llvm:Builder builder, Scaffold scaffold, bir:IntBitw
     }
     llvm:IntBitwiseOp op = binaryBitwiseOp.get(insn.op);
     llvm:Value result = builder.iBitwise(op, lhs, rhs);
-    buildStoreInt(builder, scaffold, result, insn.result);                                  
+    buildStoreInt(builder, scaffold, result, insn.result);
 }
-
 
 function buildConvertToInt(llvm:Builder builder, Scaffold scaffold, bir:ConvertToIntInsn insn) returns BuildError? {
     var [repr, val] = check buildReprValue(builder, scaffold, insn.operand);
@@ -280,7 +279,7 @@ function buildConvertToDecimal(llvm:Builder builder, Scaffold scaffold, bir:Conv
     }
     // convert to decimal from tagged pointer
     llvm:Value resultWithErr = <llvm:Value>builder.call(scaffold.getRuntimeFunctionDecl(convertToDecimalFunction), [val]);
-    buildStoreDecimal(builder, scaffold, buildCheckPanicCode(builder, scaffold, resultWithErr, insn.pos), insn.result);   
+    buildStoreDecimal(builder, scaffold, buildCheckPanicCode(builder, scaffold, resultWithErr, insn.pos), insn.result);
 }
 
 function buildConvertIntToDecimal(llvm:Builder builder, Scaffold scaffold, llvm:Value intVal, bir:ConvertToDecimalInsn insn) {
@@ -295,7 +294,7 @@ function buildConvertIntToDecimal(llvm:Builder builder, Scaffold scaffold, llvm:
 
 function buildConvertFloatToDecimal(llvm:Builder builder, Scaffold scaffold, llvm:Value floatVal, bir:ConvertToDecimalInsn insn) {
     llvm:Value resultWithErr = <llvm:Value>builder.call(scaffold.getRuntimeFunctionDecl(decimalFromFloatFunction), [floatVal]);
-    buildStoreDecimal(builder, scaffold, buildCheckPanicCode(builder, scaffold, resultWithErr, insn.pos), insn.result);   
+    buildStoreDecimal(builder, scaffold, buildCheckPanicCode(builder, scaffold, resultWithErr, insn.pos), insn.result);
 }
 
 function buildDecimalNegate(llvm:Builder builder, Scaffold scaffold, bir:DecimalNegateInsn insn) {

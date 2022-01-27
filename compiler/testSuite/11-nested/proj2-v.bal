@@ -10,7 +10,7 @@ type R record {|
 type V (int[]|float[]|int[]) & int[];
 
 public function main() {
-    R r = { x: [255], y: [], z: [] };
+    R r = {x: [255], y: [], z: []};
     any? x = r["x"];
     if x is V {
         int n = x[0];

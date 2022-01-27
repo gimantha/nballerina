@@ -6,7 +6,7 @@ type R record {
 };
 
 public function main() {
-    R r = { x: 17, y: 42 };
+    R r = {x: 17, y: 42};
     string s = "x";
     io:println(r[s]); // @output 17
     s = "y";

@@ -2,7 +2,7 @@
 import ballerina/io;
 
 public function main() {
-    int two48 = 65536*65536*65536;
+    int two48 = 65536 * 65536 * 65536;
     testAround(two48);
     // @output true
     // @output true
@@ -32,7 +32,7 @@ function testAround(int pow2) {
     roundTrip(pow2 - 1);
     roundTrip(-pow2);
     roundTrip(pow2);
-    roundTrip(-pow2 -1);
+    roundTrip(-pow2 - 1);
 }
 
 function roundTrip(int n) {

@@ -6,14 +6,15 @@ type R record {|
     int? intField;
     float? floatField;
 |};
+
 public function main() {
-    types1:R1 r1 = { intField: 255, floatField: 1.5 };
+    types1:R1 r1 = {intField: 255, floatField: 1.5};
     types2:R2 r2 = r1;
     r1 = r2;
     R r = r2;
     io:println(r is types1:R1); // @output true
     io:println(r is types2:R2); // @output true
-    r = { intField: 17, floatField: 2.5 };
+    r = {intField: 17, floatField: 2.5};
     io:println(r is types1:R1); // @output false
     io:println(r is types2:R2); // @output false
 

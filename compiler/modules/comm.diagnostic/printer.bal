@@ -20,7 +20,8 @@ public class ConsolePrinter {
         }
     }
 
-    public function close() returns (file:Error|io:Error)? {}
+    public function close() returns (file:Error|io:Error)? {
+    }
 }
 
 public class HtmlPrinter {
@@ -33,7 +34,7 @@ public class HtmlPrinter {
     }
 
     public function print(Diagnostic diagnostic) {
-       self.diagnostics.push(diagnostic);
+        self.diagnostics.push(diagnostic);
     }
 
     public function close() returns (file:Error|io:Error)? {

@@ -1,4 +1,5 @@
 type I int;
+
 type I2 int?;
 
 // @type A[I] = I2

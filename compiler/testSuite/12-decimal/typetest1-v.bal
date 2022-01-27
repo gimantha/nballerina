@@ -1,4 +1,5 @@
 import ballerina/io;
+
 public function main() {
     float|decimal x = 10;
     if x is float {

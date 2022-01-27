@@ -8,9 +8,9 @@ public function main() {
 }
 
 function printBranch(int x) {
-    if (x<10) {
+    if (x < 10) {
         io:println(0);
-    } else if(x == 10){
+    } else if (x == 10) {
         io:println(1);
     } else {
         io:println(2);

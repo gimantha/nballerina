@@ -10,7 +10,7 @@ public class FunctionDefinition {
     *Definition;
     private RecAtom atom;
     private SemType semType;
-   
+
     public function init(Env env) {
         self.atom = env.recFunctionAtom();
         self.semType = uniformSubtype(UT_FUNCTION, bddAtom(self.atom));
@@ -24,7 +24,7 @@ public class FunctionDefinition {
         FunctionAtomicType t = [args, ret];
         env.setRecFunctionAtomType(self.atom, t);
         return self.semType;
-    }    
+    }
 }
 
 function functionSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
@@ -32,7 +32,7 @@ function functionSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
     BddMemo? mm = cx.functionMemo[b];
     BddMemo m;
     if mm == () {
-        m = { bdd: b };
+        m = {bdd: b};
         cx.functionMemo.add(m);
     }
     else {
@@ -50,7 +50,7 @@ function functionSubtypeIsEmpty(Context cx, SubtypeData t) returns boolean {
     }
     boolean isEmpty = functionBddIsEmpty(cx, b, NEVER, (), ());
     m.isEmpty = isEmpty;
-    return isEmpty;    
+    return isEmpty;
 }
 
 function functionBddIsEmpty(Context cx, Bdd b, SemType s, Conjunction? pos, Conjunction? neg) returns boolean {
@@ -87,7 +87,7 @@ function functionTheta(Context cx, SemType t0, SemType t1, Conjunction? pos) ret
     }
 }
 
- UniformTypeOps functionOps =  {  
+UniformTypeOps functionOps = {
     union: bddSubtypeUnion,
     intersect: bddSubtypeIntersect,
     diff: bddSubtypeDiff,

@@ -7,11 +7,11 @@ function dIBuilder() returns Module {
 
     DIBuilder dIBuilder = m.createDIBuilder();
     Metadata fileData = dIBuilder.createFile("filename.bal", "PATH_TO_BAL_SOURCE");
-    _ = dIBuilder.createCompileUnit(file=fileData);
+    _ = dIBuilder.createCompileUnit(file = fileData);
     m.addModuleFlag("error", ["Debug Info Version", 3]);
     m.addModuleFlag("warning", ["Dwarf Version", 2]);
     Metadata functionTy = dIBuilder.createSubroutineType(fileData);
-    Metadata functionData = dIBuilder.createFunction(scope=fileData, name="test", linkageName="test", file=fileData, lineNo=0, ty=functionTy, scopeLine=0);
+    Metadata functionData = dIBuilder.createFunction(scope = fileData, name = "test", linkageName = "test", file = fileData, lineNo = 0, ty = functionTy, scopeLine = 0);
     Metadata loc = dIBuilder.createDebugLocation(context, 1, 2, functionData);
 
     FunctionDefn testFn = m.addFunctionDefn("test", {returnType: "void", paramTypes: []});
@@ -25,7 +25,7 @@ function dIBuilder() returns Module {
     builder.setCurrentDebugLocation(loc);
     _ = builder.call(testFn, []);
     builder.setCurrentDebugLocation(());
-    builder.ret(constInt("i64",0));
+    builder.ret(constInt("i64", 0));
 
     return m;
 }

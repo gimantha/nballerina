@@ -4,11 +4,11 @@ import wso2/nballerina.front.syntax as s;
 
 type ConstEvalTest [string, t:SingleValue];
 
-@test:Config{ dataProvider: validConstExprs }
+@test:Config {dataProvider: validConstExprs}
 function testConstExpr(string src, t:SingleValue expected) {
-    s:SourceFile file = s:createSourceFile([src], { filename: "<internal>" });
+    s:SourceFile file = s:createSourceFile([src], {filename: "<internal>"});
     s:Expr parsed = checkpanic s:parseExpression(file);
-    ModuleSymbols mod = { tc: t:typeContext(new) };
+    ModuleSymbols mod = {tc: t:typeContext(new)};
     s:ConstDefn defn = {
         startPos: 0,
         endPos: 0,
